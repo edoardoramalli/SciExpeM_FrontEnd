@@ -16,20 +16,23 @@ class InfoExperiment extends React.Component{
             ignition_type: "ignition_type"
         }
         console.log(this.props)
+        this.setState(this.props.experiment)
+
     }
 
     componentDidMount() {
-        const exp_id = this.props.experiment.id;
-
-        axios.get(window.$API_address + 'frontend/api/experiment/info/' + exp_id.toString())
-            .then(res => {
-                const response = res.data;
-                // this.setState({response: response});
-                console.log(response)
-            }).catch(error => {
-                console.log(error.response);
-                this.setState({error: error.response})
-        })
+        // const exp_id = this.props.experiment.id;
+        // const exp_id = 5
+        //
+        // axios.get(window.$API_address + 'frontend/api/experiment/info/' + exp_id.toString())
+        //     .then(res => {
+        //         const response = res.data;
+        //         // this.setState({response: response});
+        //         console.log(response)
+        //     }).catch(error => {
+        //         console.log(error.response);
+        //         this.setState({error: error.response})
+        // })
     }
 
     render() {

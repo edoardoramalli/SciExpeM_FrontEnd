@@ -217,8 +217,8 @@ class ExperimentTable extends React.Component {
                     loading={this.state.loading}
                     bordered
                     //expandedRowRender={record => {return <ExperimentDetail experiment={record}/>}}
-                    expandedRowRender={record => {return <ExperimentDraw experiment={record}/>}}
-                    // expandedRowRender={record => {return <TabExperiment experiment={record}/>}}
+                    // expandedRowRender={record => {return <ExperimentDraw experiment={record}/>}}
+                    expandedRowRender={record => {return <TabExperiment experiment={record}/>}}
 
                 />
             </div>

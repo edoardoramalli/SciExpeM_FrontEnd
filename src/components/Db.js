@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert, Tabs} from 'antd';
+import {Alert} from 'antd';
 import './index.css';
 
 import "react-table/react-table.css";
@@ -21,6 +21,7 @@ class ExperimentDraw extends React.Component {
             error: null,
 
         }
+        console.log(props);
     }
 
     render() {
