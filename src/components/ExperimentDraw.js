@@ -11,17 +11,15 @@ import {GenericMultiDraw} from "./Components";
 
 
 
-
-
 class ExperimentDraw extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             response: {},
             error: null,
+            exp_id: this.props.exp_id
 
         }
-        console.log(props);
     }
 
     render() {
@@ -37,13 +35,11 @@ class ExperimentDraw extends React.Component {
     }
 
     componentDidMount() {
-        const exp_id = this.props.experiment.id;
-
-        axios.get(window.$API_address + 'frontend/api/experiment/curves/' + exp_id.toString())
+        axios.get(window.$API_address + 'frontend/api/experiment/curves/' + this.state.exp_id.toString())
             .then(res => {
                 const response = res.data;
                 this.setState({response: response});
-                console.log(this.state.response.curves)
+                // console.log(this.state.response.curves)
             }).catch(error => {
             console.log(error.response);
             this.setState({error: error.response})
@@ -53,7 +49,4 @@ class ExperimentDraw extends React.Component {
 }
 
 
-
-
-
-export {ExperimentDraw}
+export default ExperimentDraw;

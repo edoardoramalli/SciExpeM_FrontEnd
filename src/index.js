@@ -4,7 +4,6 @@ import {BrowserRouter} from 'react-router-dom'
 
 // Import CSS
 import './components/index.css';
-import "react-table/react-table.css";
 import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
 import 'react-table/react-table.css'
 

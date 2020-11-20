@@ -310,10 +310,6 @@ class CommonPropertiesForm extends React.Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.setState({reviewVisible: true, dataInfo: {values}});
-                console.log("-EDO");
-                // console.log(values);
-                console.log(this.state.dataInfo.toString());
-                console.log("-ELE");
             }
         });
     };

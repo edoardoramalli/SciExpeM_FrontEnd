@@ -5,9 +5,9 @@ import {Table, Input, Button, Icon} from "antd";
 import Highlighter from 'react-highlight-words';
 
 // Local Import
-import {ExperimentDraw} from "./Db";
+import {ExperimentDraw} from "./ExperimentDraw";
 import ActionCell from "./ActionCell";
-import TabExperiment from "./TabExperiment";
+import TabExperiment from "./InfoExperimentFolder/TabExperiment";
 
 
 class ExperimentTable extends React.Component {
