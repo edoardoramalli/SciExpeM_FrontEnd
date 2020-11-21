@@ -34,8 +34,6 @@ class GenericMultiDraw extends React.Component {
 
         const curves = this.props.response.curves;
 
-        console.log(this.props.response)
-
         if (curves == null) {
             return null;
         }
@@ -64,7 +62,6 @@ class GenericMultiDraw extends React.Component {
         while (curves_copy.length > 0)
             sub_groups.push(curves_copy.splice(0, group_size));
 
-        console.log(sub_groups[0].flat())
 
         const plots = sub_groups.map((group) => <Plot
             data={group.flat()}

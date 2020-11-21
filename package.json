@@ -6,11 +6,13 @@
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.2",
     "@testing-library/user-event": "^12.2.2",
+    "prettify-xml": "^1.2.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-highlight-words": "^0.16.0",
     "react-scripts": "4.0.0",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",

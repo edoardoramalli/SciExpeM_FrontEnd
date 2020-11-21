@@ -1,5 +1,6 @@
 import React, {lazy} from "react";
 import {Tabs} from 'antd';
+import RawData from "./RawData";
 
 const { TabPane } = Tabs;
 const InfoExperiment = lazy(() => import('./InfoExperiment'));
@@ -26,13 +27,16 @@ class TabExperiment extends React.Component{
                 <TabPane tab="Plot Data" key="2">
                     <ExperimentDraw exp_id={this.props.experiment.id}/>
                 </TabPane>
-                <TabPane tab="Row Data" key="3">
-                    Content of Tab Pane 3
+                <TabPane tab="Raw Data" key="3">
+                    <RawData exp_id={this.props.experiment.id} type={"dg1"}/>
                 </TabPane>
-                <TabPane tab="OS Input File" key="4" disabled>
+                <TabPane tab="V-t profile" key="4">
+                    <RawData exp_id={this.props.experiment.id} type={"dg2"}/>
+                </TabPane>
+                <TabPane tab="OS Input File" key="5">
                     <ExperimentFile exp_id={this.props.experiment.id} type={"OS"}/>
                 </TabPane>
-                <TabPane tab="ReSpecTh File" key="5" disabled>
+                <TabPane tab="ReSpecTh File" key="6" disabled>
                     <ExperimentFile exp_id={this.props.experiment.id} type={"ReSpecTh"}/>
                 </TabPane>
             </Tabs>

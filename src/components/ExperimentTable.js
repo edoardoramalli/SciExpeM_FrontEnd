@@ -1,19 +1,18 @@
 import React from "react";
 import axios from "axios";
 import {CommonPropertiesList, InitialSpeciesList} from "./Search";
-import {Table, Input, Button, Icon} from "antd";
+import {Table, Input, Button, Icon,} from "antd";
 import Highlighter from 'react-highlight-words';
 
 // Local Import
-import {ExperimentDraw} from "./ExperimentDraw";
 import ActionCell from "./ActionCell";
 import TabExperiment from "./InfoExperimentFolder/TabExperiment";
 
 
 class ExperimentTable extends React.Component {
     getColumnSearchProps = dataIndex => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-            <div style={{ padding: 8 }}>
+        filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
+            <div style={{padding: 8}}>
                 <Input
                     ref={node => {
                         this.searchInput = node;
@@ -22,23 +21,23 @@ class ExperimentTable extends React.Component {
                     value={selectedKeys[0]}
                     onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                     onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-                    style={{ width: 188, marginBottom: 8, display: 'block' }}
+                    style={{width: 188, marginBottom: 8, display: 'block'}}
                 />
-                    <Button
-                        type="primary"
-                        onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-                        icon={<Icon type="search" />}
-                        size="small"
-                        style={{ width: 90 }}
-                    >
-                        Search
-                    </Button>
-                    <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                        Reset
-                    </Button>
+                <Button
+                    type="primary"
+                    onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                    icon={<Icon type="search"/>}
+                    size="small"
+                    style={{width: 90}}
+                >
+                    Search
+                </Button>
+                <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{width: 90}}>
+                    Reset
+                </Button>
             </div>
         ),
-        filterIcon: filtered => <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }}/>,
+        filterIcon: filtered => <Icon type="search" style={{color: filtered ? '#1890ff' : undefined}}/>,
         onFilter: (value, record) =>
             record[dataIndex]
                 ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
@@ -51,7 +50,7 @@ class ExperimentTable extends React.Component {
         render: text =>
             this.state.searchedColumn === dataIndex ? (
                 <Highlighter
-                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    highlightStyle={{backgroundColor: '#ffc069', padding: 0}}
                     searchWords={[this.state.searchText]}
                     autoEscape
                     textToHighlight={text ? text.toString() : ''}
@@ -60,6 +59,7 @@ class ExperimentTable extends React.Component {
                 text
             ),
     });
+
 
     handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -71,7 +71,7 @@ class ExperimentTable extends React.Component {
 
     handleReset = clearFilters => {
         clearFilters();
-        this.setState({ searchText: '' });
+        this.setState({searchText: ''});
     };
 
     constructor(props) {
@@ -91,6 +91,17 @@ class ExperimentTable extends React.Component {
                 const experiments_managed = res.data.filter((exp) => exp.run_type_str != null);
                 this.setState({experiments: experiments, loading: false, number_managed: experiments_managed.length});
             })
+        axios.get(window.$API_address + 'frontend/api/opensmoke/species_names')
+            .then(res => {
+                const names = res.data.names
+                let list = []
+                let i;
+                for (i = 0; i < names.length; i++) {
+                    list.push({text: names[i], value: names[i]})
+                }
+                this.setState({filter_type_exp: list.sort(function(a, b) {
+                    return a.value > b.value;})});
+            })
     }
 
     // handle local delete
@@ -101,25 +112,92 @@ class ExperimentTable extends React.Component {
     };
 
     render() {
-        const columns = [{
-            title: 'File DOI',
-            dataIndex: 'fileDOI',
-            key: 'fileDOI',
-            width: '20%',
-            ...this.getColumnSearchProps('fileDOI'),
-            sorter: (a, b) => {
-                return a.fileDOI.localeCompare(b.fileDOI)
-            },
+        // const speciesOptions = this.state.species.map((specie) =>
+        //     <Select.Option value={specie} key={specie}>{specie}</Select.Option>
+        // );
 
-        }, {
-            title: 'Id',
-            dataIndex: 'id',
-            key: 'id',
-            width: '7%',
-            sorter: (a, b) => {
-                return a.id > b.id
+        const filter_exp_type = [
+            {
+                text: 'Ignition delay measurement',
+                value: 'ignition delay measurement',
+            }, {
+                text: 'Laminar burning velocity measurement',
+                value: 'laminar burning velocity measurement',
+            }, {
+                text: 'Outlet concentration measurement',
+                value: 'outlet concentration measurement',
+            }, {
+                text: 'Concentration time profile measurement',
+                value: 'concentration time profile measurement',
+            }, {
+                text: 'Jet stirred reactor measurement',
+                value: 'jet stirred reactor measurement',
+            }, {
+                text: 'Burner stabilized flame speciation measurement',
+                value: 'burner stabilized flame speciation measurement',
+            }, {
+                text: 'Direct rate coefficient measurement',
+                value: 'direct rate coefficient measurement',
+            }]
+
+        const filter_reactor_type = [
+            {
+                text: 'Shock tube',
+                value: 'shock',
+            }, {
+                text: 'Perfectly Stirred Reactor',
+                value: 'stirred',
+            }, {
+                text: 'Plug Flow Reactor',
+                value: 'flow',
+            }, {
+                text: 'Flame',
+                value: 'flame',
             },
-        },
+            {
+                text: 'Rapid Compression Machine',
+                value: 'rapid compression machine',
+            }]
+
+        const filter_properties = [
+            {
+                text: 'Temperature',
+                value: 'temperature',
+            }, {
+                text: 'Pressure',
+                value: 'pressure',
+            }, {
+                text: 'Residence Time',
+                value: 'residence time',
+            }, {
+                text: 'Volume',
+                value: 'volume',
+            }, {
+                text: 'Laminar Burning Velocity',
+                value: 'laminar burning velocity',
+            }]
+
+        const columns = [
+            {
+                title: 'File DOI',
+                dataIndex: 'fileDOI',
+                key: 'fileDOI',
+                width: '20%',
+                ...this.getColumnSearchProps('fileDOI'),
+                sorter: (a, b) => {
+                    return a.fileDOI.localeCompare(b.fileDOI)
+                },
+
+            },
+            {
+                title: 'Id',
+                dataIndex: 'id',
+                key: 'id',
+                width: '7%',
+                sorter: (a, b) => {
+                    return a.id > b.id
+                },
+            },
             //     {
             //     title: 'Paper',
             //     dataIndex: 'file_paper.title',
@@ -130,72 +208,59 @@ class ExperimentTable extends React.Component {
                 dataIndex: 'reactor',
                 key: 'reactor',
                 width: '15%',
-                filters: [{
-                    text: 'Shock tube',
-                    value: 'shock',
-                }, {
-                    text: 'Perfectly Stirred Reactor',
-                    value: 'stirred',
-                }, {
-                    text: 'Plug Flow Reactor',
-                    value: 'flow',
-                }, {
-                    text: 'Flame',
-                    value: 'flame',
-                },
-                    {
-                        text: 'Rapid Compression Machine',
-                        value: 'rapid compression machine',
-                    }],
+                filters: filter_reactor_type,
                 onFilter: (value, record) => record.reactor.toLowerCase().includes(value),
 
                 sorter: (a, b) => {
                     return a.reactor.localeCompare(b.reactor)
                 },
-            }, {
+            },
+            {
                 title: 'Experiment type',
                 dataIndex: 'experiment_type',
                 key: 'experiment_type',
                 width: '20%',
-                filters: [{
-                    text: 'Ignition delay measurement',
-                    value: 'ignition delay measurement',
-                }, {
-                    text: 'Laminar burning velocity measurement',
-                    value: 'laminar burning velocity measurement',
-                }, {
-                    text: 'Outlet concentration measurement',
-                    value: 'outlet concentration measurement',
-                }, {
-                    text: 'Concentration time profile measurement',
-                    value: 'concentration time profile measurement',
-                }, {
-                    text: 'Jet stirred reactor measurement',
-                    value: 'jet stirred reactor measurement',
-                }, {
-                    text: 'Burner stabilized flame speciation measurement',
-                    value: 'burner stabilized flame speciation measurement',
-                }, {
-                    text: 'Direct rate coefficient measurement',
-                    value: 'direct rate coefficient measurement',
-                }],
+                filters: filter_exp_type,
                 onFilter: (value, record) => record.experiment_type.toLowerCase().includes(value),
                 sorter: (a, b) => {
                     return a.experiment_type.localeCompare(b.experiment_type)
                 },
-            }, {
+            },
+            {
                 title: 'Properties',
                 dataIndex: 'common_properties',
                 key: 'common_properties',
                 width: '15%',
+                filters: filter_properties,
+                onFilter: (value, record) => {
+                    let i;
+                    for (i = 0; i < record.common_properties.length; i++) {
+                        if (record.common_properties[i].name.includes(value)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                },
                 render: props => <CommonPropertiesList common_properties={props}/>
-            }, {
+            },
+            {
                 title: 'Initial species',
                 dataIndex: 'initial_species',
                 key: 'initial_species',
                 width: '10%',
+                filters: this.state.filter_type_exp,
+                onFilter: (value, record) => {
+                    let i;
+                    for (i = 0; i < record.initial_species.length; i++) {
+                        if (record.initial_species[i].name.includes(value)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                },
                 render: props => <InitialSpeciesList initial_species={props}/>,
-            }, {
+            },
+            {
                 title: 'Action',
                 dataIndex: 'actions',
                 key: 'actions',
@@ -210,7 +275,7 @@ class ExperimentTable extends React.Component {
                 {/*    Stored: {this.state.experiments.length} experiments - Managed: {this.state.number_managed} experiments*/}
                 {/*</span>*/}
                 <Table
-                    scroll={{y: '100%'} }
+                    scroll={{y: '100%'}}
                     columns={columns}
                     dataSource={this.state.experiments}
                     rowKey="id"
@@ -218,9 +283,12 @@ class ExperimentTable extends React.Component {
                     bordered
                     //expandedRowRender={record => {return <ExperimentDetail experiment={record}/>}}
                     // expandedRowRender={record => {return <ExperimentDraw experiment={record}/>}}
-                    expandedRowRender={record => {return <TabExperiment experiment={record}/>}}
+                    expandedRowRender={record => {
+                        return <TabExperiment experiment={record}/>
+                    }}
 
                 />
+
             </div>
         )
     }

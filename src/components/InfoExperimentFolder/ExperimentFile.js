@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import prettifyXml from "prettify-xml";
 
 class ExperimentFile extends React.Component{
     constructor(props) {
@@ -17,9 +18,15 @@ class ExperimentFile extends React.Component{
             .then(res => {
                 const response = res.data;
                 let file = response.file;
-                console.log(response)
                 if (file === null){
                     file = "No file."
+                }
+                else{
+                    if (this.state.type === "ReSpecTh"){
+                        const options = {indent: 2, newline: '\n'}
+                        file = prettifyXml(file, options);
+                    }
+
                 }
                 this.setState({
                     file: file
@@ -29,9 +36,11 @@ class ExperimentFile extends React.Component{
         })
     }
     render() {
+
         return(
-            <div>{this.state.file}</div>
-        )
+            <div dangerouslySetInnerHTML={{__html: this.state.file}} style={{whiteSpace: "pre-line"}}/>
+            )
+
     }
 
 }

@@ -4,11 +4,15 @@ import React, { lazy, Suspense } from 'react';
 import './App.css';
 
 // Import Libraries
-import {Layout} from "antd";
+import {BackTop, Layout,  Spin} from "antd";
 import NavBar from "./NavBar";
 
+import {SearchAndExecute} from "./Search";
+
+
 const ExperimentTable = lazy(() => import('./ExperimentTable'));
-const SearchAndExecute = lazy(() => import('./Search'));
+// const SearchAndExecute = lazy(() => import('./Search'));
+
 const WrappedCommonPropertiesForm = lazy(() => import('./InputExperimentForm'));
 const {Header, Content, Footer} = Layout;
 
@@ -49,10 +53,24 @@ class App extends React.Component {
                 </Header>
                 <Content style={{padding: '25px 25px', height: "100%"}}>
                     <div style={{background: '#fff', padding: 0, height: "100%"}}>
-                        <Suspense fallback={<div>Loading...</div>}>
+                        <Suspense fallback={<div><Spin tip="Loading..." size="large" /></div>}>
                             {currentMapping[current]}
                         </Suspense>
                     </div>
+                    <BackTop>
+                        <div
+                            style={{  height: 40,
+                                width: 40,
+                                lineHeight: '40px',
+                                borderRadius: 4,
+                                backgroundColor: '#1088e9',
+                                color: '#fff',
+                                textAlign: 'center',
+                                fontSize: 14,}}
+                        >
+                            UP
+                        </div>
+                    </BackTop>
 
                 </Content>
                 <Footer style={{textAlign: 'center', float: 'bottom', padding: '25px'}}>
