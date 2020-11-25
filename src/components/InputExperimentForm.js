@@ -426,6 +426,43 @@ class CommonPropertiesForm extends React.Component {
             );
         });
 
+        const ignition_definition_type = <FormItem label={"Ignition definition type"}>
+            {getFieldDecorator('ignition_definition_type', {
+                rules: [{required: false, message: 'Please insert experiment type.'}],
+            })(
+                <Select
+                    placeholder="Select an ignition definition type"
+                    allowClear={true}
+                    style={{width: "25%"}}
+                >
+                    <Option value="d/dt max">d/dt max</Option>
+                    <Option value="max">max</Option>
+                    <Option value="baseline max intercept from d/dt">baseline max intercept from d/dt</Option>
+                    <Option value="baseline min intercept from d/dt">baseline min intercept from d/dt</Option>
+                    <Option value="concentration">concentration</Option>
+                    <Option value="relative concentration">relative concentration</Option>
+                </Select>
+            )}
+        </FormItem>
+
+        const ignition_definition_quantity = <FormItem label={"Ignition definition measured quantity"}>
+            {getFieldDecorator('ignition_definition_quantity', {
+                rules: [{required: false, message: 'Please insert experiment type.'}],
+            })(
+                <Select
+                    placeholder="Select an ignition measured quantity"
+                    allowClear={true}
+                    style={{width: "25%"}}
+                >
+                    <Option value="p">pressure</Option>
+                    <Option value="T">temperature</Option>
+                    <Option value="CH">CH</Option>
+                    <Option value="OH">OH</Option>
+                    <Option value="CO2">C02</Option>
+                </Select>
+            )}
+        </FormItem>
+
         // TODO: limit upload size
 
         const hoverContent =
@@ -679,13 +716,18 @@ class CommonPropertiesForm extends React.Component {
                     />
                 ) : null}
                 <Form  layout={"horizontal"}>
-                    <Collapse defaultActiveKey={['1', '2', '3', '4', '5', '6', '7', '8']}>
+                    <Collapse defaultActiveKey={['1', '3', '4', '5', '6', '7', '8']}>
                         <Panel header="General" key="1">
                             {/*<ReactorSelect />*/}
                             {reactorSelect}
                             {experimentTypeSelect}
+
                         </Panel>
-                        <Panel header="Common properties" key="2">
+                        <Panel header="Ignition definition" key="2">
+                            {ignition_definition_type}
+                            {ignition_definition_quantity}
+                        </Panel>
+                        <Panel header="Common properties" key="3">
                             {propsFormItems}
                             <FormItem {...formItemLayoutWithOutLabel}>
                                 <Button type="dashed" onClick={this.add_prop} style={{width: '50%'}}>
@@ -693,7 +735,7 @@ class CommonPropertiesForm extends React.Component {
                                 </Button>
                             </FormItem>
                         </Panel>
-                        <Panel header="Input species" key="3">
+                        <Panel header="Input species" key="4">
                             {switchPhi}
                             {equivalence_ratio}
                             {speciesFormItems}
@@ -703,27 +745,24 @@ class CommonPropertiesForm extends React.Component {
                                 </Button>
                             </FormItem>
                         </Panel>
-                        <Panel header="Varied experimental conditions and measured results" key="4">
+                        <Panel header="Varied experimental conditions and measured results" key="5">
                             {dataUpload}
                         </Panel>
 
-                        <Panel header="Volume-time Profile" key="5">
+                        <Panel header="Volume-time Profile" key="6">
                             {dataUploadOptional}
                         </Panel>
 
-                        <Panel header="OpenSmoke Input File" key="6">
+                        <Panel header="OpenSmoke Input File" key="7">
                             {OSUpload}
                         </Panel>
 
-                        <Panel header="Bibliography data" key="7">
+                        <Panel header="Bibliography data" key="8">
                             {referenceInput}
                             {experimentReferenceInput}
                             {fileDOIInput}
                         </Panel>
 
-                        <Panel header="Additional" key="8">
-                            {commentsInput}
-                        </Panel>
                     </Collapse>
                     <FormItem {...formItemLayoutWithOutLabel}>
                         <Button type="primary" htmlType="submit" onClick={this.handleExperimentsOk}>Submit</Button>

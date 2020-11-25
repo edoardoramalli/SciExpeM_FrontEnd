@@ -7,7 +7,7 @@ import './App.css';
 import {BackTop, Layout,  Spin} from "antd";
 import NavBar from "./NavBar";
 
-import {SearchAndExecute} from "./Search";
+// import {SearchAndExecute} from "./Search";
 
 
 const ExperimentTable = lazy(() => import('./ExperimentTable'));
@@ -40,7 +40,7 @@ class App extends React.Component {
         const current = this.state.current;
         const currentMapping = {
             "experiments": <ExperimentTable/>,
-            "searchandexecute": <SearchAndExecute/>,
+            // "searchandexecute": <SearchAndExecute/>,
             // "input": <WrappedDataForm/>,
             "input-form": <WrappedCommonPropertiesForm/>,
             "about": <div>Ciaooo</div>

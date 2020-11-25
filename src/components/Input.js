@@ -678,6 +678,41 @@ class CommonPropertiesForm extends React.Component {
             )}
         </FormItem>
 
+        const ignition_definition_type = <FormItem label={"Ignition definition type"}>
+            {getFieldDecorator('ignition_definition_type', {
+                rules: [{required: false, message: 'Please insert experiment type.'}],
+            })(
+                <Select
+                    placeholder="Select an ignition definition type"
+                    allowClear={true}
+                    style={{width: "25%"}}
+                >
+                    <Option value="d/dt max">d/dt max</Option>
+                    <Option value="max">max</Option>
+                    <Option value="baseline max intercept from d/dt">baseline max intercept from d/dt</Option>
+                    <Option value="baseline min intercept from d/dt">baseline min intercept from d/dt</Option>
+                    <Option value="concentration">concentration</Option>
+                    <Option value="relative concentration">relative concentration</Option>
+                </Select>
+            )}
+        </FormItem>
+
+        const ignition_definition_quantity = <FormItem label={"Ignition definition measured quantity"}>
+            {getFieldDecorator('ignition_definition_quantity', {
+                rules: [{required: false, message: 'Please insert experiment type.'}],
+            })(
+                <Select
+                    placeholder="Select an ignition measured quantity"
+                    allowClear={true}
+                    style={{width: "25%"}}
+                >
+                    <Option value="CH">CH</Option>
+                    <Option value="OH">OH</Option>
+                    <Option value="CO2">C02</Option>
+                </Select>
+            )}
+        </FormItem>
+
         const referenceInput = <FormItem label={"Paper reference (Title, Authors etc..)"}>
             {
                 getFieldDecorator('paper_reference', {
@@ -779,6 +814,8 @@ class CommonPropertiesForm extends React.Component {
                             {/*<ReactorSelect />*/}
                             {reactorSelect}
                             {experimentTypeSelect}
+                            {ignition_definition_type}
+                            {ignition_definition_quantity}
                         </Panel>
                         <Panel header="Common properties" key="2">
                             {propsFormItems}
