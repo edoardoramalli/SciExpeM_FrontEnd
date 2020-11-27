@@ -6,6 +6,7 @@ const { TabPane } = Tabs;
 const InfoExperiment = lazy(() => import('./InfoExperiment'));
 const ExperimentFile = lazy(() => import('./ExperimentFile'));
 const ExperimentDraw = lazy(() => import('../ExperimentDraw'));
+const ManagementExperiment = lazy(() => import('./ManagementExperiment'));
 
 
 
@@ -36,8 +37,11 @@ class TabExperiment extends React.Component{
                 <TabPane tab="OS Input File" key="5">
                     <ExperimentFile exp_id={this.props.experiment.id} type={"OS"}/>
                 </TabPane>
-                <TabPane tab="ReSpecTh File" key="6" disabled>
+                <TabPane tab="ReSpecTh File" key="6">
                     <ExperimentFile exp_id={this.props.experiment.id} type={"ReSpecTh"}/>
+                </TabPane>
+                <TabPane tab="Management" key="7">
+                    <ManagementExperiment exp_id={this.props.experiment.id}/>
                 </TabPane>
             </Tabs>
         )

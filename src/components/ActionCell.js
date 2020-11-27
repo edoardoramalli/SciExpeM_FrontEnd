@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import {Button, Dropdown, Menu, message, Popconfirm} from "antd";
+import {DeleteOutlined, DownloadOutlined} from "@ant-design/icons";
 
 class ActionCell extends React.Component {
     constructor(props) {
@@ -119,12 +120,13 @@ class ActionCell extends React.Component {
         return (
             <div>
                 <Dropdown overlay={menu}>
-                    <Button shape="circle" icon="download">
+                    <Button shape="circle" >
+                        <DownloadOutlined />
                     </Button>
                 </Dropdown>
                 <Popconfirm title="Are you sure delete this experiment?" onConfirm={this.handleDelete} okText="Yes"
                             cancelText="No">
-                    <Button shape="circle" icon="delete" loading={this.state.loadingDelete}>
+                    <Button shape="circle" loading={this.state.loadingDelete}><DeleteOutlined />
                     </Button>
                 </Popconfirm>
             </div>

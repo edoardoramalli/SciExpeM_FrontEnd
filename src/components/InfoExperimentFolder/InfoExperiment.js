@@ -3,6 +3,8 @@ import { Descriptions } from 'antd';
 import axios from "axios";
 import HyperLink from "../HyperLink";
 
+import styles from "./styles.less"
+
 class InfoExperiment extends React.Component{
     constructor(props) {
         super(props);
@@ -57,11 +59,17 @@ class InfoExperiment extends React.Component{
 
     render() {
         return(
-            <div>
-                <Descriptions title={<HyperLink link={this.state.exp.props.fileDOI}/>} bordered column={2}>
-                    <Descriptions.Item label="Author" >{this.state.author}</Descriptions.Item>
+            <div >
+                <Descriptions
+                    title={<HyperLink link={this.state.exp.props.fileDOI}/>}
+                    bordered
+                    column={2}
+
+                >
+                    <Descriptions.Item label="Author" className={styles.description}>{this.state.author}</Descriptions.Item>
                     <Descriptions.Item label="Creation Date" >{this.state.date}</Descriptions.Item>
-                    <Descriptions.Item label="Status" span={2}>{this.state.status}</Descriptions.Item>
+                    <Descriptions.Item label="Status" >{this.state.exp.props.status}</Descriptions.Item>
+                    <Descriptions.Item label="Classifier">{this.state.exp.props.experiment_classifier}</Descriptions.Item>
                     <Descriptions.Item label="Experiment ID" >{this.state.exp.props.id}</Descriptions.Item>
                     <Descriptions.Item label="Experiment Type">{this.state.exp.props.experiment_type}</Descriptions.Item>
                     <Descriptions.Item label="Reactor">{this.state.exp.props.reactor}</Descriptions.Item>

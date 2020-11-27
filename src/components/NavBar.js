@@ -1,6 +1,7 @@
 import React from "react";
-import {Icon, Menu} from "antd";
+import {Menu} from "antd";
 import axios from "axios";
+import {UploadOutlined, DatabaseOutlined, LineChartOutlined, InfoCircleOutlined} from '@ant-design/icons';
 
 class NavBar extends React.Component{
 
@@ -39,7 +40,7 @@ class NavBar extends React.Component{
                 <Menu.SubMenu
                     title={
                         <span className="submenu-title-wrapper">
-                            <Icon type="upload"/>
+                            <UploadOutlined />
                             Insert
                         </span>
                     }>
@@ -49,11 +50,11 @@ class NavBar extends React.Component{
                     <Menu.Item key="input-form">Insert Experiment</Menu.Item>
                 </Menu.SubMenu>
 
-                <Menu.Item key="experiments"><Icon type="database"/>Experimental Database</Menu.Item>
-                <Menu.Item key="searchandexecute" disabled><Icon type="line-chart"/>Search & Execute</Menu.Item>
-                <Menu.Item key="about" disabled><Icon type="info-circle"/>About</Menu.Item>
+                <Menu.Item key="experiments"><DatabaseOutlined />Experimental Database</Menu.Item>
+                <Menu.Item key="searchandexecute" disabled><LineChartOutlined />Search & Execute</Menu.Item>
+                <Menu.Item key="about" disabled><InfoCircleOutlined />About</Menu.Item>
                 <Menu.Item key="logout" style={{"float": "right"}}>
-                    <Icon type="logout"/>
+                    <UploadOutlined />
                     Log Out - {this.state.username}
                 </Menu.Item>
 

@@ -1,6 +1,10 @@
 import React from "react";
 import axios from "axios";
 import GenericTable from "../GenericTable";
+import Cookies from "js-cookie";
+
+const csrftoken = Cookies.get('csrftoken');
+axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
 
 class RawData extends React.Component{
     constructor(props) {

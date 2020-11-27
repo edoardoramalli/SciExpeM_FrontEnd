@@ -1,7 +1,8 @@
 import React from "react";
 import axios from "axios";
-import {CommonPropertiesList, InitialSpeciesList} from "./Search";
-import {Table, Input, Button, Icon,} from "antd";
+import {CommonPropertiesList, InitialSpeciesList, StatusTag} from "./Search";
+import {Table, Input, Button, Tag} from "antd";
+import {SearchOutlined} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
 // Local Import
@@ -26,7 +27,7 @@ class ExperimentTable extends React.Component {
                 <Button
                     type="primary"
                     onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-                    icon={<Icon type="search"/>}
+                    icon={<SearchOutlined type="search"/>}
                     size="small"
                     style={{width: 90}}
                 >
@@ -37,7 +38,7 @@ class ExperimentTable extends React.Component {
                 </Button>
             </div>
         ),
-        filterIcon: filtered => <Icon type="search" style={{color: filtered ? '#1890ff' : undefined}}/>,
+        filterIcon: filtered => <SearchOutlined type="search" style={{color: filtered ? '#1890ff' : undefined}}/>,
         onFilter: (value, record) =>
             record[dataIndex]
                 ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
@@ -159,6 +160,25 @@ class ExperimentTable extends React.Component {
                 value: 'rapid compression machine',
             }]
 
+        const filter_status = [
+            {
+                text: 'NEW',
+                value: 'new'
+            },
+            {
+                text: 'VALID',
+                value: 'valid'
+            },
+            {
+                text: 'MANAGED',
+                value: 'managed'
+            },
+            {
+                text: 'UNMANAGED',
+                value: 'unmanaged'
+            }
+        ]
+
         const filter_properties = [
             {
                 text: 'Temperature',
@@ -259,6 +279,31 @@ class ExperimentTable extends React.Component {
                     return false;
                 },
                 render: props => <InitialSpeciesList initial_species={props}/>,
+            },
+            {
+                title: 'Status',
+                dataIndex: 'status',
+                key: 'status',
+                width: '10%',
+                filters: filter_status,
+                onFilter: (value, record) => {
+                    if (record.status.includes(value)){
+                        return true
+                    }
+                    let exp_type;
+                    if (record.experiment_classifier === null){
+                        exp_type = "unmanaged"
+                    }
+                    else{
+                        exp_type = "managed"
+                    }
+                    if (value.includes(exp_type)){
+                        return true
+                    }
+                    return false
+                },
+                render: (props, record) => <StatusTag status={props} record={record}/>
+
             },
             {
                 title: 'Action',

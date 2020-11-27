@@ -5,7 +5,6 @@ import {
     Button,
     Menu,
     Dropdown,
-    Icon,
     Table,
     Divider,
     Form,
@@ -24,7 +23,7 @@ import {
 import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
 import Plot from 'react-plotly.js';
 
-
+import {DownOutlined} from "@ant-design/icons";
 
 import './index.css';
 import ReactTable from "react-table";
@@ -60,6 +59,41 @@ function InitialSpeciesList(props) {
     );
     return (
         <div>{listTags}</div>
+    )
+}
+
+function StatusTag(props) {
+    const status = props.status;
+    const experiment_classifier = props.record.experiment_classifier;
+    let color_status;
+    if (status === 'new'){
+        color_status = 'red';
+    }
+    else if (status === 'valid'){
+        color_status = 'green';
+    }
+    let type;
+    let color_type;
+    if (experiment_classifier !== null){
+        type = "managed"
+        color_type = "green"
+    }
+    else {
+        type = "unmanaged"
+        color_type = "red"
+    }
+    const listTags = [
+        <Tag color={color_status} key={status}>
+        {status.toUpperCase()}
+        </Tag>,
+        <Tag color={color_type} key={type}>
+            {type.toUpperCase()}
+        </Tag>]
+
+    return (
+        <>
+            {listTags}
+        </>
     )
 }
 
@@ -341,7 +375,9 @@ class SearchPanelRaw
     }
 }
 
-const SearchPanel = Form.create()(SearchPanelRaw);
+// const SearchPanel = Form.create()(SearchPanelRaw);
+const SearchPanel = SearchPanelRaw;
+
 
 class SearchTable extends React.Component {
     constructor(props) {
@@ -510,7 +546,7 @@ class ExecuteAction extends React.Component {
         return (
             <Dropdown overlay={menu} disabled={this.props.disabled}>
                 <Button type="primary" style={{marginLeft: 8}}>
-                    Execute <Icon type="down"/>
+                    Execute <DownOutlined />
                 </Button>
             </Dropdown>
         )
@@ -1253,4 +1289,4 @@ class SearchMain extends React.Component {
 }
 
 
-export {SearchAndExecute, CommonPropertiesList, InitialSpeciesList, SearchMain, CurveMatchingTable, CurveMatchingResult, ExperimentExecutionsCMDetails}
+export {SearchAndExecute, CommonPropertiesList, InitialSpeciesList, StatusTag, SearchMain, CurveMatchingTable, CurveMatchingResult, ExperimentExecutionsCMDetails}

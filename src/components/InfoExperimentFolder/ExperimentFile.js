@@ -1,6 +1,10 @@
 import React from "react";
 import axios from "axios";
-import prettifyXml from "prettify-xml";
+import Cookies from "js-cookie";
+import XMLViewer from 'react-xml-viewer'
+
+const csrftoken = Cookies.get('csrftoken');
+axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
 
 class ExperimentFile extends React.Component{
     constructor(props) {
@@ -8,7 +12,8 @@ class ExperimentFile extends React.Component{
         this.state = {
             exp_id: this.props.exp_id,
             type: this.props.type,
-            file: ""
+            file: "",
+            render: null
         }
     }
     componentDidMount() {
@@ -23,8 +28,13 @@ class ExperimentFile extends React.Component{
                 }
                 else{
                     if (this.state.type === "ReSpecTh"){
-                        const options = {indent: 2, newline: '\n'}
-                        file = prettifyXml(file, options);
+                        this.setState({render: <XMLViewer xml={file} />})
+                    }
+                    else if (this.state.type === "OS"){
+                        this.setState(
+                            {render: <div
+                                    dangerouslySetInnerHTML={{__html: file}}
+                                    style={{whiteSpace: "pre-line"}}/>})
                     }
 
                 }
@@ -37,9 +47,7 @@ class ExperimentFile extends React.Component{
     }
     render() {
 
-        return(
-            <div dangerouslySetInnerHTML={{__html: this.state.file}} style={{whiteSpace: "pre-line"}}/>
-            )
+        return(<>{this.state.render}</>)
 
     }
 

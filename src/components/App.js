@@ -13,7 +13,10 @@ import NavBar from "./NavBar";
 const ExperimentTable = lazy(() => import('./ExperimentTable'));
 // const SearchAndExecute = lazy(() => import('./Search'));
 
-const WrappedCommonPropertiesForm = lazy(() => import('./InputExperimentForm'));
+
+const InsertExperimentForm = lazy(() => import('./ExperimentForm'));
+
+// const WrappedCommonPropertiesForm = lazy(() => import('./InputExperimentForm'));
 const {Header, Content, Footer} = Layout;
 
 
@@ -42,7 +45,7 @@ class App extends React.Component {
             "experiments": <ExperimentTable/>,
             // "searchandexecute": <SearchAndExecute/>,
             // "input": <WrappedDataForm/>,
-            "input-form": <WrappedCommonPropertiesForm/>,
+            "input-form": <InsertExperimentForm/>,
             "about": <div>Ciaooo</div>
         }
 

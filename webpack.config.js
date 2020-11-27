@@ -1,9 +1,16 @@
+const webpack = require('webpack');
+
 module.exports = {
     // optimization: {
     //     splitChunks: {
     //         chunks: 'all',
     //     },
     // },
+    plugins: [
+        new webpack.optimize.LimitChunkCountPlugin({
+            maxChunks: 1
+        })
+    ],
     module: {
         rules: [
             {
@@ -16,6 +23,10 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.less$/,
+                loader: "less-loader", // compiles Less to CSS
             }
         ]
     }
