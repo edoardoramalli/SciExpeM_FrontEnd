@@ -11,9 +11,15 @@
     "antd": "^4.8.5",
     "antd-data-table": "^1.0.0",
     "axios": "^0.18.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.2.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
     "brotli-webpack-plugin": "^1.1.0",
     "chart.js": "^2.7.3",
+    "chunks-webpack-plugin": "^7.0.0",
+    "clean-webpack-plugin": "^3.0.0",
     "html-webpack-plugin": "^4.5.0",
     "http-server": "^0.12.3",
     "js-cookie": "^2.2.0",
@@ -37,13 +43,15 @@
     "react-xml-viewer": "^1.1.0",
     "webpack": "^4.29.3",
     "webpack-bundle-analyzer": "^4.1.0",
+    "webpack-bundle-tracker": "^1.0.0-alpha.1",
     "webpack-cli": "^3.2.3",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "webpack-manifest-plugin": "^2.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "webpack-dev-server --mode development ./src/index.js --output ./static/dev/main.js",
     "dev": "webpack --mode development ./src/index.js --output ./static/dev/main.js",
-    "build": "webpack --mode production ./src/index.js --output ./static/build/main.js",
+    "build": "webpack --config ./webpack.build.config.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -64,5 +72,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "dependencies": {
+    "lodash-webpack-plugin": "^0.11.5"
   }
 }

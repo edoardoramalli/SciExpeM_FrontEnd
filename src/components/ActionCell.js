@@ -14,15 +14,20 @@ class ActionCell extends React.Component {
     handleDelete = (e) => {
         const e_id = this.props.e_id;
         this.setState({loadingDelete: true});
-        axios.get(window.$API_address + 'frontend/api/experiment/delete/' + e_id.toString())
+        axios.get(window.$API_address + 'ExperimentManager/API/deleteExperiment/' + e_id.toString())
             .then(res => {
                 this.props.handleDelete(e_id);
                 this.setState({loadingDelete: false})
 
             }).catch(error => {
-            // console.log(error.response)
             this.setState({loadingDelete: false});
-            message.error('Error deleting experiment')
+            if (error.response.status === 403){
+                message.error("You don't have the permission to delete this experiment.")
+            }
+            else{
+                message.error(error.response.data)
+            }
+
         });
     };
 

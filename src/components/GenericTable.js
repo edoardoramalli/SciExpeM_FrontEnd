@@ -8,7 +8,7 @@ class GenericTable extends React.Component {
         const names = this.props.names;
 
         if (names == null || names.length === 0) {
-            return null;
+            return <>No data present.</>;
         }
 
         const columns = names.map(function (name) {

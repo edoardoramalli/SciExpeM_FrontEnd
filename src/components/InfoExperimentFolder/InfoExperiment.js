@@ -3,7 +3,7 @@ import { Descriptions } from 'antd';
 import axios from "axios";
 import HyperLink from "../HyperLink";
 
-import styles from "./styles.less"
+import "./styles.less"
 
 class InfoExperiment extends React.Component{
     constructor(props) {
@@ -59,14 +59,14 @@ class InfoExperiment extends React.Component{
 
     render() {
         return(
-            <div >
+            <div className={"description"}>
                 <Descriptions
                     title={<HyperLink link={this.state.exp.props.fileDOI}/>}
                     bordered
                     column={2}
-
+                    className={"description"}
                 >
-                    <Descriptions.Item label="Author" className={styles.description}>{this.state.author}</Descriptions.Item>
+                    <Descriptions.Item label="Author" >{this.state.author}</Descriptions.Item>
                     <Descriptions.Item label="Creation Date" >{this.state.date}</Descriptions.Item>
                     <Descriptions.Item label="Status" >{this.state.exp.props.status}</Descriptions.Item>
                     <Descriptions.Item label="Classifier">{this.state.exp.props.experiment_classifier}</Descriptions.Item>

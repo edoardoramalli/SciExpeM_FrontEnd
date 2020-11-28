@@ -1,10 +1,15 @@
+// System import
 import React from "react";
-import axios from "axios";
-import GenericTable from "../GenericTable";
-import Cookies from "js-cookie";
 
-const csrftoken = Cookies.get('csrftoken');
-axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
+// Third parties import
+import axios from "axios";
+import Cookies from "js-cookie";
+import {message} from "antd";
+
+// Local import
+import GenericTable from "../GenericTable";
+
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 class RawData extends React.Component{
     constructor(props) {
@@ -21,12 +26,11 @@ class RawData extends React.Component{
             {params: {"type": this.state.type}})
             .then(res => {
                 const response = res.data;
-                const data = response.data;
-                const header = response.header
-
+                let data = response.data;
+                let header = response.header
                 this.setState({data: data, header: header})
             }).catch(error => {
-            console.log(error.response);
+                message.error(error.response.data, 3);
         })
     }
     render() {

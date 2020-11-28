@@ -1,7 +1,8 @@
 import React from "react";
 import axios from "axios";
 import {CommonPropertiesList, InitialSpeciesList, StatusTag} from "./Search";
-import {Table, Input, Button, Tag} from "antd";
+import {Table, Input, Button, Space, Progress} from "antd";
+import { Statistic, Row, Col } from 'antd';
 import {SearchOutlined} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
@@ -89,8 +90,16 @@ class ExperimentTable extends React.Component {
         axios.get(window.$API_address + 'frontend/api/experiments/')
             .then(res => {
                 const experiments = res.data;
-                const experiments_managed = res.data.filter((exp) => exp.run_type_str != null);
-                this.setState({experiments: experiments, loading: false, number_managed: experiments_managed.length});
+                const experiments_managed = res.data.filter((exp) => exp.experiment_classifier != null);
+                const experiments_valid = res.data.filter((exp) => exp.status === "valid");
+                this.setState(
+                    {
+                        experiments: experiments,
+                        loading: false,
+                        experiments_managed: experiments_managed.length,
+                        experiments_valid: experiments_valid.length
+                    }
+                );
             })
         axios.get(window.$API_address + 'frontend/api/opensmoke/species_names')
             .then(res => {
@@ -314,12 +323,26 @@ class ExperimentTable extends React.Component {
                                                       handleDelete={this.handleDelete}/>
             },];
 
+        const header =
+            <>
+                <Row>
+                    <Col span={3} offset={1}>
+                        <Statistic title="N° Experiment" value={this.state.experiments.length} />
+                    </Col>
+                    <Col span={3}>
+                        <Statistic title="N° Managed" value={this.state.experiments_managed} />
+                    </Col>
+                    <Col span={3}>
+                        <Statistic title="N° Validated" value={this.state.experiments_valid} />
+                    </Col>
+                </Row>
+            </>
+
         return (
-            <div>
-                {/*<span>*/}
-                {/*    Stored: {this.state.experiments.length} experiments - Managed: {this.state.number_managed} experiments*/}
-                {/*</span>*/}
+
+
                 <Table
+                    title={()=>header}
                     scroll={{y: '100%'}}
                     columns={columns}
                     dataSource={this.state.experiments}
@@ -333,8 +356,6 @@ class ExperimentTable extends React.Component {
                     }}
 
                 />
-
-            </div>
         )
     }
 }

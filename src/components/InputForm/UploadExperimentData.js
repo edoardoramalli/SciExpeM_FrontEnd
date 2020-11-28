@@ -1,8 +1,13 @@
 import React from "react";
 import {Button, Form, Upload, message, Modal} from "antd";
 import {UploadOutlined} from "@ant-design/icons";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const GenericTable = React.lazy(() => import('../GenericTable'));
+
+const csrftoken = Cookies.get('csrftoken');
+axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
 
 class UploadExperimentData extends React.Component{
     constructor() {
@@ -84,6 +89,7 @@ class UploadExperimentData extends React.Component{
                             name="data"
                             action={window.$API_address + this.props.api}
                             accept={this.props.ext}
+                            headers={{"X-CSRFToken": csrftoken}}
                             onChange={this.onFileDataChange}
                             onPreview={this.handleDataPreview}
                             style={{width: "35%"}}

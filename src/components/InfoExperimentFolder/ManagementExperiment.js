@@ -17,7 +17,12 @@ class ManagementExperiment extends React.Component{
             .then(res => {
                 message.success('Validation successful! Reload page to see the effects', 3);
             }).catch(error => {
-                message.error(error, 3);
+                if (error.response.status === 403){
+                    message.error("You don't have the authorization!", 3);
+                }
+                else{
+                    message.error(error.response.data, 3);
+                }
         })
     }
 
