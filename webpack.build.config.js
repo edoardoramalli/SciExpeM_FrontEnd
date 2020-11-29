@@ -3,9 +3,12 @@ const webpack = require('webpack');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const BundleTracker = require('webpack-bundle-tracker')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { merge } = require('webpack-merge');
 
-module.exports = {
+module.exports =  {
     mode: 'production',
+    devtool: '',
+    profile: true,
     entry: './src/index.js',
     output: {
         path: '/Users/edoardo/Documents/GitHub/sciexpem/FrontEnd/static/FrontEnd/', // Should be in STATICFILES_DIRS
@@ -38,17 +41,25 @@ module.exports = {
     plugins: [
         // new BundleTracker({filename: './webpack-stats.json'}),
         new LodashModuleReplacementPlugin(),
+        new CleanWebpackPlugin(),
         new webpack.optimize.LimitChunkCountPlugin({
             maxChunks: 1
         }),
     ],
     optimization: {
         splitChunks: {
-            chunks: 'all',
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: "vendor",
+                    chunks: "initial",
+                },
+            },
         },
     },
-
 };
+
+
 // const webpack = require('webpack');
 // const path = require('path');
 // const fs = require('fs');

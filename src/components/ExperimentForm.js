@@ -14,42 +14,39 @@ import CommonProperty from "./InputForm/CommonProperty";
 import UploadExperimentData from "./InputForm/UploadExperimentData";
 import HelpGuide from "./InputForm/HelpGuide";
 import Bibliography from "./InputForm/Bibliography";
+import IgnitionDefinition from "./InputForm/IgnitionDefinition";
 
 
 const csrftoken = Cookies.get('csrftoken');
 axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
 
 
+
+
 class ExperimentForm extends React.Component {
+    formRef = React.createRef();
 
     constructor() {
         super();
         this.onFinish = this.onFinish.bind(this)
     }
 
+    onFinishFailed = errorInfo => {
+        const reducer = (accumulator, currentValue) => accumulator + " " + currentValue.errors;
+        const errors = errorInfo.errorFields.reduce(reducer, "")
+        message.error("There are some errors in the form! " + errors, 3)
+
+    };
+
     onFinish = values => {
-        console.log(values)
-        axios.post(window.$API_address + 'frontend/input/submit', {
-                        params: {"values": values}
-                    })
-                        .then(res => {
-
-                            // const response = res.data;
-                            // const a = response['experiment'];
-                            // this.setState({reviewVisible: true, reviewExperiments: [a]})
-                            message.success('Experiment added successfully', 3);
-                        })
-                        .catch(error => {
-                            // message.error(error.message + " - " + error.response.message, 3)
-                            message.error(error.response.data, 3)
-
-                            // console.log("Start")
-                            // console.log(error.response.data);
-                            // console.log(error.response.status);
-                            // console.log(error.response.headers);
-                            // console.log(error.message);
-                            // console.log("Finish")
-                        })
+        axios.post(window.$API_address + 'frontend/input/submit', {params: {"values": values}})
+            .then(() => {
+                message.success('Experiment added successfully', 3);
+                this.formRef.current.resetFields();
+            })
+            .catch(error => {
+                message.error(error.response.data, 3)
+            })
     }
 
     render() {
@@ -63,8 +60,10 @@ class ExperimentForm extends React.Component {
         return (
             <Form
                 onFinish={this.onFinish}
+                onFinishFailed={this.onFinishFailed}
                 layout="vertical"
                 autoComplete="off"
+                ref={this.formRef}
             >
                 <Collapse defaultActiveKey={['1', '2', '3', '4', '5', '6', '7', '8']}>
                     <Collapse.Panel header="General" key="1">
@@ -101,7 +100,10 @@ class ExperimentForm extends React.Component {
                             <HelpGuide/>
                         </Space>
                     </Collapse.Panel>
-                    <Collapse.Panel header="OpenSMOKE input file" key="6">
+                    <Collapse.Panel header="Ignition definition" key="6">
+                        <IgnitionDefinition />
+                    </Collapse.Panel>
+                    <Collapse.Panel header="OpenSMOKE input file" key="7">
                         <UploadExperimentData
                             name={"os_input_file"}
                             type={"text"}
@@ -111,7 +113,7 @@ class ExperimentForm extends React.Component {
                         />
                     </Collapse.Panel>
 
-                    <Collapse.Panel header="Bibliography" key="7">
+                    <Collapse.Panel header="Bibliography" key="8">
                         <Bibliography/>
                     </Collapse.Panel>
 
@@ -119,7 +121,12 @@ class ExperimentForm extends React.Component {
 
                 <Form.Item {...formItemLayoutWithOutLabel}>
 
-                    <Button type="primary" htmlType="submit" style={{margin: "10px"}} size={"large"}>
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        style={{margin: "10px"}}
+                        size={"large"}
+                    >
                         Submit
                     </Button>
 

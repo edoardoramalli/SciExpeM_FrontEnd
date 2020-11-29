@@ -1,23 +1,20 @@
+// React import
 import React, {lazy} from "react";
-import {Tabs} from 'antd';
-import RawData from "./RawData";
 
+// Third partis import
+import {Tabs} from 'antd';
 const { TabPane } = Tabs;
+
+// Local import
 const InfoExperiment = lazy(() => import('./InfoExperiment'));
 const ExperimentFile = lazy(() => import('./ExperimentFile'));
 const ExperimentDraw = lazy(() => import('../ExperimentDraw'));
 const ManagementExperiment = lazy(() => import('./ManagementExperiment'));
+const RawData = lazy(() => import('./RawData'))
 
 
 
 class TabExperiment extends React.Component{
-
-    callback(key) {
-    }
-
-    componentDidMount() {
-
-    }
 
     render() {
         return(

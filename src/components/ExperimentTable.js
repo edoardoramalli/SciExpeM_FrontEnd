@@ -1,14 +1,70 @@
 import React from "react";
 import axios from "axios";
-import {CommonPropertiesList, InitialSpeciesList, StatusTag} from "./Search";
-import {Table, Input, Button, Space, Progress} from "antd";
-import { Statistic, Row, Col } from 'antd';
+// import {CommonPropertiesList, InitialSpeciesList, StatusTag} from "./Search";
+import {Table, Input, Button, Statistic, Row, Col, Tag} from "antd";
 import {SearchOutlined} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
 // Local Import
 import ActionCell from "./ActionCell";
 import TabExperiment from "./InfoExperimentFolder/TabExperiment";
+
+function CommonPropertiesList(props) {
+    const common_properties = props.common_properties;
+    const listItems = common_properties.map((common_property) =>
+        <div key={common_property.id} style={{fontSize: 12}}>
+            <span>{common_property.name}</span>: <span style={{fontFamily: 'monospace'}}>{parseFloat(common_property.value).toFixed(2)} {common_property.units}</span>
+        </div>
+    );
+    return (
+        <div>{listItems}</div>
+    );
+}
+
+function InitialSpeciesList(props) {
+    const initial_species = props.initial_species;
+    const listTags = initial_species.map((initial_specie) =>
+        <Tag key={initial_specie.id}>{initial_specie.name}</Tag>
+    );
+    return (
+        <div>{listTags}</div>
+    )
+}
+
+function StatusTag(props) {
+    const status = props.status;
+    const experiment_classifier = props.record.experiment_classifier;
+    let color_status;
+    if (status === 'new'){
+        color_status = 'red';
+    }
+    else if (status === 'valid'){
+        color_status = 'green';
+    }
+    let type;
+    let color_type;
+    if (experiment_classifier !== null){
+        type = "managed"
+        color_type = "green"
+    }
+    else {
+        type = "unmanaged"
+        color_type = "red"
+    }
+    const listTags = [
+        <Tag color={color_status} key={status}>
+            {status.toUpperCase()}
+        </Tag>,
+        <Tag color={color_type} key={type}>
+            {type.toUpperCase()}
+        </Tag>]
+
+    return (
+        <>
+            {listTags}
+        </>
+    )
+}
 
 
 class ExperimentTable extends React.Component {

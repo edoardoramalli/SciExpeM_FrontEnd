@@ -22,6 +22,7 @@ import {
 } from 'antd';
 import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
 import Plot from 'react-plotly.js';
+// import Plot from 'plotly.js-dist-min';
 
 import {DownOutlined} from "@ant-design/icons";
 

@@ -82,7 +82,7 @@ class UploadExperimentData extends React.Component{
                     name={this.props.name}
                     valuePropName="fileList"
                     getValueFromEvent={this.normFile}
-                    rules={[{required: this.props.required, message: 'Please upload File'}]}
+                    rules={[{required: this.props.required, message: 'Please upload File.'}]}
                 >
                     <Upload
                             multiple={false}

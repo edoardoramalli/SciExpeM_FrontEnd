@@ -66,7 +66,7 @@ class CommonProperty extends React.Component{
                                     {...field}
                                     name={[field.name, 'name']}
                                     fieldKey={[field.fieldKey, 'name']}
-                                    rules={[{ required: true, message: 'Missing property name' }]}
+                                    rules={[{ required: true, message: 'Missing property name.' }]}
                                 >
                                     <Select
                                         placeholder={"Select a property"}
@@ -80,7 +80,7 @@ class CommonProperty extends React.Component{
                                     {...field}
                                     name={[field.name, 'value']}
                                     fieldKey={[field.fieldKey, 'value']}
-                                    rules={[{ required: true, message: 'Missing property value' }]}
+                                    rules={[{ required: true, message: 'Missing property value.' }]}
                                 >
                                     <InputNumber
                                         min={0}
@@ -92,7 +92,7 @@ class CommonProperty extends React.Component{
                                     {...field}
                                     name={[field.name, 'units']}
                                     fieldKey={[field.fieldKey, 'units']}
-                                    rules={[{ required: true, message: 'Missing unit' }]}
+                                    rules={[{ required: true, message: 'Missing property unit.' }]}
                                 >
                                     <Select
                                         placeholder={"Select unit"}

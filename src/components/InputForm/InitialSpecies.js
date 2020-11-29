@@ -1,6 +1,6 @@
 import React from "react";
 
-import {Space, Form, Input, Button, Select, InputNumber} from "antd";
+import {Space, Form, Button, Select, InputNumber} from "antd";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import axios from "axios";
 
@@ -42,7 +42,7 @@ class InitialSpecies extends React.Component{
                                     {...field}
                                     name={[field.name, 'name']}
                                     fieldKey={[field.fieldKey, 'name']}
-                                    rules={[{ required: true, message: 'Missing specie name' }]}
+                                    rules={[{ required: true, message: 'Missing species name.' }]}
                                 >
                                     <Select
                                         showSearch
@@ -57,7 +57,7 @@ class InitialSpecies extends React.Component{
                                     {...field}
                                     name={[field.name, 'value']}
                                     fieldKey={[field.fieldKey, 'value']}
-                                    rules={[{ required: true, message: 'Missing specie value' }]}
+                                    rules={[{ required: true, message: 'Missing species value.' }]}
                                 >
                                     <InputNumber
                                         min={0} max={1} step={0.001}
@@ -69,7 +69,7 @@ class InitialSpecies extends React.Component{
                                     {...field}
                                     name={[field.name, 'units']}
                                     fieldKey={[field.fieldKey, 'units']}
-                                    rules={[{ required: true, message: 'Missing unit' }]}
+                                    rules={[{ required: true, message: 'Missing species unit.' }]}
                                 >
                                     <Select value="mole fraction"  style={{width: 150}} placeholder={"Select unit"}>
                                         <Select.Option value={"mole fraction"}>mole fraction</Select.Option>

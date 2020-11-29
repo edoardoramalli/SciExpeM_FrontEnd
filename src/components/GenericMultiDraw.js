@@ -1,20 +1,12 @@
-import React from 'react';
-import {
-    Select,
-    Tabs,
+import React from "react";
 
-} from 'antd';
-import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
-import Plot from 'react-plotly.js';
+import Plotly from "plotly.js-cartesian-dist";
+import createPlotlyComponent from "react-plotly.js/factory";
+import {Select, Tabs} from "antd";
 
-import './index.css';
+const Plot = createPlotlyComponent(Plotly);
 
-import 'react-datasheet/lib/react-datasheet.css';
-
-const TabPane = Tabs.TabPane;
-
-
-class GenericMultiDraw extends React.Component {
+class GenericMultiDraw extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -79,7 +71,7 @@ class GenericMultiDraw extends React.Component {
 
 
         const component_groups = plots.map((plot, index) =>
-            <TabPane  key={sub_groups_titles[index].join(",")} tab={sub_groups_titles[index].join(" - ")}>{plot}</TabPane>
+            <Tabs.TabPane  key={sub_groups_titles[index].join(",")} tab={sub_groups_titles[index].join(" - ")}>{plot}</Tabs.TabPane>
         );
 
         return (
@@ -90,7 +82,6 @@ class GenericMultiDraw extends React.Component {
             </div>
         );
     }
-
 }
 
-export {GenericMultiDraw}
+export default GenericMultiDraw;

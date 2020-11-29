@@ -2,7 +2,8 @@ import React from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import XMLViewer from 'react-xml-viewer'
-import {Collapse, message, Form, Button} from "antd";
+import {message, Form, Button} from "antd";
+
 import UploadExperimentData from "../InputForm/UploadExperimentData";
 
 const csrftoken = Cookies.get('csrftoken');
