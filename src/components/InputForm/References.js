@@ -1,7 +1,7 @@
 import React from "react";
 import {Form, Input} from "antd";
 
-class Bibliography extends React.Component{
+class References extends React.Component{
     render() {
         return(
             <>
@@ -21,9 +21,9 @@ class Bibliography extends React.Component{
                     <Input placeholder={"Insert paper DOI"} style={{width: "35%"}}/>
                 </Form.Item>
                 <Form.Item
-                    label="Experiment Reference"
+                    label="Experiment DOI"
                     name="experiment_reference"
-                    rules={[{required: true, message: 'Please insert experiment reference.'}]}>
+                    rules={[{required: true, message: 'Please insert experiment DOI.'}]}>
                     <Input placeholder={"Insert experiment reference"} style={{width: "35%"}}/>
                 </Form.Item>
             </>
@@ -31,4 +31,4 @@ class Bibliography extends React.Component{
     }
 }
 
-export default Bibliography;
+export default References;

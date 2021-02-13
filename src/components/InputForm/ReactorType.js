@@ -1,27 +1,13 @@
 import React from "react";
 import {Form, Select} from "antd";
-import axios from "axios";
 
 class ExperimentType extends React.Component{
-    constructor() {
-        super();
-        this.state = {
-            options: null
-        }
+    constructor(props) {
+        super(props);
     }
-    componentDidMount() {
-        axios.get(window.$API_address + 'frontend/api/get_reactor_type_list')
-            .then(res => {
-                const reactor_type_list = res.data.reactor_type_list;
-                let options = reactor_type_list.map((item) => {
-                    return(
-                        <Select.Option value={item} style={{"textTransform": "capitalize"}}>{item}</Select.Option>
-                    )
-                });
-                this.setState({options: options})
-            }).catch(error => {
-            console.log(error.response);
-        })
+
+    onChange = e => {
+        this.props.handleReactorType(e)
     }
 
     render() {
@@ -32,11 +18,14 @@ class ExperimentType extends React.Component{
                 rules={[{required: true, message: 'Please insert reactor type.'}]}
             >
                 <Select
-                    placeholder="Select an reactor type"
+                    placeholder="Select a reactor type"
                     allowClear={true}
                     style={{width: "35%"}}
+                    disabled={this.props.reactor_inactive}
+                    value={this.props.reactor_value} // se cambio tipo di esperimento non torna il placeholder ma cambia lo stesso il valore
+                    onChange={this.onChange}
                 >
-                    {this.state.options}
+                    {this.props.reactor_list}
                 </Select>
             </Form.Item>
         )

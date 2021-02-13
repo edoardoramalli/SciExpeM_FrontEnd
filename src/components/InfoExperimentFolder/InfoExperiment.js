@@ -80,6 +80,17 @@ class InfoExperiment extends React.Component{
 
                 <br />
 
+                <Descriptions title={"Characteristics"} bordered column={3}>
+                    <Descriptions.Item label="Experiment Type">{this.state.exp.props.experiment_type}</Descriptions.Item>
+                    <Descriptions.Item label="Reactor">{this.state.exp.props.reactor}</Descriptions.Item>
+                    <Descriptions.Item label="Fuels">{this.state.exp.props.fuels ? this.state.exp.props.fuels.toString() : null}</Descriptions.Item>
+                    <Descriptions.Item label="Equivalent Ratio">[{this.state.exp.props.phi_inf} - {this.state.exp.props.phi_sup}]</Descriptions.Item>
+                    <Descriptions.Item label="Temperature Profile [K]">[{this.state.exp.props.t_inf} - {this.state.exp.props.t_sup}]</Descriptions.Item>
+                    <Descriptions.Item label="Pressure Profile [Bar]">[{this.state.exp.props.p_inf} - {this.state.exp.props.p_sup}]</Descriptions.Item>
+                </Descriptions>
+
+                <br />
+
                 <Descriptions title={"Common Properties"} bordered column={4}>
                     {this.renderCommonProperties()}
                 </Descriptions>

@@ -35,21 +35,24 @@ function StatusTag(props) {
     const status = props.status;
     const experiment_classifier = props.record.experiment_classifier;
     let color_status;
-    if (status === 'new'){
-        color_status = 'red';
+    if (status === 'unverified'){
+        color_status = 'orange';
     }
-    else if (status === 'valid'){
+    else if (status === 'verified'){
         color_status = 'green';
+    }
+    else if (status === 'invalid'){
+        color_status = 'red';
     }
     let type;
     let color_type;
     if (experiment_classifier !== null){
         type = "managed"
-        color_type = "green"
+        color_type = "blue"
     }
     else {
         type = "unmanaged"
-        color_type = "red"
+        color_type = "purple"
     }
     const listTags = [
         <Tag color={color_status} key={status}>
@@ -227,12 +230,16 @@ class ExperimentTable extends React.Component {
 
         const filter_status = [
             {
-                text: 'NEW',
-                value: 'new'
+                text: 'INVALID',
+                value: 'invalid'
             },
             {
-                text: 'VALID',
-                value: 'valid'
+                text: 'UNVERIFIED',
+                value: 'unverified'
+            },
+            {
+                text: 'VERIFIED',
+                value: 'verified'
             },
             {
                 text: 'MANAGED',

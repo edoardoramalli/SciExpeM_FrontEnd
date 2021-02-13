@@ -21,11 +21,14 @@
     "chart.js": "^2.7.3",
     "chunks-webpack-plugin": "^7.0.0",
     "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^5.0.1",
     "html-webpack-plugin": "^4.5.0",
     "http-server": "^0.12.3",
     "js-cookie": "^2.2.0",
     "less": "^3.12.2",
     "less-loader": "^7.1.0",
+    "less-vars-to-js": "^1.3.0",
+    "lodash-webpack-plugin": "^0.11.5",
     "match-sorter": "^2.3.0",
     "mini-css-extract-plugin": "^1.3.1",
     "path": "^0.12.7",
@@ -42,9 +45,9 @@
     "react-plotly.js": "^2.5.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
-    "react-scripts-less-support": "^3.4.0",
     "react-table": "^6.8.6",
     "react-xml-viewer": "^1.1.0",
+    "style-loader": "^2.0.0",
     "webpack": "^4.29.3",
     "webpack-bundle-analyzer": "^4.1.0",
     "webpack-bundle-tracker": "^1.0.0-alpha.1",
@@ -57,30 +60,7 @@
     "start": "webpack-dev-server --mode development ./src/index.js --output ./static/dev/main.js",
     "dev": "webpack --mode development ./src/index.js --output ./static/dev/main.js",
     "build": "webpack --progress --config ./webpack.build.config.js",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "test": "node scripts/test.js",
     "build:stats": "webpack --progress --config ./webpack.build.config.js --json > stats.json"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "dependencies": {
-    "lodash-webpack-plugin": "^0.11.5",
-    "source-map-explorer": "^2.5.1"
   }
 }

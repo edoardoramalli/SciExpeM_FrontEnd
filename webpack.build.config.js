@@ -19,9 +19,14 @@ module.exports =  {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader"
-                }
+
+                loader: "babel-loader",
+
+                // options: {
+                //     plugins: [
+                //         ['import', { libraryName: "antd", style: "css" }]
+                //     ]
+                // },
             },
             {
                 test: /\.css$/,
@@ -29,11 +34,19 @@ module.exports =  {
             },
             {
                 test: /\.less$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'less-loader'
-                ],
+                use: [{
+                    loader: "style-loader"
+                }, {
+                    loader: "css-loader"
+                }, {
+                    loader: "less-loader",
+                    options: {
+                        lessOptions: {
+                            javascriptEnabled: true
+                        }
+
+                    }
+                }]
             },
 
         ]
@@ -46,17 +59,7 @@ module.exports =  {
             maxChunks: 1
         }),
     ],
-    optimization: {
-        splitChunks: {
-            cacheGroups: {
-                commons: {
-                    test: /[\\/]node_modules[\\/]/,
-                    name: "vendor",
-                    chunks: "initial",
-                },
-            },
-        },
-    },
+
 };
 
 

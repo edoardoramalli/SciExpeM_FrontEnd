@@ -56,7 +56,6 @@ class UploadExperimentData extends React.Component{
     };
 
     handleDataPreview = (file) => {
-        console.log(file)
         this.setState({dataPreviewVisible: true, dataFilePreview: file, previewType: this.props.type})
         this.setState({
             previewImage: file.url || file.thumbUrl,

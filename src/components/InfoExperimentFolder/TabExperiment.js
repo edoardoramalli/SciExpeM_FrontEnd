@@ -38,7 +38,7 @@ class TabExperiment extends React.Component{
                     <ExperimentFile exp_id={this.props.experiment.id} type={"ReSpecTh"}/>
                 </TabPane>
                 <TabPane tab="Management" key="7">
-                    <ManagementExperiment exp_id={this.props.experiment.id}/>
+                    <ManagementExperiment props={this.props.experiment}/>
                 </TabPane>
             </Tabs>
         )

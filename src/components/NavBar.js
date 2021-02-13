@@ -36,7 +36,8 @@ class NavBar extends React.Component{
                 onClick={this.handleMenuClick}
                 style={{lineHeight: '64px'}}
             >
-                <Menu.Item key="main" disabled><b>SciExpeM</b></Menu.Item>
+                <Menu.Item key="experiments"><DatabaseOutlined />Experimental Database</Menu.Item>
+                {/*<Menu.Item key="main" disabled><b>SciExpeM</b></Menu.Item>*/}
                 <Menu.SubMenu
                     title={
                         <span className="submenu-title-wrapper">
@@ -45,14 +46,14 @@ class NavBar extends React.Component{
                         </span>
                     }>
 
-                    <Menu.Item key="input" disabled>Insert using input file</Menu.Item>
+                    <Menu.Item key="input" >Insert ReSpecTh File</Menu.Item>
 
                     <Menu.Item key="input-form">Insert Experiment</Menu.Item>
                 </Menu.SubMenu>
 
-                <Menu.Item key="experiments"><DatabaseOutlined />Experimental Database</Menu.Item>
-                <Menu.Item key="searchandexecute" disabled><LineChartOutlined />Search & Execute</Menu.Item>
-                <Menu.Item key="about" disabled><InfoCircleOutlined />About</Menu.Item>
+
+                {/*<Menu.Item key="searchandexecute" disabled><LineChartOutlined />Search & Execute</Menu.Item>*/}
+                {/*<Menu.Item key="about" disabled><InfoCircleOutlined />About</Menu.Item>*/}
                 <Menu.Item key="logout" style={{"float": "right"}}>
                     <UploadOutlined />
                     Log Out - {this.state.username}

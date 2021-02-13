@@ -2,7 +2,7 @@
 import React from "react";
 
 // Third-parties import
-import {Form, Button, Collapse, Space, message} from "antd"
+import {Form, Button, Collapse, Space, message, Select} from "antd"
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -13,8 +13,9 @@ import InitialSpecies from "./InputForm/InitialSpecies";
 import CommonProperty from "./InputForm/CommonProperty";
 import UploadExperimentData from "./InputForm/UploadExperimentData";
 import HelpGuide from "./InputForm/HelpGuide";
-import Bibliography from "./InputForm/Bibliography";
+import References from "./InputForm/References";
 import IgnitionDefinition from "./InputForm/IgnitionDefinition";
+import Characteristics from "./InputForm/Characteristics";
 
 
 const csrftoken = Cookies.get('csrftoken');
@@ -29,7 +30,18 @@ class ExperimentForm extends React.Component {
     constructor() {
         super();
         this.onFinish = this.onFinish.bind(this)
+        this.state ={
+            reactor_inactive: true,
+            idt: false,
+            rcm: false,
+            base_active: ['1', '2', '3', '4', '7', '8', '9'],
+            active_key: ['1', '2', '3', '4', '7', '8', '9'],
+            reactor_value: null
+        }
+        this.handleExperimentType = this.handleExperimentType.bind(this);
+        this.handleReactorType = this.handleReactorType.bind(this);
     }
+
 
     onFinishFailed = errorInfo => {
         const reducer = (accumulator, currentValue) => accumulator + " " + currentValue.errors;
@@ -49,6 +61,74 @@ class ExperimentForm extends React.Component {
             })
     }
 
+    handleKey = () => {
+        this.setState({
+            active_key: this.state.base_active
+        })
+        if (this.state.idt){
+            this.setState({
+                active_key: this.state.base_active.concat(['6'])
+            })
+        }
+        if (this.state.idt && this.state.rcm){
+            this.setState({
+                active_key: this.state.base_active.concat(['5', '6'])
+            })
+        }
+
+
+    }
+
+    handleReactorType = (reactorType) => {
+        this.setState({
+            reactor_value: reactorType,
+            rcm: reactorType === 'rapid compression machine'
+        },() => {
+            this.handleKey()
+        });
+    }
+
+    handleExperimentType = (experimentType) => {
+        this.setState(
+            {
+                idt: false,
+                rcm: false,
+                reactor_value: undefined
+            }
+        )
+
+        axios.post(window.$API_address + 'ReSpecTh/API/getReactors', {'experiment_type': [experimentType]})
+            .then((res) => {
+                const reactor_type_list = res.data;
+                let options = reactor_type_list.map((item) => {
+                    return(
+                        <Select.Option value={item} style={{"textTransform": "capitalize"}}>{item}</Select.Option>
+                    )
+                });
+                this.setState({
+                    reactor_inactive: false,
+                    reactor_list: options
+                })
+                if (experimentType === 'ignition delay measurement'){
+                    this.setState({idt: true}, () =>{this.handleKey()})
+                }
+                this.handleKey()
+
+            })
+            .catch(error => {
+                if (error.response.status === 403){
+                    message.error("You don't have the authorization!", 3);
+                }
+                else if (error.response.status === 400){
+                    message.error("Bad Request. " + error.response.data, 3);
+                }
+                else{
+                    message.error(error.response.data, 3);
+                }
+            })
+
+    }
+
     render() {
 
         const formItemLayoutWithOutLabel = {
@@ -56,6 +136,13 @@ class ExperimentForm extends React.Component {
                 sm: {span: 20, offset: 0},
             },
         };
+
+        let props_reactor = {
+            'reactor_inactive': this.state.reactor_inactive,
+            'reactor_list': this.state.reactor_list,
+            'reactor_value': this.state.reactor_value,
+            'handleReactorType': this.handleReactorType
+        }
 
         return (
             <Form
@@ -65,10 +152,10 @@ class ExperimentForm extends React.Component {
                 autoComplete="off"
                 ref={this.formRef}
             >
-                <Collapse defaultActiveKey={['1', '2', '3', '4', '5', '6', '7', '8']}>
+                <Collapse activeKey={this.state.active_key}>
                     <Collapse.Panel header="General" key="1">
-                        <ExperimentType/>
-                        <ReactorType/>
+                        <ExperimentType handleExperimentType={this.handleExperimentType}/>
+                        <ReactorType {...props_reactor}/>
                     </Collapse.Panel>
                     <Collapse.Panel header="Common Properties" key="2">
                         <CommonProperty/>
@@ -88,20 +175,22 @@ class ExperimentForm extends React.Component {
                             <HelpGuide/>
                         </Space>
                     </Collapse.Panel>
-                    <Collapse.Panel header="Volume-time profile" key="5">
+                    <Collapse.Panel header="Volume-time profile (Only for 'Rapid Compression Machine')" key="5"
+                                    disabled={!this.state.rcm} accordion>
                         <Space style={{display: 'flex'}} align="baseline">
                             <UploadExperimentData
                                 name={"volume_time_data"}
                                 type={"data"}
                                 api={'frontend/input/data_excel'}
                                 ext={".xlsx"}
-                                required={false}
+                                required={this.state.rcm}
                             />
                             <HelpGuide/>
                         </Space>
                     </Collapse.Panel>
-                    <Collapse.Panel header="Ignition definition" key="6">
-                        <IgnitionDefinition />
+                    <Collapse.Panel header="Ignition definition (Only for 'Ignition Delay Measurement') " key="6"
+                                    disabled={!this.state.idt}>
+                        <IgnitionDefinition required={this.state.idt}/>
                     </Collapse.Panel>
                     <Collapse.Panel header="OpenSMOKE input file" key="7">
                         <UploadExperimentData
@@ -112,9 +201,12 @@ class ExperimentForm extends React.Component {
                             required={false}
                         />
                     </Collapse.Panel>
+                    <Collapse.Panel header="Characteristics" key="8">
+                        <Characteristics />
+                    </Collapse.Panel>
 
-                    <Collapse.Panel header="Bibliography" key="8">
-                        <Bibliography/>
+                    <Collapse.Panel header="References" key="9">
+                        <References/>
                     </Collapse.Panel>
 
                 </Collapse>

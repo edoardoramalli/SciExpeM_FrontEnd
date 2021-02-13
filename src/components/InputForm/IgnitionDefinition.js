@@ -3,12 +3,16 @@ import {Select, Form, Space} from "antd";
 
 
 class IgnitionDefinition extends React.Component{
+    constructor(props) {
+        super(props);
+    }
     render() {
         return(
             <Space align="baseline">
                 <Form.Item
                     label={"Ignition definition measured quantity"}
                     name="ignition_definition_measured_quantity"
+                    rules={[{required: this.props.required, message: 'Please insert ignition definition measured quantity.'}]}
                 >
                     <Select
                         placeholder="Select an ignition measured quantity"
@@ -25,6 +29,7 @@ class IgnitionDefinition extends React.Component{
                 <Form.Item
                     label={"Ignition definition type"}
                     name="ignition_definition_type"
+                    rules={[{required: this.props.required, message: 'Please insert ignition definition type.'}]}
                 >
                     <Select
                         placeholder="Select an ignition type"
@@ -38,8 +43,6 @@ class IgnitionDefinition extends React.Component{
                         <Select.Option value="concentration">concentration</Select.Option>
                         <Select.Option value="relative concentration">relative concentration</Select.Option>
                     </Select>
-
-
 
 
             </Form.Item>

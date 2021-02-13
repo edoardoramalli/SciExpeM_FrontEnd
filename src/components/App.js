@@ -16,7 +16,7 @@ const ExperimentTable = lazy(() => import('./ExperimentTable'));
 
 const InsertExperimentForm = lazy(() => import('./ExperimentForm'));
 
-// const WrappedCommonPropertiesForm = lazy(() => import('./InputExperimentForm'));
+const InsertExperimentFile = lazy(() => import('./InsertExperimentFile'));
 const {Header, Content, Footer} = Layout;
 
 
@@ -27,7 +27,7 @@ class App extends React.Component {
         super(props);
         this.updateStateApp = this.updateStateApp.bind(this)
         this.state = {
-            current: 'experiments'
+            current: 'input-form'
         }
     }
 
@@ -44,9 +44,9 @@ class App extends React.Component {
         const currentMapping = {
             "experiments": <ExperimentTable/>,
             // "searchandexecute": <SearchAndExecute/>,
-            // "input": <WrappedDataForm/>,
+            "input": <InsertExperimentFile/>,
             "input-form": <InsertExperimentForm/>,
-            "about": <div>Ciaooo</div>
+            // "about": <div>Ciaooo</div>
         }
 
         return (

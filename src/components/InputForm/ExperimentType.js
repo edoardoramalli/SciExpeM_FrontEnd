@@ -3,11 +3,12 @@ import {Form, Select} from "antd";
 import axios from "axios";
 
 class ExperimentType extends React.Component{
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             options: null
         }
+
     }
     componentDidMount() {
         axios.get(window.$API_address + 'frontend/api/get_experiment_type_list')
@@ -24,6 +25,10 @@ class ExperimentType extends React.Component{
         })
     }
 
+    onChange = e => {
+        this.props.handleExperimentType(e)
+    }
+
     render() {
         return(
             <Form.Item
@@ -35,6 +40,7 @@ class ExperimentType extends React.Component{
                     placeholder="Select an experiment type"
                     allowClear={true}
                     style={{width: "35%"}}
+                    onChange={this.onChange}
                 >
                     {this.state.options}
                 </Select>
