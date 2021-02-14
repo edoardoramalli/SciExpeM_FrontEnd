@@ -70,7 +70,7 @@ class CommonProperty extends React.Component{
                                 >
                                     <Select
                                         placeholder={"Select a property"}
-                                        style={{width: 150}}
+                                        style={{width: 200}}
                                         onChange={this.onPropertyChange}
                                     >
                                         {this.state.properties}

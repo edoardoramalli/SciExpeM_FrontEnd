@@ -14,7 +14,7 @@ class ExperimentType extends React.Component{
         return(
             <Form.Item
                 label="Reactor Type"
-                name="reactor_type"
+                name="reactor"
                 rules={[{required: true, message: 'Please insert reactor type.'}]}
             >
                 <Select

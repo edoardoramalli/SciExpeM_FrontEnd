@@ -71,7 +71,7 @@ class InfoExperiment extends React.Component{
                     <Descriptions.Item label="Author" >{this.state.author}</Descriptions.Item>
                     <Descriptions.Item label="Creation Date" >{this.state.date}</Descriptions.Item>
                     <Descriptions.Item label="Status" >{this.state.exp.props.status}</Descriptions.Item>
-                    <Descriptions.Item label="Classifier">{this.state.exp.props.experiment_classifier}</Descriptions.Item>
+                    <Descriptions.Item label="Interpreter">{this.state.exp.props.experiment_classifier}</Descriptions.Item>
                     <Descriptions.Item label="Experiment ID" >{this.state.exp.props.id}</Descriptions.Item>
                     <Descriptions.Item label="Experiment Type">{this.state.exp.props.experiment_type}</Descriptions.Item>
                     <Descriptions.Item label="Reactor">{this.state.exp.props.reactor}</Descriptions.Item>
@@ -110,7 +110,7 @@ class InfoExperiment extends React.Component{
                     <Descriptions.Item label="Paper DOI" >
                         {<HyperLink link={this.state.exp.props.file_paper.reference_doi}/>}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Reference ID" >{this.state.exp.props.file_paper.id}</Descriptions.Item>
+                    <Descriptions.Item label="ID" >{this.state.exp.props.file_paper.id}</Descriptions.Item>
                 </Descriptions>
             </div>
 

@@ -16,12 +16,12 @@ import HelpGuide from "./InputForm/HelpGuide";
 import References from "./InputForm/References";
 import IgnitionDefinition from "./InputForm/IgnitionDefinition";
 import Characteristics from "./InputForm/Characteristics";
+import LoadOpenSmokeFile from "./InputForm/LoadOpenSmokeFile"
+import LoadDataColumn from "./InputForm/LoadDataColumn"
 
 
 const csrftoken = Cookies.get('csrftoken');
 axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
-
-
 
 
 class ExperimentForm extends React.Component {
@@ -30,28 +30,79 @@ class ExperimentForm extends React.Component {
     constructor() {
         super();
         this.onFinish = this.onFinish.bind(this)
-        this.state ={
+        this.state = {
             reactor_inactive: true,
             idt: false,
             rcm: false,
             base_active: ['1', '2', '3', '4', '7', '8', '9'],
             active_key: ['1', '2', '3', '4', '7', '8', '9'],
-            reactor_value: null
+            reactor_value: null,
+            experiment: null
         }
         this.handleExperimentType = this.handleExperimentType.bind(this);
         this.handleReactorType = this.handleReactorType.bind(this);
     }
 
+    handleValueForm = values => {
+        let ignition_type;
+        if (values.ignition_definition_measured_quantity && values.ignition_definition_type) {
+            ignition_type = values.ignition_definition_measured_quantity + '-' + values.ignition_definition_type
+        } else {
+            ignition_type = undefined
+        }
+        let data_columns;
+        if (!values.volume_time) {
+            data_columns = values.experimental_data
+        } else {
+            data_columns = values.experimental_data.concat(values.volume_time)
+        }
+        let experiment = {
+            // Model Mandatory
+            experiment_type: values.experiment_type,
+            reactor: values.reactor,
+            fileDOI: values.fileDOI,
+            // Model Optional
+            comment: values.comment,
+            ignition_type: ignition_type,
+            fuels: values.fuels,
 
-    onFinishFailed = errorInfo => {
+            p_sup: values.p_profile.p_sup,
+            p_inf: values.p_profile.p_inf,
+            t_sup: values.t_profile.t_sup,
+            t_inf: values.t_profile.t_inf,
+            phi_sup: values.phi_profile.phi_sup,
+            phi_inf: values.phi_profile.phi_inf,
+
+            os_input_file: values.os_input_file,
+            volume_time_profile: {},
+            // Foreign Key
+            data_columns: data_columns,
+            common_properties: values.common_properties,
+            initial_species: values.initial_species,
+            file_paper: {references: values.references, reference_doi: values.reference_doi},
+
+        }
+        this.setState({experiment: experiment})
+    }
+
+
+    onFinishFailed = ({values, errorFields}) => {
+        this.handleValueForm(values)
         const reducer = (accumulator, currentValue) => accumulator + " " + currentValue.errors;
-        const errors = errorInfo.errorFields.reduce(reducer, "")
-        message.error("There are some errors in the form! " + errors, 3)
+        const errors = errorFields.reduce(reducer, "")
+        message.error("There are some errors in the form! " + errors, 5)
 
     };
 
     onFinish = values => {
-        axios.post(window.$API_address + 'frontend/input/submit', {params: {"values": values}})
+        this.handleValueForm(values)
+
+        const params = {
+            'model_name': ['Experiment'],
+            'property': [JSON.stringify(this.state.experiment)]
+        }
+
+        axios.post(window.$API_address + 'ExperimentManager/API/insertElement', params)
             .then(() => {
                 message.success('Experiment added successfully', 3);
                 this.formRef.current.resetFields();
@@ -65,12 +116,12 @@ class ExperimentForm extends React.Component {
         this.setState({
             active_key: this.state.base_active
         })
-        if (this.state.idt){
+        if (this.state.idt) {
             this.setState({
                 active_key: this.state.base_active.concat(['6'])
             })
         }
-        if (this.state.idt && this.state.rcm){
+        if (this.state.idt && this.state.rcm) {
             this.setState({
                 active_key: this.state.base_active.concat(['5', '6'])
             })
@@ -79,11 +130,23 @@ class ExperimentForm extends React.Component {
 
     }
 
+    handleDataColumn = text_file => {
+        this.formRef.current.setFieldsValue({experimental_data: text_file})
+    }
+
+    handleVolumeTime = text_file => {
+        this.formRef.current.setFieldsValue({volume_time: text_file})
+    }
+
+    handleOSinputFile = (text_file) => {
+        this.formRef.current.setFieldsValue({os_input_file: text_file})
+    }
+
     handleReactorType = (reactorType) => {
         this.setState({
             reactor_value: reactorType,
             rcm: reactorType === 'rapid compression machine'
-        },() => {
+        }, () => {
             this.handleKey()
         });
     }
@@ -101,7 +164,7 @@ class ExperimentForm extends React.Component {
             .then((res) => {
                 const reactor_type_list = res.data;
                 let options = reactor_type_list.map((item) => {
-                    return(
+                    return (
                         <Select.Option value={item} style={{"textTransform": "capitalize"}}>{item}</Select.Option>
                     )
                 });
@@ -109,20 +172,20 @@ class ExperimentForm extends React.Component {
                     reactor_inactive: false,
                     reactor_list: options
                 })
-                if (experimentType === 'ignition delay measurement'){
-                    this.setState({idt: true}, () =>{this.handleKey()})
+                if (experimentType === 'ignition delay measurement') {
+                    this.setState({idt: true}, () => {
+                        this.handleKey()
+                    })
                 }
                 this.handleKey()
 
             })
             .catch(error => {
-                if (error.response.status === 403){
+                if (error.response.status === 403) {
                     message.error("You don't have the authorization!", 3);
-                }
-                else if (error.response.status === 400){
+                } else if (error.response.status === 400) {
                     message.error("Bad Request. " + error.response.data, 3);
-                }
-                else{
+                } else {
                     message.error(error.response.data, 3);
                 }
             })
@@ -165,12 +228,11 @@ class ExperimentForm extends React.Component {
                     </Collapse.Panel>
                     <Collapse.Panel header="Varied experimental conditions and measured results" key="4">
                         <Space style={{display: 'flex'}} align="baseline">
-                            <UploadExperimentData
-                                name={"experimental_data"}
-                                type={"data"}
-                                api={'frontend/input/data_excel'}
-                                ext={".xlsx"}
+                            <LoadDataColumn
+                                name={'experimental_data'}
+                                dataGroup={'dg1'}
                                 required={true}
+                                handleDataColumn={this.handleDataColumn}
                             />
                             <HelpGuide/>
                         </Space>
@@ -178,31 +240,28 @@ class ExperimentForm extends React.Component {
                     <Collapse.Panel header="Volume-time profile (Only for 'Rapid Compression Machine')" key="5"
                                     disabled={!this.state.rcm} accordion>
                         <Space style={{display: 'flex'}} align="baseline">
-                            <UploadExperimentData
-                                name={"volume_time_data"}
-                                type={"data"}
-                                api={'frontend/input/data_excel'}
-                                ext={".xlsx"}
-                                required={this.state.rcm}
+                            <LoadDataColumn
+                                name={'volume_time'}
+                                dataGroup={'dg2'}
+                                required={true}
+                                handleDataColumn={this.handleVolumeTime}
                             />
                             <HelpGuide/>
+                            {/*// todo helph guide deve essere diversa*/}
                         </Space>
                     </Collapse.Panel>
                     <Collapse.Panel header="Ignition definition (Only for 'Ignition Delay Measurement') " key="6"
                                     disabled={!this.state.idt}>
                         <IgnitionDefinition required={this.state.idt}/>
                     </Collapse.Panel>
-                    <Collapse.Panel header="OpenSMOKE input file" key="7">
-                        <UploadExperimentData
-                            name={"os_input_file"}
-                            type={"text"}
-                            api={'frontend/input/os_input_file'}
-                            ext={".dic"}
-                            required={false}
+                    <Collapse.Panel header="OpenSMOKE++ input file" key="7">
+                        <LoadOpenSmokeFile
+                            required={true}
+                            handleOSinputFile={this.handleOSinputFile}
                         />
                     </Collapse.Panel>
                     <Collapse.Panel header="Characteristics" key="8">
-                        <Characteristics />
+                        <Characteristics/>
                     </Collapse.Panel>
 
                     <Collapse.Panel header="References" key="9">

@@ -46,7 +46,7 @@ function StatusTag(props) {
     }
     let type;
     let color_type;
-    if (experiment_classifier !== null){
+    if (experiment_classifier){
         type = "managed"
         color_type = "blue"
     }
@@ -150,7 +150,7 @@ class ExperimentTable extends React.Component {
             .then(res => {
                 const experiments = res.data;
                 const experiments_managed = res.data.filter((exp) => exp.experiment_classifier != null);
-                const experiments_valid = res.data.filter((exp) => exp.status === "valid");
+                const experiments_valid = res.data.filter((exp) => exp.status === "verified");
                 this.setState(
                     {
                         experiments: experiments,
@@ -359,7 +359,7 @@ class ExperimentTable extends React.Component {
                 width: '10%',
                 filters: filter_status,
                 onFilter: (value, record) => {
-                    if (record.status.includes(value)){
+                    if (record.status === value){
                         return true
                     }
                     let exp_type;
@@ -369,7 +369,7 @@ class ExperimentTable extends React.Component {
                     else{
                         exp_type = "managed"
                     }
-                    if (value.includes(exp_type)){
+                    if (value === exp_type){
                         return true
                     }
                     return false

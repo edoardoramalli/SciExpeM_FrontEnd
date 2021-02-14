@@ -6,25 +6,36 @@ class References extends React.Component{
         return(
             <>
                 <Form.Item
-                    label="Bibliography"
-                    name="bibliography"
-                    rules={[{required: true, message: 'Please insert bibliography.'}]}
+                    label="References"
+                    name="references"
+                    rules={[{required: true, message: 'Please insert references.'}]}
                 >
-                    <Input.TextArea placeholder={"Insert paper title, authors, publisher etc."} rows={4} style={{width: "35%"}}/>
+                    <Input.TextArea placeholder={"Insert paper title, authors, publisher etc."} rows={5} style={{width: "35%"}}/>
                 </Form.Item
                 >
                 <Form.Item
                     label="Paper DOI"
-                    name="paper_doi"
+                    name="reference_doi"
                     rules={[{required: true, message: 'Please insert paper DOI.'}]}
                 >
                     <Input placeholder={"Insert paper DOI"} style={{width: "35%"}}/>
                 </Form.Item>
                 <Form.Item
                     label="Experiment DOI"
-                    name="experiment_reference"
+                    name="fileDOI"
                     rules={[{required: true, message: 'Please insert experiment DOI.'}]}>
                     <Input placeholder={"Insert experiment reference"} style={{width: "35%"}}/>
+                </Form.Item>
+                <Form.Item
+                    label="Comment"
+                    name="comment"
+                    rules={[{required: false, message: ''}]}>
+                    <Input.TextArea
+                        rows={5}
+                        showCount
+                        maxLength={280}
+                        placeholder={"Insert an optional comment"}
+                        style={{width: "35%"}}/>
                 </Form.Item>
             </>
         )
