@@ -2,14 +2,14 @@ import React from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import XMLViewer from 'react-xml-viewer'
-import {message, Form, Button} from "antd";
+import {message, Form, Button, Upload} from "antd";
 
-import UploadExperimentData from "../InputForm/UploadExperimentData";
+import {UploadOutlined} from "@ant-design/icons";
 
 const csrftoken = Cookies.get('csrftoken');
 axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
 
-class ExperimentFile extends React.Component{
+class ExperimentFile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,86 +20,103 @@ class ExperimentFile extends React.Component{
         }
     }
 
-    onFinish = values => {
-        console.log(values)
-        axios.post(window.$API_address + 'ExperimentManager/API/insertOSFile/' + this.state.exp_id.toString(), {
-            params: {"values": values}
-        })
-            .then(res => {
+    uploadFile = options => {
 
-                // const response = res.data;
-                // const a = response['experiment'];
-                // this.setState({reviewVisible: true, reviewExperiments: [a]})
-                message.success('OS input file added successfully', 3);
+        const {onSuccess, onError, file, onProgress} = options;
+
+        const reader = new FileReader();
+        let file_text;
+        const scope = this
+        reader.readAsText(file);
+        reader.onloadend = function (e) {
+            file_text = e.target.result
+            onSuccess(file);
+            const params = {
+                'model_name': ['Experiment'],
+                'id': [scope.state.exp_id.toString()],
+                'property': [JSON.stringify({'os_input_file': file_text})]
+            }
+            axios.post(window.$API_address + 'ExperimentManager/API/updateElement', params)
+                .then(res => {
+                    message.success(`OpenSMOKE file uploaded successfully. Refresh Page.`, 3);
+                })
+                .catch(error => {
+                    message.error(error.response.data, 3)
+                });
+        }
+    }
+
+    componentDidMount() {
+        let property_name;
+        if (this.state.type === "OS") {
+            property_name = 'os_input_file'
+        } else if (this.state.type === "ReSpecTh") {
+            property_name = 'xml_file'
+        } else {
+            return
+        }
+
+        const params = {
+            'model_name': ['Experiment'],
+            'id': [this.state.exp_id.toString()],
+            'property': [property_name]
+        }
+
+
+
+        axios.post(window.$API_address + 'ExperimentManager/API/requestProperty', params)
+            .then(res => {
+                if (res.data) {
+                    this.setState({file: res.data}, () =>{
+                        this.optional_render()
+                    })
+                }else{
+                    this.optional_render()
+                }
             })
             .catch(error => {
-                // message.error(error.message + " - " + error.response.message, 3)
-                if (error.response.status === 403){
-                    message.error("You don't have the authorization to update an experiment!", 3)
-                }
-                else{
-                    message.error(error.response.data, 3)
-                }
-
-
-                // console.log("Start")
-                // console.log(error.response.data);
-                // console.log(error.response.status);
-                // console.log(error.response.headers);
-                // console.log(error.message);
-                // console.log("Finish")
-            })
-    }
-    componentDidMount() {
-
-        axios.post(window.$API_address + 'frontend/api/get_experiment_file/' + this.state.exp_id.toString(),
-            {params: {"type": this.state.type}})
-            .then(res => {
-                const response = res.data;
-                let file = response.file;
-                if (file === null){
-                    file = "No file."
-                    file =
-                        <Form
-                            onFinish={this.onFinish}
-                        >
-                            <UploadExperimentData
-                                name={"os_input_file"}
-                                type={"text"}
-                                api={'frontend/input/os_input_file'}
-                                ext={".dic"}
-                                required={true}
-                            />
-                            <Button type="primary" htmlType="submit" style={{margin: "10px"}} size={"large"}>
-                                Submit
-                            </Button>
-                        </Form>
-
-                    this.setState({render: file })
-                }
-
-                else{
-                    if (this.state.type === "ReSpecTh"){
-                        this.setState({render: <XMLViewer xml={file} />})
-                    }
-                    else if (this.state.type === "OS"){
-                        this.setState(
-                            {render: <div
-                                    dangerouslySetInnerHTML={{__html: file}}
-                                    style={{whiteSpace: "pre-line"}}/>})
-                    }
-
-                }
-            }).catch(error => {
                 message.error(error.response.data, 3);
-        })
+            })
+
+
     }
+
+    optional_render = () => {
+        let render;
+        if (this.state.file) {
+            if (this.state.type === "ReSpecTh") {
+                render = <XMLViewer xml={this.state.file}/>
+            } else if (this.state.type === "OS") {
+                render = <div dangerouslySetInnerHTML={{__html: this.state.file}} style={{whiteSpace: "pre-line"}}/>
+            }
+        } else {
+            if (this.state.type === "OS"){
+                render =
+                    <Upload
+                        multiple={false}
+                        customRequest={this.uploadFile}
+                        showUploadList={
+                            {showRemoveIcon: false}
+                        }
+                        accept={'.dic'}
+                    >
+                        <Button icon={<UploadOutlined/>}>Upload OpenSMOKE++ File</Button>
+                    </Upload>
+            }
+            else{
+                render = 'No file.'
+            }
+        }
+
+        this.setState({render: render})
+
+    }
+
     render() {
-
-        return(<>{this.state.render}</>)
-
+        return (
+            <>{this.state.render}</>
+        )
     }
-
 }
 
 export default ExperimentFile;

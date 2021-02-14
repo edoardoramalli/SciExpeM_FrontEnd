@@ -10,8 +10,8 @@ import 'react-table/react-table.css'
 // Import Local Componentsont
 import App from "./components/App";
 
-// window.$API_address = "";
-window.$API_address = "http://127.0.0.1:8080/";
+window.$API_address = "";
+// window.$API_address = "http://127.0.0.1:8080/";
 
 
 ReactDOM.render(<BrowserRouter><App/></BrowserRouter>, document.getElementById("root"));

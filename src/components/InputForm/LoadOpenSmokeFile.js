@@ -58,6 +58,7 @@ class LoadOpenSmokeFile extends React.Component{
                             {showRemoveIcon: false}
                         }
                         onPreview={this.handleDataPreview}
+                        accept={'.dic'}
                     >
                         <Button icon={<UploadOutlined />}>Upload OpenSMOKE++ File</Button>
                     </Upload>

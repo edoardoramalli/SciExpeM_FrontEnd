@@ -4,10 +4,13 @@ import {Button, message, Radio, Row, Col, Divider, Select, InputNumber, Typograp
 
 import {CheckOutlined} from "@ant-design/icons";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 
 const { Option } = Select;
 const { Text } = Typography;
+
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 class ManagementExperiment extends React.Component{
     constructor(props) {

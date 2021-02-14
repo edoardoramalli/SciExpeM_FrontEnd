@@ -65,7 +65,7 @@ function InitialSpeciesList(props) {
 
 function StatusTag(props) {
     const status = props.status;
-    const experiment_classifier = props.record.experiment_classifier;
+    const experiment_interpreter = props.record.experiment_interpreter;
     let color_status;
     if (status === 'new'){
         color_status = 'red';
@@ -75,7 +75,7 @@ function StatusTag(props) {
     }
     let type;
     let color_type;
-    if (experiment_classifier !== null){
+    if (experiment_interpreter !== null){
         type = "managed"
         color_type = "green"
     }

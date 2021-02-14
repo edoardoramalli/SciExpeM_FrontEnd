@@ -104,11 +104,11 @@ class ExperimentForm extends React.Component {
 
         axios.post(window.$API_address + 'ExperimentManager/API/insertElement', params)
             .then(() => {
-                message.success('Experiment added successfully', 3);
                 this.formRef.current.resetFields();
+                message.success('Experiment added successfully', 5);
             })
             .catch(error => {
-                message.error(error.response.data, 3)
+                message.error(error.response.data, 5)
             })
     }
 

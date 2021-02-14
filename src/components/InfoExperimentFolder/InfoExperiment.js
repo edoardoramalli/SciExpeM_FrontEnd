@@ -18,19 +18,19 @@ class InfoExperiment extends React.Component{
         }
     }
 
-    componentDidMount() {
-        const exp_id = this.state.exp.props.id;
-
-        axios.get(window.$API_address + 'frontend/api/experiment/info/' + exp_id.toString())
-            .then(res => {
-                const response = res.data;
-                this.setState({
-                    author: response.author,
-                    date: response.date});
-            }).catch(error => {
-                console.log(error.response);
-        })
-    }
+    // componentDidMount() {
+    //     const exp_id = this.state.exp.props.id;
+    //
+    //     axios.get(window.$API_address + 'frontend/api/experiment/info/' + exp_id.toString())
+    //         .then(res => {
+    //             const response = res.data;
+    //             this.setState({
+    //                 author: response.author,
+    //                 date: response.date});
+    //         }).catch(error => {
+    //             console.log(error.response);
+    //     })
+    // }
 
     renderSpecies() {
         return this.state.exp.props.initial_species.map((species) => {
@@ -68,10 +68,10 @@ class InfoExperiment extends React.Component{
                     column={2}
                     className={"description"}
                 >
-                    <Descriptions.Item label="Author" >{this.state.author}</Descriptions.Item>
-                    <Descriptions.Item label="Creation Date" >{this.state.date}</Descriptions.Item>
+                    {/*<Descriptions.Item label="Author" >{this.state.author}</Descriptions.Item>*/}
+                    {/*<Descriptions.Item label="Creation Date" >{this.state.date}</Descriptions.Item>*/}
                     <Descriptions.Item label="Status" >{this.state.exp.props.status}</Descriptions.Item>
-                    <Descriptions.Item label="Interpreter">{this.state.exp.props.experiment_classifier}</Descriptions.Item>
+                    <Descriptions.Item label="Interpreter">{this.state.exp.props.experiment_interpreter}</Descriptions.Item>
                     <Descriptions.Item label="Experiment ID" >{this.state.exp.props.id}</Descriptions.Item>
                     <Descriptions.Item label="Experiment Type">{this.state.exp.props.experiment_type}</Descriptions.Item>
                     <Descriptions.Item label="Reactor">{this.state.exp.props.reactor}</Descriptions.Item>
@@ -105,7 +105,7 @@ class InfoExperiment extends React.Component{
 
                 <Descriptions title={"Bibliography"} bordered column={2}>
                     <Descriptions.Item label="Reference" span={2}>
-                        {this.state.exp.props.file_paper.title}
+                        {this.state.exp.props.file_paper.references}
                     </Descriptions.Item>
                     <Descriptions.Item label="Paper DOI" >
                         {<HyperLink link={this.state.exp.props.file_paper.reference_doi}/>}

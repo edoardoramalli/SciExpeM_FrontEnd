@@ -2,6 +2,9 @@ import React from "react";
 import axios from "axios";
 import {Button, Dropdown, Menu, message, Popconfirm} from "antd";
 import {DeleteOutlined, DownloadOutlined} from "@ant-design/icons";
+import Cookies from "js-cookie";
+
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 class ActionCell extends React.Component {
     constructor(props) {
@@ -14,7 +17,12 @@ class ActionCell extends React.Component {
     handleDelete = (e) => {
         const e_id = this.props.e_id;
         this.setState({loadingDelete: true});
-        axios.get(window.$API_address + 'ExperimentManager/API/deleteExperiment/' + e_id.toString())
+        const params = {
+            'id': [e_id.toString()],
+            'model_name': ['Experiment']
+
+        }
+        axios.post(window.$API_address + 'ExperimentManager/API/deleteElement', params)
             .then(res => {
                 this.props.handleDelete(e_id);
                 this.setState({loadingDelete: false})
@@ -22,10 +30,10 @@ class ActionCell extends React.Component {
             }).catch(error => {
             this.setState({loadingDelete: false});
             if (error.response.status === 403){
-                message.error("You don't have the permission to delete this experiment.")
+                message.error("You don't have the permission to delete this experiment.", 3)
             }
             else{
-                message.error(error.response.data)
+                message.error(error.response.data, 3)
             }
 
         });

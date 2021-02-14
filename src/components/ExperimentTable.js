@@ -33,7 +33,7 @@ function InitialSpeciesList(props) {
 
 function StatusTag(props) {
     const status = props.status;
-    const experiment_classifier = props.record.experiment_classifier;
+    const experiment_interpreter = props.record.experiment_interpreter;
     let color_status;
     if (status === 'unverified'){
         color_status = 'orange';
@@ -46,7 +46,7 @@ function StatusTag(props) {
     }
     let type;
     let color_type;
-    if (experiment_classifier){
+    if (experiment_interpreter){
         type = "managed"
         color_type = "blue"
     }
@@ -149,7 +149,7 @@ class ExperimentTable extends React.Component {
         axios.get(window.$API_address + 'frontend/api/experiments/')
             .then(res => {
                 const experiments = res.data;
-                const experiments_managed = res.data.filter((exp) => exp.experiment_classifier != null);
+                const experiments_managed = res.data.filter((exp) => exp.experiment_interpreter != null);
                 const experiments_valid = res.data.filter((exp) => exp.status === "verified");
                 this.setState(
                     {
@@ -363,7 +363,7 @@ class ExperimentTable extends React.Component {
                         return true
                     }
                     let exp_type;
-                    if (record.experiment_classifier === null){
+                    if (record.experiment_interpreter === null){
                         exp_type = "unmanaged"
                     }
                     else{

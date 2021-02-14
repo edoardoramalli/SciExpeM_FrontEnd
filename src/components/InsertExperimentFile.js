@@ -107,6 +107,7 @@ class InsertExperimentFile extends React.Component {
                                 {showRemoveIcon: false}
                             }
                             onChange={this.onChangeUpload}
+                            accept={'.xml'}
                         >
                             <Button icon={<UploadOutlined />}>Upload ReSpecTh Files</Button>
                         </Upload>
