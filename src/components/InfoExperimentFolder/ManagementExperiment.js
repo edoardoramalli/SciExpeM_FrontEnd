@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, message, Radio, Row, Col, Divider, Select, InputNumber, Typography} from "antd";
+import {Button, message, Radio, Row, Col, Divider, Select, InputNumber, Typography, Input} from "antd";
 
 
 import {CheckOutlined} from "@ant-design/icons";
@@ -17,15 +17,7 @@ class ManagementExperiment extends React.Component{
         super(props);
         this.state = {
             exp: this.props,
-            list_fuels: [],
-            phi_inf: null,
-            phi_sup: null,
-            t_inf: null,
-            t_sup: null,
-            p_inf: null,
-            p_sup: null,
-            fuels: [],
-
+            list_fuels: []
         }
     }
 
@@ -74,12 +66,12 @@ class ManagementExperiment extends React.Component{
 
     ok(){
         let params = {
-            phi_inf: this.state.phi_inf,
-            phi_sup: this.state.phi_sup,
-            t_inf: this.state.t_inf,
-            t_sup: this.state.t_sup,
-            p_inf: this.state.p_inf,
-            p_sup: this.state.p_sup,
+            phi_inf: parseInt(this.state.phi_inf),
+            phi_sup: parseInt(this.state.phi_sup),
+            t_inf: parseInt(this.state.t_inf),
+            t_sup: parseInt(this.state.t_sup),
+            p_inf: parseInt(this.state.p_inf),
+            p_sup: parseInt(this.state.p_sup),
             fuels: this.state.fuels
         }
         if (this.state.status === 'verified') {
@@ -188,63 +180,112 @@ class ManagementExperiment extends React.Component{
         return(
             <>
 
-                <Divider orientation="left">Temperature Range</Divider>
+                <Divider orientation="left">Temperature Range (Min - Max) [Kelvin]</Divider>
                 <Row gutter={0}>
                     <Col className="gutter-row" span={10} offset={1}>
-                       <Text style={font}>&#123;  </Text>
                        <InputNumber
+                           style={{width: 100, textAlign: 'center'}}
+                           placeholder={'Min'}
                            min={250} max={3000} step={10}
-                           defaultValue={this.state.t_inf} onChange={this.onChangeTinf}
+                           value={this.state.t_inf} onChange={this.onChangeTinf}
                        />
-                        <Text style={font}>   -   </Text>
+                        <Input
+                            className="site-input-split"
+                            style={{
+                                width: 30,
+                                borderLeft: 0,
+                                borderRight: 0,
+                                pointerEvents: 'none',
+                            }}
+                            placeholder="~"
+                            disabled
+                        />
                         <InputNumber
                             min={this.state.t_inf}  max={3000} step={10}
-                            defaultValue={this.state.t_sup} onChange={this.onChangeTsup}
+                            value={this.state.t_sup} onChange={this.onChangeTsup}
+                            className="site-input-right"
+                            style={{
+                                width: 100,
+                                textAlign: 'center',
+                            }}
+                            placeholder={'Max'}
                         />
-                        <Text style={font}>    &#125;    Kelvin</Text>
                     </Col>
                 </Row>
-                <Divider orientation="left">Pressure Range</Divider>
+                <Divider orientation="left">Pressure Range (Min - Max) [Bar]</Divider>
                 <Row gutter={0}>
                     <Col className="gutter-row" span={10} offset={1}>
-                        <Text style={font}>&#123;  </Text>
                         <InputNumber
+                            style={{width: 100, textAlign: 'center'}}
+                            placeholder={'Min'}
                             min={0} max={150} step={5}
-                            defaultValue={this.state.p_inf} onChange={this.onChangePinf}
+                            value={this.state.p_inf} onChange={this.onChangePinf}
                         />
-                        <Text style={font}>   -   </Text>
+                        <Input
+                            className="site-input-split"
+                            style={{
+                                width: 30,
+                                borderLeft: 0,
+                                borderRight: 0,
+                                pointerEvents: 'none',
+                            }}
+                            placeholder="~"
+                            disabled
+                        />
                         <InputNumber
                             min={this.state.p_inf}  max={150} step={5}
-                            defaultValue={this.state.p_sup} onChange={this.onChangePsup}
+                            value={this.state.p_sup} onChange={this.onChangePsup}
+                            className="site-input-right"
+                            style={{
+                                width: 100,
+                                textAlign: 'center',
+                            }}
+                            placeholder={'Max'}
                         />
-                        <Text style={font}>    &#125;    Bar</Text>
                     </Col>
                 </Row>
-                <Divider orientation="left">Equivalence Ratio Range</Divider>
+                <Divider orientation="left">Equivalence Ratio Range (Min - Max) [Phi = 100 = +&infin;]</Divider>
                 <Row gutter={0}>
                    <Col className="gutter-row" span={10} offset={1}>
-                    <Text style={font}>&#123;  </Text>
                     <InputNumber
+                        style={{width: 100, textAlign: 'center'}}
+                        placeholder={'Min'}
                         min={0} max={100} step={0.1}
-                        defaultValue={this.state.phi_inf} onChange={this.onChangePhiinf}
+                        value={this.state.phi_inf} onChange={this.onChangePhiinf}
                     />
-                    <Text style={font}>   -   </Text>
+                       <Input
+                           className="site-input-split"
+                           style={{
+                               width: 30,
+                               borderLeft: 0,
+                               borderRight: 0,
+                               pointerEvents: 'none',
+                           }}
+                           placeholder="~"
+                           disabled
+                       />
                     <InputNumber
                         min={this.state.phi_inf}  max={100} step={0.1}
-                        defaultValue={this.state.phi_sup} onChange={this.onChangePhisup}
+                        value={this.state.phi_sup} onChange={this.onChangePhisup}
+                        className="site-input-right"
+                        style={{
+                            width: 100,
+                            textAlign: 'center',
+                        }}
+                        placeholder={'Max'}
                     />
-                    <Text style={font}>    &#125;   </Text> <Text>(Phi = 100 ==> +inf)</Text>
                 </Col>
                 </Row>
                 <Divider orientation="left">Fuels</Divider>
                 <Row gutter={0}>
                     <Col className="gutter-row" span={10} offset={1}>
                         <Select
-                            mode="tags"
+                            mode="multiple"
                             placeholder="Please select fuels"
                             style={{ width: '100%' }}
                             value={this.state.fuels}
                             onChange={this.changeFuels}
+                            allowClear
                         >
                             {this.state.list_fuels}
                         </Select>

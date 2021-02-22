@@ -12,8 +12,6 @@ class InfoExperiment extends React.Component{
         super(props);
         this.state = {
             exp: this.props,
-            author: "None",
-            date: "None",
             status: "None"
         }
     }
@@ -63,13 +61,15 @@ class InfoExperiment extends React.Component{
         return(
             <div className={"description"}>
                 <Descriptions
-                    title={<HyperLink link={this.state.exp.props.fileDOI}/>}
+                    title="General"
                     bordered
                     column={2}
                     className={"description"}
                 >
-                    {/*<Descriptions.Item label="Author" >{this.state.author}</Descriptions.Item>*/}
-                    {/*<Descriptions.Item label="Creation Date" >{this.state.date}</Descriptions.Item>*/}
+                    <Descriptions.Item label="Experiment DOI" >
+                        {<HyperLink link={this.state.exp.props.fileDOI}/>}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Author" >{this.state.exp.props.username}</Descriptions.Item>
                     <Descriptions.Item label="Status" >{this.state.exp.props.status}</Descriptions.Item>
                     <Descriptions.Item label="Interpreter">{this.state.exp.props.experiment_interpreter}</Descriptions.Item>
                     <Descriptions.Item label="Experiment ID" >{this.state.exp.props.id}</Descriptions.Item>
@@ -84,7 +84,7 @@ class InfoExperiment extends React.Component{
                     <Descriptions.Item label="Experiment Type">{this.state.exp.props.experiment_type}</Descriptions.Item>
                     <Descriptions.Item label="Reactor">{this.state.exp.props.reactor}</Descriptions.Item>
                     <Descriptions.Item label="Fuels">{this.state.exp.props.fuels ? this.state.exp.props.fuels.toString() : null}</Descriptions.Item>
-                    <Descriptions.Item label="Equivalent Ratio">[{this.state.exp.props.phi_inf} - {this.state.exp.props.phi_sup}]</Descriptions.Item>
+                    <Descriptions.Item label="Equivalence Ratio">[{this.state.exp.props.phi_inf} - {this.state.exp.props.phi_sup}]</Descriptions.Item>
                     <Descriptions.Item label="Temperature Profile [K]">[{this.state.exp.props.t_inf} - {this.state.exp.props.t_sup}]</Descriptions.Item>
                     <Descriptions.Item label="Pressure Profile [Bar]">[{this.state.exp.props.p_inf} - {this.state.exp.props.p_sup}]</Descriptions.Item>
                 </Descriptions>

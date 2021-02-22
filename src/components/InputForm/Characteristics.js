@@ -196,9 +196,10 @@ class Characteristics extends React.Component {
                     name="fuels"
                     rules={[{required: true, message: 'Please insert fuels.'}]}>
                     <Select
-                        mode="tags"
+                        mode="multiple"
                         placeholder="Please select fuels"
                         style={{width: "35%"}}
+                        allowClear
                     >
                         {this.state.list_fuels}
                     </Select>
