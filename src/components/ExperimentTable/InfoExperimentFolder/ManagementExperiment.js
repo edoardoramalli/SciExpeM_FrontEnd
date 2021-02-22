@@ -16,6 +16,7 @@ class ManagementExperiment extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
+            exp_id: this.props['exp_id'],
             exp: this.props,
             list_fuels: []
         }
@@ -90,8 +91,8 @@ class ManagementExperiment extends React.Component{
             }
         }
 
-        this.updateValues(this.state.exp.props.id.toString(), params)
-        this.verifyExperiment(this.state.exp.props.id.toString(), this.state.status)
+        this.updateValues(this.state.exp_id.toString(), params)
+        this.verifyExperiment(this.state.exp_id.toString(), this.state.status)
     }
 
     componentDidMount() {
@@ -104,24 +105,48 @@ class ManagementExperiment extends React.Component{
                     )})
 
                 })
-        let tmp_fuel;
-        if (this.state.exp.props.fuels === null){
-            tmp_fuel = []
-        }
-        else{
-            tmp_fuel = this.state.exp.props.fuels
-        }
-        this.setState({
-            fuels: tmp_fuel,
-            phi_inf: this.state.exp.props.phi_inf,
-            phi_sup: this.state.exp.props.phi_sup,
-            t_inf: this.state.exp.props.t_inf,
-            t_sup: this.state.exp.props.t_sup,
-            p_inf: this.state.exp.props.p_inf,
-            p_sup: this.state.exp.props.p_sup,
-            status: this.state.exp.props.status
-        })
 
+        const params = {
+            fields: ['t_inf', 't_sup', 'p_inf', 'p_sup', 'phi_inf', 'phi_sup', 'fuels', 'status'],
+            id: this.state.exp_id.toString(),
+            model_name: 'Experiment'
+        }
+
+        axios.post(window.$API_address + 'ExperimentManager/API/requestPropertyList', params)
+            .then(res => {
+                const result = JSON.parse(res.data)
+                let tmp_fuel;
+                if (result.fuels === null){
+                    tmp_fuel = []
+                }
+                else{
+                    tmp_fuel = result.fuels
+                }
+                this.setState({
+                    fuels: tmp_fuel,
+                    phi_inf: result.phi_inf,
+                    phi_sup: result.phi_sup,
+                    t_inf: result.t_inf,
+                    t_sup: result.t_sup,
+                    p_inf: result.p_inf,
+                    p_sup: result.p_sup,
+                    status: result.status
+                })
+            })
+            .catch(error => {
+                if (error.response.status === 403){
+                    message.error("You don't have the authorization!", 3);
+                    this.setState({loading: false})
+                }
+                else if (error.response.status === 400){
+                    message.error("Bad Request. " + error.response.data, 3);
+                    this.setState({loading: false})
+                }
+                else{
+                    message.error(error.response.data, 3);
+                    this.setState({loading: false})
+                }
+            })
     }
 
     onChangeTinf = value =>{

@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 // import {CommonPropertiesList, InitialSpeciesList, StatusTag} from "./Search";
-import {Table, Input, Button, Statistic, Row, Col, Tag} from "antd";
+import {Table, Input, Button, Statistic, Row, Col, Tag, message} from "antd";
 import {SearchOutlined} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
@@ -9,27 +9,27 @@ import Highlighter from 'react-highlight-words';
 import ActionCell from "./ActionCell";
 import TabExperiment from "./InfoExperimentFolder/TabExperiment";
 
-function CommonPropertiesList(props) {
-    const common_properties = props.common_properties;
-    const listItems = common_properties.map((common_property) =>
-        <div key={common_property.id} style={{fontSize: 12}}>
-            <span>{common_property.name}</span>: <span style={{fontFamily: 'monospace'}}>{parseFloat(common_property.value).toFixed(2)} {common_property.units}</span>
-        </div>
-    );
-    return (
-        <div>{listItems}</div>
-    );
-}
+// function CommonPropertiesList(props) {
+//     const common_properties = props.common_properties;
+//     const listItems = common_properties.map((common_property) =>
+//         <div key={common_property.id} style={{fontSize: 12}}>
+//             <span>{common_property.name}</span>: <span style={{fontFamily: 'monospace'}}>{parseFloat(common_property.value).toFixed(2)} {common_property.units}</span>
+//         </div>
+//     );
+//     return (
+//         <div>{listItems}</div>
+//     );
+// }
 
-function InitialSpeciesList(props) {
-    const initial_species = props.initial_species;
-    const listTags = initial_species.map((initial_specie) =>
-        <Tag key={initial_specie.id}>{initial_specie.name}</Tag>
-    );
-    return (
-        <div>{listTags}</div>
-    )
-}
+// function InitialSpeciesList(props) {
+//     const initial_species = props.initial_species;
+//     const listTags = initial_species.map((initial_specie) =>
+//         <Tag key={initial_specie.id}>{initial_specie.name}</Tag>
+//     );
+//     return (
+//         <div>{listTags}</div>
+//     )
+// }
 
 function StatusTag(props) {
     const status = props.status;
@@ -146,31 +146,52 @@ class ExperimentTable extends React.Component {
 
     componentDidMount() {
         this.setState({loading: true});
-        axios.get(window.$API_address + 'frontend/api/experiments/')
+
+        const params = {
+            fields: ['id', 'reactor', 'experiment_type', 'username',
+                'fileDOI', 'status', 'ignition_type', 'experiment_interpreter']
+        }
+        axios.post(window.$API_address + 'frontend/api/getExperimentList', params)
             .then(res => {
-                const experiments = res.data;
-                const experiments_managed = res.data.filter((exp) => exp.experiment_interpreter != null);
-                const experiments_valid = res.data.filter((exp) => exp.status === "verified");
+                const experiments = JSON.parse(res.data)
                 this.setState(
                     {
                         experiments: experiments,
                         loading: false,
-                        experiments_managed: experiments_managed.length,
-                        experiments_valid: experiments_valid.length
+                        experiments_managed: experiments.filter((exp) => exp.experiment_interpreter != null).length,
+                        experiments_valid: experiments.filter((exp) => exp.status === "verified").length
                     }
-                );
+                )
             })
-        axios.get(window.$API_address + 'frontend/api/opensmoke/species_names')
-            .then(res => {
-                const names = res.data.names
-                let list = []
-                let i;
-                for (i = 0; i < names.length; i++) {
-                    list.push({text: names[i], value: names[i]})
+            .catch(error => {
+                console.log(error)
+                if (error.response.status === 403){
+                    message.error("You don't have the authorization!", 3);
+                    this.setState({loading: false})
                 }
-                this.setState({filter_type_exp: list.sort(function(a, b) {
-                    return a.value > b.value;})});
+                else if (error.response.status === 400){
+                    message.error("Bad Request. " + error.response.data, 3);
+                    this.setState({loading: false})
+                }
+                else{
+                    message.error(error.response.data, 3);
+                    this.setState({loading: false})
+                }
             })
+
+
+
+        // axios.get(window.$API_address + 'frontend/api/opensmoke/species_names')
+        //     .then(res => {
+        //         const names = res.data.names
+        //         let list = []
+        //         let i;
+        //         for (i = 0; i < names.length; i++) {
+        //             list.push({text: names[i], value: names[i]})
+        //         }
+        //         this.setState({filter_type_exp: list.sort(function(a, b) {
+        //             return a.value > b.value;})});
+        //     })
     }
 
     // handle local delete
@@ -251,23 +272,23 @@ class ExperimentTable extends React.Component {
             }
         ]
 
-        const filter_properties = [
-            {
-                text: 'Temperature',
-                value: 'temperature',
-            }, {
-                text: 'Pressure',
-                value: 'pressure',
-            }, {
-                text: 'Residence Time',
-                value: 'residence time',
-            }, {
-                text: 'Volume',
-                value: 'volume',
-            }, {
-                text: 'Laminar Burning Velocity',
-                value: 'laminar burning velocity',
-            }]
+        // const filter_properties = [
+        //     {
+        //         text: 'Temperature',
+        //         value: 'temperature',
+        //     }, {
+        //         text: 'Pressure',
+        //         value: 'pressure',
+        //     }, {
+        //         text: 'Residence Time',
+        //         value: 'residence time',
+        //     }, {
+        //         text: 'Volume',
+        //         value: 'volume',
+        //     }, {
+        //         text: 'Laminar Burning Velocity',
+        //         value: 'laminar burning velocity',
+        //     }]
 
         const columns = [
             {
@@ -318,40 +339,40 @@ class ExperimentTable extends React.Component {
                     return a.experiment_type.localeCompare(b.experiment_type)
                 },
             },
-            {
-                title: 'Properties',
-                dataIndex: 'common_properties',
-                key: 'common_properties',
-                width: '15%',
-                filters: filter_properties,
-                onFilter: (value, record) => {
-                    let i;
-                    for (i = 0; i < record.common_properties.length; i++) {
-                        if (record.common_properties[i].name.includes(value)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                },
-                render: props => <CommonPropertiesList common_properties={props}/>
-            },
-            {
-                title: 'Initial species',
-                dataIndex: 'initial_species',
-                key: 'initial_species',
-                width: '10%',
-                filters: this.state.filter_type_exp,
-                onFilter: (value, record) => {
-                    let i;
-                    for (i = 0; i < record.initial_species.length; i++) {
-                        if (record.initial_species[i].name.includes(value)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                },
-                render: props => <InitialSpeciesList initial_species={props}/>,
-            },
+            // {
+            //     title: 'Properties',
+            //     dataIndex: 'common_properties',
+            //     key: 'common_properties',
+            //     width: '15%',
+            //     filters: filter_properties,
+            //     onFilter: (value, record) => {
+            //         let i;
+            //         for (i = 0; i < record.common_properties.length; i++) {
+            //             if (record.common_properties[i].name.includes(value)) {
+            //                 return true;
+            //             }
+            //         }
+            //         return false;
+            //     },
+            //     render: props => <CommonPropertiesList common_properties={props}/>
+            // },
+            // {
+            //     title: 'Initial species',
+            //     dataIndex: 'initial_species',
+            //     key: 'initial_species',
+            //     width: '10%',
+            //     filters: this.state.filter_type_exp,
+            //     onFilter: (value, record) => {
+            //         let i;
+            //         for (i = 0; i < record.initial_species.length; i++) {
+            //             if (record.initial_species[i].name.includes(value)) {
+            //                 return true;
+            //             }
+            //         }
+            //         return false;
+            //     },
+            //     render: props => <InitialSpeciesList initial_species={props}/>,
+            // },
             {
                 title: 'Status',
                 dataIndex: 'status',
@@ -415,7 +436,7 @@ class ExperimentTable extends React.Component {
                     //expandedRowRender={record => {return <ExperimentDetail experiment={record}/>}}
                     // expandedRowRender={record => {return <ExperimentDraw experiment={record}/>}}
                     expandedRowRender={record => {
-                        return <TabExperiment experiment={record}/>
+                        return <TabExperiment exp_id={record.id} experiment={record}/>
                     }}
 
                 />

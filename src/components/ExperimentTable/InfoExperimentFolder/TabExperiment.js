@@ -7,14 +7,22 @@ const { TabPane } = Tabs;
 
 // Local import
 const InfoExperiment = lazy(() => import('./InfoExperiment'));
+const CommonPropertyTab = lazy(() => import('./CommonPropertyTab'))
+const BibliographyTab = lazy(()=> import('./BibliographyTab'))
 const ExperimentFile = lazy(() => import('./ExperimentFile'));
-const ExperimentDraw = lazy(() => import('../ExperimentDraw'));
+const ExperimentDraw = lazy(() => import('../../ExperimentDraw'));
 const ManagementExperiment = lazy(() => import('./ManagementExperiment'));
 const RawData = lazy(() => import('./RawData'))
 
 
 
 class TabExperiment extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            exp_id: this.props['exp_id']
+        }
+    }
 
     render() {
         return(
@@ -23,13 +31,21 @@ class TabExperiment extends React.Component{
                     <InfoExperiment props={this.props.experiment}/>
                 </TabPane>
                 <TabPane tab="Common Property" key="2">
-                    <ManagementExperiment props={this.props.experiment}/>
+                    <CommonPropertyTab
+                        exp_id={this.props.exp_id}
+                        name={'CommonProperty'}
+                    />
                 </TabPane>
                 <TabPane tab="Initial Specie" key="3">
-                    <ManagementExperiment props={this.props.experiment}/>
+                    <CommonPropertyTab
+                        exp_id={this.props.exp_id}
+                        name={'InitialSpecie'}
+                    />
                 </TabPane>
                 <TabPane tab="Bibliography" key="4">
-                    <ManagementExperiment props={this.props.experiment}/>
+                    <BibliographyTab
+                        exp_id={this.props.exp_id}
+                    />
                 </TabPane>
                 <TabPane tab="Plot Data" key="5">
                     <ExperimentDraw exp_id={this.props.experiment.id}/>
@@ -46,8 +62,11 @@ class TabExperiment extends React.Component{
                 <TabPane tab="ReSpecTh File" key="9">
                     <ExperimentFile exp_id={this.props.experiment.id} type={"ReSpecTh"}/>
                 </TabPane>
-                <TabPane tab="Management" key="10">
-                    <ManagementExperiment props={this.props.experiment}/>
+                <TabPane tab="Characteristics" key="10">
+                    <ManagementExperiment
+                        exp_id={this.props.exp_id}
+                        props={this.props.experiment}
+                    />
                 </TabPane>
             </Tabs>
         )

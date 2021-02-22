@@ -3,7 +3,7 @@ import { Descriptions } from 'antd';
 import axios from "axios";
 
 
-import HyperLink from "../HyperLink";
+import HyperLink from "../../HyperLink";
 
 import "./styles.less"
 
@@ -15,20 +15,6 @@ class InfoExperiment extends React.Component{
             status: "None"
         }
     }
-
-    // componentDidMount() {
-    //     const exp_id = this.state.exp.props.id;
-    //
-    //     axios.get(window.$API_address + 'frontend/api/experiment/info/' + exp_id.toString())
-    //         .then(res => {
-    //             const response = res.data;
-    //             this.setState({
-    //                 author: response.author,
-    //                 date: response.date});
-    //         }).catch(error => {
-    //             console.log(error.response);
-    //     })
-    // }
 
     renderSpecies() {
         return this.state.exp.props.initial_species.map((species) => {
@@ -64,7 +50,6 @@ class InfoExperiment extends React.Component{
                     title="General"
                     bordered
                     column={2}
-                    className={"description"}
                 >
                     <Descriptions.Item label="Experiment DOI" >
                         {<HyperLink link={this.state.exp.props.fileDOI}/>}
@@ -78,40 +63,36 @@ class InfoExperiment extends React.Component{
                     <Descriptions.Item label="Ignition Type">{this.state.exp.props.ignition_type}</Descriptions.Item>
                 </Descriptions>
 
-                <br />
 
-                <Descriptions title={"Characteristics"} bordered column={3}>
-                    <Descriptions.Item label="Experiment Type">{this.state.exp.props.experiment_type}</Descriptions.Item>
-                    <Descriptions.Item label="Reactor">{this.state.exp.props.reactor}</Descriptions.Item>
-                    <Descriptions.Item label="Fuels">{this.state.exp.props.fuels ? this.state.exp.props.fuels.toString() : null}</Descriptions.Item>
-                    <Descriptions.Item label="Equivalence Ratio">[{this.state.exp.props.phi_inf} - {this.state.exp.props.phi_sup}]</Descriptions.Item>
-                    <Descriptions.Item label="Temperature Profile [K]">[{this.state.exp.props.t_inf} - {this.state.exp.props.t_sup}]</Descriptions.Item>
-                    <Descriptions.Item label="Pressure Profile [Bar]">[{this.state.exp.props.p_inf} - {this.state.exp.props.p_sup}]</Descriptions.Item>
-                </Descriptions>
+                {/*<Descriptions title={"Characteristics"} bordered column={3}>*/}
+                {/*    <Descriptions.Item label="Experiment Type">{this.state.exp.props.experiment_type}</Descriptions.Item>*/}
+                {/*    <Descriptions.Item label="Reactor">{this.state.exp.props.reactor}</Descriptions.Item>*/}
+                {/*    <Descriptions.Item label="Fuels">{this.state.exp.props.fuels ? this.state.exp.props.fuels.toString() : null}</Descriptions.Item>*/}
+                {/*    <Descriptions.Item label="Equivalence Ratio">[{this.state.exp.props.phi_inf} - {this.state.exp.props.phi_sup}]</Descriptions.Item>*/}
+                {/*    <Descriptions.Item label="Temperature Profile [K]">[{this.state.exp.props.t_inf} - {this.state.exp.props.t_sup}]</Descriptions.Item>*/}
+                {/*    <Descriptions.Item label="Pressure Profile [Bar]">[{this.state.exp.props.p_inf} - {this.state.exp.props.p_sup}]</Descriptions.Item>*/}
+                {/*</Descriptions>*/}
 
-                <br />
 
-                <Descriptions title={"Common Properties"} bordered column={4}>
-                    {this.renderCommonProperties()}
-                </Descriptions>
+                {/*<Descriptions title={"Common Properties"} bordered column={4}>*/}
+                {/*    {this.renderCommonProperties()}*/}
+                {/*</Descriptions>*/}
 
-                <br />
 
-                <Descriptions title={"Initial Species"} bordered column={4}>
-                    {this.renderSpecies()}
-                </Descriptions>
+                {/*<Descriptions title={"Initial Species"} bordered column={4}>*/}
+                {/*    {this.renderSpecies()}*/}
+                {/*</Descriptions>*/}
 
-                <br />
 
-                <Descriptions title={"Bibliography"} bordered column={2}>
-                    <Descriptions.Item label="Reference" span={2}>
-                        {this.state.exp.props.file_paper.references}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Paper DOI" >
-                        {<HyperLink link={this.state.exp.props.file_paper.reference_doi}/>}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="ID" >{this.state.exp.props.file_paper.id}</Descriptions.Item>
-                </Descriptions>
+                {/*<Descriptions title={"Bibliography"} bordered column={2}>*/}
+                {/*    <Descriptions.Item label="Reference" span={2}>*/}
+                {/*        {this.state.exp.props.file_paper.references}*/}
+                {/*    </Descriptions.Item>*/}
+                {/*    <Descriptions.Item label="Paper DOI" >*/}
+                {/*        {<HyperLink link={this.state.exp.props.file_paper.reference_doi}/>}*/}
+                {/*    </Descriptions.Item>*/}
+                {/*    <Descriptions.Item label="ID" >{this.state.exp.props.file_paper.id}</Descriptions.Item>*/}
+                {/*</Descriptions>*/}
             </div>
 
         )

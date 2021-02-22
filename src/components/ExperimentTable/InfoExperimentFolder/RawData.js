@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import {message} from "antd";
 
 // Local import
-import GenericTable from "../GenericTable";
+import GenericTable from "../../GenericTable";
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 

@@ -10,7 +10,7 @@ import NavBar from "./NavBar";
 // import {SearchAndExecute} from "./Search";
 
 
-const ExperimentTable = lazy(() => import('./ExperimentTable'));
+const ExperimentTable = lazy(() => import('./ExperimentTable/ExperimentTable'));
 // const SearchAndExecute = lazy(() => import('./Search'));
 
 
