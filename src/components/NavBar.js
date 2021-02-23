@@ -1,7 +1,7 @@
 import React from "react";
 import {Menu} from "antd";
 import axios from "axios";
-import {UploadOutlined, DatabaseOutlined, LineChartOutlined, InfoCircleOutlined} from '@ant-design/icons';
+import {UploadOutlined, DatabaseOutlined, HomeOutlined, LogoutOutlined} from '@ant-design/icons';
 
 class NavBar extends React.Component{
 
@@ -16,7 +16,12 @@ class NavBar extends React.Component{
         if (e.key === "logout"){
             window.location.href="/accounts/logout";
         }
-        this.props.updateStateApp(e);
+        else if (e.key === 'home'){
+            window.location.href="/";
+        }
+        else{
+            this.props.updateStateApp(e);
+        }
     };
 
     componentDidMount() {
@@ -36,6 +41,7 @@ class NavBar extends React.Component{
                 onClick={this.handleMenuClick}
                 style={{lineHeight: '64px'}}
             >
+                <Menu.Item key="home"><HomeOutlined />Home</Menu.Item>
                 <Menu.Item key="experiments"><DatabaseOutlined />Experimental Database</Menu.Item>
                 {/*<Menu.Item key="main" disabled><b>SciExpeM</b></Menu.Item>*/}
                 <Menu.SubMenu
@@ -55,7 +61,7 @@ class NavBar extends React.Component{
                 {/*<Menu.Item key="searchandexecute" disabled><LineChartOutlined />Search & Execute</Menu.Item>*/}
                 {/*<Menu.Item key="about" disabled><InfoCircleOutlined />About</Menu.Item>*/}
                 <Menu.Item key="logout" style={{"float": "right"}}>
-                    <UploadOutlined />
+                    <LogoutOutlined />
                     Log Out - {this.state.username}
                 </Menu.Item>
 

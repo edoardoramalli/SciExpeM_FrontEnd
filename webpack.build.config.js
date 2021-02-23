@@ -11,7 +11,7 @@ module.exports =  {
     profile: true,
     entry: './src/index.js',
     output: {
-        path: '/Users/edoardo/Documents/GitHub/sciexpem/FrontEnd/static/FrontEnd/', // Should be in STATICFILES_DIRS
+        path: '/Users/edoardo/Documents/GitHub/sciexpem/FrontEnd/static/FrontEnd/Main/', // Should be in STATICFILES_DIRS
         // filename: "[name]-[hash].js",
     },
     module: {

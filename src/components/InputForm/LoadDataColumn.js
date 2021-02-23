@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Form, Upload, message, Modal, Col} from "antd";
+import {Button, Form, Upload, message, Modal} from "antd";
 import {UploadOutlined} from "@ant-design/icons";
 import Cookies from "js-cookie";
 import axios from "axios";
