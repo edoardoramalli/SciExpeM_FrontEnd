@@ -4,7 +4,7 @@ import React, { lazy, Suspense } from 'react';
 import './App.css';
 
 // Import Libraries
-import {BackTop, Layout,  Spin} from "antd";
+import {BackTop, Layout, message, Spin} from "antd";
 import NavBar from "./NavBar";
 
 // import {SearchAndExecute} from "./Search";

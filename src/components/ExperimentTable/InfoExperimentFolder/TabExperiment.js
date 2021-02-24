@@ -10,7 +10,6 @@ const InfoExperiment = lazy(() => import('./InfoExperiment'));
 const CommonPropertyTab = lazy(() => import('./CommonPropertyTab'))
 const BibliographyTab = lazy(()=> import('./BibliographyTab'))
 const ExperimentFile = lazy(() => import('./ExperimentFile'));
-// const ExperimentDraw = lazy(() => import('../../ExperimentDraw'));
 const ManagementExperiment = lazy(() => import('./ManagementExperiment'));
 const RawData = lazy(() => import('./RawData'))
 const PlotExperiment = lazy(() => import('./PlotExperiment'))

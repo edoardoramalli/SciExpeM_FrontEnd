@@ -3,6 +3,7 @@ import {Descriptions, message, Spin, Col, Empty} from 'antd';
 const axios = require('axios');
 
 import "./styles.less"
+import checkError from "../../../components/Tool"
 
 class CommonPropertyTab extends React.Component {
     constructor(props) {
@@ -55,11 +56,6 @@ class CommonPropertyTab extends React.Component {
             }
     }
 
-
-
-
-
-
     componentDidMount() {
         this.setState({loading: true});
         const params = {
@@ -76,18 +72,7 @@ class CommonPropertyTab extends React.Component {
                 )
             })
             .catch(error => {
-                if (error.response.status === 403){
-                    message.error("You don't have the authorization!", 3);
-                    this.setState({loading: false})
-                }
-                else if (error.response.status === 400){
-                    message.error("Bad Request. " + error.response.data, 3);
-                    this.setState({loading: false})
-                }
-                else{
-                    message.error(error.response.data, 3);
-                    this.setState({loading: false})
-                }
+                checkError(error)
             })
     }
 

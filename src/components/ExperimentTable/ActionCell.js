@@ -3,6 +3,7 @@ const axios = require('axios');
 import {Button, Dropdown, Menu, message, Popconfirm} from "antd";
 import {DeleteOutlined, DownloadOutlined} from "@ant-design/icons";
 import Cookies from "js-cookie";
+import checkError from "../../components/Tool"
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
@@ -29,13 +30,7 @@ class ActionCell extends React.Component {
 
             }).catch(error => {
             this.setState({loadingDelete: false});
-            if (error.response.status === 403){
-                message.error("You don't have the permission to delete this experiment.", 3)
-            }
-            else{
-                message.error(error.response.data, 3)
-            }
-
+            checkError(error)
         });
     };
 

@@ -8,6 +8,7 @@ import {message} from "antd";
 
 // Local import
 import GenericTable from "../../GenericTable";
+import checkError from "../../../components/Tool"
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
@@ -30,7 +31,7 @@ class RawData extends React.Component{
                 let header = response.header
                 this.setState({data: data, header: header})
             }).catch(error => {
-                message.error(error.response.data, 3);
+                checkError(error)
         })
     }
     render() {

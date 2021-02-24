@@ -1,5 +1,5 @@
 import React from "react";
-import {message, Alert} from "antd";
+import {Tabs, Alert, Descriptions} from "antd";
 
 const axios = require('axios');
 
@@ -7,6 +7,8 @@ const Plotly = require('plotly-latest')
 
 import createPlotlyComponent from "react-plotly.js/factory";
 const Plot = createPlotlyComponent(Plotly);
+import checkError from "../../../components/Tool"
+
 
 
 class PlotExperiment extends React.Component{
@@ -16,7 +18,8 @@ class PlotExperiment extends React.Component{
             plotList: [],
             baseConfig: {width: 640, height: 480, showlegend: true, autosize: true},
             addConfig: {},
-            renderObject: null
+            renderObject: null,
+            tabs: null
         }
     }
 
@@ -25,18 +28,32 @@ class PlotExperiment extends React.Component{
         return obj;
     }
 
+    renderTabs = (info, data) => {
+        return (Object.entries(info).map(([key, value], index) => {
+            return(
+                <Tabs.TabPane tab={key} key={index}>
+                    <Plot
+                        data={data[key]}
+                        layout={this.extend(this.state.baseConfig, value)}
+                    />
+                </Tabs.TabPane>
+            )
+        }))
+
+    }
+
     componentDidMount() {
         this.setState({loading: true});
         const params = {experiment: this.props.exp_id.toString()}
         axios.post(window.$API_address + 'frontend/API/getPlotExperiment', params)
             .then(res => {
                 const result = JSON.parse(res.data)
+                const tabs =  this.renderTabs(result['info'], result['data'])
                 this.setState({
                     renderObject:
-                        <Plot
-                            data={result['data']}
-                            layout={this.extend(this.state.baseConfig, result['info'])}
-                        />
+                        <Tabs defaultActiveKey="1">
+                            {tabs}
+                        </Tabs>
                 })
             })
             .catch(error => {
@@ -44,18 +61,7 @@ class PlotExperiment extends React.Component{
                     renderObject:
                         <Alert message="Experiment Plot is not supported yet." type="warning" />
                 })
-                if (error.response.status === 403){
-                    message.error("You don't have the authorization!", 3);
-                    this.setState({loading: false})
-                }
-                else if (error.response.status === 400){
-                    message.error("Bad Request. " + error.response.data, 3);
-                    this.setState({loading: false})
-                }
-                else{
-                    message.error(error.response.data, 3);
-                    this.setState({loading: false})
-                }
+                checkError(error)
             })
     }
 

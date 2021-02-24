@@ -9,6 +9,9 @@ import {UploadOutlined} from "@ant-design/icons";
 const csrftoken = Cookies.get('csrftoken');
 axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
 
+import checkError from "../../../components/Tool"
+
+
 class ExperimentFile extends React.Component {
     constructor(props) {
         super(props);
@@ -41,7 +44,7 @@ class ExperimentFile extends React.Component {
                     message.success(`OpenSMOKE file uploaded successfully. Refresh Page.`, 3);
                 })
                 .catch(error => {
-                    message.error(error.response.data, 3)
+                    checkError(error)
                 });
         }
     }

@@ -10,6 +10,7 @@ import Highlighter from 'react-highlight-words';
 // Local Import
 import ActionCell from "./ActionCell";
 import TabExperiment from "./InfoExperimentFolder/TabExperiment";
+import checkError from "../../components/Tool"
 
 // function CommonPropertiesList(props) {
 //     const common_properties = props.common_properties;
@@ -166,19 +167,8 @@ class ExperimentTable extends React.Component {
                 )
             })
             .catch(error => {
-                console.log(error)
-                if (error.response.status === 403){
-                    message.error("You don't have the authorization!", 3);
-                    this.setState({loading: false})
-                }
-                else if (error.response.status === 400){
-                    message.error("Bad Request. " + error.response.data, 3);
-                    this.setState({loading: false})
-                }
-                else{
-                    message.error(error.response.data, 3);
-                    this.setState({loading: false})
-                }
+                this.setState({loading: false})
+                checkError(error)
             })
 
 

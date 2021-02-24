@@ -8,7 +8,8 @@ import Cookies from "js-cookie";
 
 
 const { Option } = Select;
-const { Text } = Typography;
+import checkError from "../../../components/Tool"
+
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
@@ -134,18 +135,7 @@ class ManagementExperiment extends React.Component{
                 })
             })
             .catch(error => {
-                if (error.response.status === 403){
-                    message.error("You don't have the authorization!", 3);
-                    this.setState({loading: false})
-                }
-                else if (error.response.status === 400){
-                    message.error("Bad Request. " + error.response.data, 3);
-                    this.setState({loading: false})
-                }
-                else{
-                    message.error(error.response.data, 3);
-                    this.setState({loading: false})
-                }
+                checkError(error)
             })
     }
 
