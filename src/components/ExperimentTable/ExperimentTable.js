@@ -1,5 +1,7 @@
 import React from "react";
-import axios from "axios";
+
+const axios = require('axios');
+
 // import {CommonPropertiesList, InitialSpeciesList, StatusTag} from "./Search";
 import {Table, Input, Button, Statistic, Row, Col, Tag, message} from "antd";
 import {SearchOutlined} from '@ant-design/icons';

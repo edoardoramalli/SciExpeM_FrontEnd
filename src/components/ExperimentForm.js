@@ -3,7 +3,7 @@ import React from "react";
 
 // Third-parties import
 import {Form, Button, Collapse, Space, message, Select} from "antd"
-import axios from "axios";
+const axios = require('axios');
 import Cookies from "js-cookie";
 
 // Local import

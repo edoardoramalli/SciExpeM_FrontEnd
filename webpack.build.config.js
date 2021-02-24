@@ -6,6 +6,10 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { merge } = require('webpack-merge');
 
 module.exports =  {
+    externals: {
+        axios: 'axios',
+        'plotly-latest': 'Plotly'
+    },
     mode: 'production',
     devtool: '',
     profile: true,

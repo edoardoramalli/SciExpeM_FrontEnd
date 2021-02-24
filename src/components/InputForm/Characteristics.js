@@ -1,6 +1,6 @@
 import React from "react";
 import {Form, Input, InputNumber, Select, Slider} from "antd";
-import axios from "axios";
+const axios = require('axios');
 
 
 class Characteristics extends React.Component {

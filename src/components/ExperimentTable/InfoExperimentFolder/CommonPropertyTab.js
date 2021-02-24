@@ -1,6 +1,6 @@
 import React from "react";
 import {Descriptions, message, Spin, Col, Empty} from 'antd';
-import axios from "axios";
+const axios = require('axios');
 
 import "./styles.less"
 

@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+const axios = require('axios');
 import Cookies from "js-cookie";
 import XMLViewer from 'react-xml-viewer'
 import {message, Form, Button, Upload} from "antd";

@@ -2,7 +2,7 @@
 import React from "react";
 
 // Third parties import
-import axios from "axios";
+const axios = require('axios');
 import Cookies from "js-cookie";
 import {message} from "antd";
 

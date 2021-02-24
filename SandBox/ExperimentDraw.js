@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert} from 'antd';
 
-import axios from 'axios';
+const axios = require('axios');
 
 
 import GenericMultiDraw from "./GenericMultiDraw";

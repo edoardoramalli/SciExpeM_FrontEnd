@@ -1,6 +1,6 @@
 import React from "react";
 import { Descriptions } from 'antd';
-import axios from "axios";
+const axios = require('axios');
 
 
 import HyperLink from "../../HyperLink";

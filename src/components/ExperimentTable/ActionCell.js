@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+const axios = require('axios');
 import {Button, Dropdown, Menu, message, Popconfirm} from "antd";
 import {DeleteOutlined, DownloadOutlined} from "@ant-design/icons";
 import Cookies from "js-cookie";

@@ -3,7 +3,7 @@ import {Button, message, Radio, Row, Col, Divider, Select, InputNumber, Typograp
 
 
 import {CheckOutlined} from "@ant-design/icons";
-import axios from "axios";
+const axios = require('axios');
 import Cookies from "js-cookie";
 
 

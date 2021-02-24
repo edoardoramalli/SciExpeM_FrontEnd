@@ -20,6 +20,11 @@ const host = process.env.HOST || 'localhost';
 // process.env.NODE_ENV = 'development';
 
 module.exports = {
+    externals: {
+        axios: 'axios',
+        // 'create-plotly-component': 'createPlotlyComponent',
+        'plotly-latest': 'Plotly'
+    },
     optimization: {
         splitChunks: {
             chunks: 'all',

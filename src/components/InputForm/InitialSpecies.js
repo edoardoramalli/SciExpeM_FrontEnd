@@ -2,7 +2,7 @@ import React from "react";
 
 import {Space, Form, Button, Select, InputNumber} from "antd";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
-import axios from "axios";
+const axios = require('axios');
 
 class InitialSpecies extends React.Component{
     constructor() {

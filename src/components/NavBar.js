@@ -1,6 +1,6 @@
 import React from "react";
 import {Menu} from "antd";
-import axios from "axios";
+const axios = require('axios');
 import {UploadOutlined, DatabaseOutlined, HomeOutlined, LogoutOutlined} from '@ant-design/icons';
 
 class NavBar extends React.Component{

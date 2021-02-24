@@ -2,7 +2,7 @@ import React from "react";
 import {Button, Form, Upload, message, Modal} from "antd";
 import {UploadOutlined} from "@ant-design/icons";
 import Cookies from "js-cookie";
-import axios from "axios";
+const axios = require('axios');
 
 const GenericTable = React.lazy(() => import('../GenericTable'));
 

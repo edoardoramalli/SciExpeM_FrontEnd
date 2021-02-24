@@ -10,9 +10,10 @@ const InfoExperiment = lazy(() => import('./InfoExperiment'));
 const CommonPropertyTab = lazy(() => import('./CommonPropertyTab'))
 const BibliographyTab = lazy(()=> import('./BibliographyTab'))
 const ExperimentFile = lazy(() => import('./ExperimentFile'));
-const ExperimentDraw = lazy(() => import('../../ExperimentDraw'));
+// const ExperimentDraw = lazy(() => import('../../ExperimentDraw'));
 const ManagementExperiment = lazy(() => import('./ManagementExperiment'));
 const RawData = lazy(() => import('./RawData'))
+const PlotExperiment = lazy(() => import('./PlotExperiment'))
 
 
 
@@ -48,7 +49,7 @@ class TabExperiment extends React.Component{
                     />
                 </TabPane>
                 <TabPane tab="Plot Data" key="5">
-                    <ExperimentDraw exp_id={this.props.experiment.id}/>
+                    <PlotExperiment exp_id={this.props.experiment.id}/>
                 </TabPane>
                 <TabPane tab="Raw Data" key="6">
                     <RawData exp_id={this.props.experiment.id} type={"dg1"}/>

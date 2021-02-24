@@ -4,7 +4,7 @@ import React from "react";
 // Third-parties import
 import {Button, Upload, Space, Modal, Statistic, Row, Col} from "antd"
 import { UploadOutlined } from '@ant-design/icons';
-import axios from "axios";
+const axios = require('axios');
 import Cookies from "js-cookie";
 
 const csrftoken = Cookies.get('csrftoken');
