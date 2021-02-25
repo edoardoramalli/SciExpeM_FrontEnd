@@ -10,7 +10,7 @@ import Highlighter from 'react-highlight-words';
 // Local Import
 import ActionCell from "./ActionCell";
 import TabExperiment from "./InfoExperimentFolder/TabExperiment";
-import checkError from "../../components/Tool"
+import {checkError} from "../../components/Tool"
 
 // function CommonPropertiesList(props) {
 //     const common_properties = props.common_properties;

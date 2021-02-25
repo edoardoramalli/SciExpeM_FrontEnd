@@ -7,7 +7,7 @@ const Plotly = require('plotly-latest')
 
 import createPlotlyComponent from "react-plotly.js/factory";
 const Plot = createPlotlyComponent(Plotly);
-import checkError from "../../../components/Tool"
+import {checkError} from "../../Tool"
 
 
 

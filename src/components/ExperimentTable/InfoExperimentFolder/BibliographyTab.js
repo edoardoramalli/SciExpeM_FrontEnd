@@ -4,7 +4,7 @@ const axios = require('axios');
 
 import "./styles.less"
 import HyperLink from "../../HyperLink";
-import checkError from "../../../components/Tool"
+import {checkError} from "../../Tool"
 
 class BibliographyTab extends React.Component {
     constructor(props) {

@@ -9,7 +9,7 @@ import {UploadOutlined} from "@ant-design/icons";
 const csrftoken = Cookies.get('csrftoken');
 axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
 
-import checkError from "../../../components/Tool"
+import {checkError} from "../../../components/Tool"
 
 
 class ExperimentFile extends React.Component {

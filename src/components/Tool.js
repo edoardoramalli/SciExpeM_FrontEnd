@@ -1,6 +1,11 @@
 import {message} from "antd";
 
-function checkError(error){
+
+export function HelloTester() {
+
+}
+
+export function checkError(error){
     if (error.response.status === 403){
         message.error("You don't have the authorization!", 3);
     }
@@ -11,5 +16,3 @@ function checkError(error){
         message.error(error.response.data, 3);
     }
 }
-
-export default checkError;

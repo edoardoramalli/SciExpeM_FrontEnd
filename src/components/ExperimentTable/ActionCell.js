@@ -3,7 +3,7 @@ const axios = require('axios');
 import {Button, Dropdown, Menu, message, Popconfirm} from "antd";
 import {DeleteOutlined, DownloadOutlined} from "@ant-design/icons";
 import Cookies from "js-cookie";
-import checkError from "../../components/Tool"
+import {checkError} from "../../components/Tool"
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 

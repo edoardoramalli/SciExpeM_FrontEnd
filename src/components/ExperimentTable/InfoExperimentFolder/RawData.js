@@ -8,7 +8,7 @@ import {message} from "antd";
 
 // Local import
 import GenericTable from "../../GenericTable";
-import checkError from "../../../components/Tool"
+import {checkError} from "../../../components/Tool"
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 

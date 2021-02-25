@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 
 
 const { Option } = Select;
-import checkError from "../../../components/Tool"
+import {checkError} from "../../../components/Tool"
 
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');

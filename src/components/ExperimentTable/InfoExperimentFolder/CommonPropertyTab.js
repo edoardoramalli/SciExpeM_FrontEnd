@@ -3,7 +3,7 @@ import {Descriptions, message, Spin, Col, Empty} from 'antd';
 const axios = require('axios');
 
 import "./styles.less"
-import checkError from "../../../components/Tool"
+import {checkError} from "../../../components/Tool"
 
 class CommonPropertyTab extends React.Component {
     constructor(props) {
