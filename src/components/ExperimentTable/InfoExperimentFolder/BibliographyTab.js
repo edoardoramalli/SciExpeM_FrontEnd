@@ -1,6 +1,8 @@
 import React from "react";
 import {Descriptions, message, Spin, Col, Empty} from 'antd';
 const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 import "./styles.less"
 import HyperLink from "../../HyperLink";
@@ -68,9 +70,9 @@ class BibliographyTab extends React.Component {
         this.setState({loading: true});
         const params = {
             fields: ['id', 'references', 'reference_doi'],
-            experiment: this.state.exp_id.toString()
+            exp_id: this.state.exp_id.toString()
         }
-        axios.post(window.$API_address + 'frontend/api/getFilePaper', params)
+        axios.post(window.$API_address + 'frontend/API/getFilePaper', params)
             .then(res => {
                 this.setState(
                     {

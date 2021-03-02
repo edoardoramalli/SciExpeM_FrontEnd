@@ -7,6 +7,7 @@ import './App.css';
 import {BackTop, Layout, message, Spin} from "antd";
 import NavBar from "./NavBar";
 
+
 // import {SearchAndExecute} from "./Search";
 
 
@@ -14,9 +15,9 @@ const ExperimentTable = lazy(() => import('./ExperimentTable/ExperimentTable'));
 // const SearchAndExecute = lazy(() => import('./Search'));
 
 
-const InsertExperimentForm = lazy(() => import('./ExperimentForm'));
-
-const InsertExperimentFile = lazy(() => import('./InsertExperimentFile'));
+const InsertExperimentForm = lazy(() => import('./ExperimentForm/ExperimentForm'));
+const ModelTable = lazy(()=> import('./ModelTable/ModelTable'))
+const InsertExperimentFile = lazy(() => import('./ExperimentFile/InsertExperimentFile'));
 const {Header, Content, Footer} = Layout;
 
 
@@ -46,13 +47,13 @@ class App extends React.Component {
             // "searchandexecute": <SearchAndExecute/>,
             "input": <InsertExperimentFile/>,
             "input-form": <InsertExperimentForm/>,
-            // "about": <div>Ciaooo</div>
+            "models": <ModelTable/>
         }
 
         return (
             <Layout className="layout">
                 <Header>
-                    <NavBar updateStateApp = {this.updateStateApp}/>
+                    <NavBar current={current} updateStateApp = {this.updateStateApp}/>
                 </Header>
                 <Content style={{padding: '25px 25px', height: "100%"}}>
                     <div style={{background: '#fff', padding: 0, height: "100%"}}>

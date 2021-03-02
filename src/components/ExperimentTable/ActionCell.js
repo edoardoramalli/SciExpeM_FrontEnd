@@ -1,4 +1,5 @@
 import React from "react";
+
 const axios = require('axios');
 import {Button, Dropdown, Menu, message, Popconfirm} from "antd";
 import {DeleteOutlined, DownloadOutlined} from "@ant-design/icons";
@@ -19,8 +20,8 @@ class ActionCell extends React.Component {
         const e_id = this.props.e_id;
         this.setState({loadingDelete: true});
         const params = {
-            'id': [e_id.toString()],
-            'model_name': ['Experiment']
+            'element_id': e_id.toString(),
+            'model_name': 'Experiment'
 
         }
         axios.post(window.$API_address + 'ExperimentManager/API/deleteElement', params)
@@ -35,106 +36,59 @@ class ActionCell extends React.Component {
     };
 
     handleClick = (e) => {
-        let exp_id = this.props.e_id;
-        let file_doi = this.props.file_doi;
-        if (e.key === 'opensmoke') {
-
-            const request_url = window.$API_address + 'frontend/api/experiment/download/input_file/' + exp_id.toString();
-            axios.get(request_url, {
-                responseType: 'blob',
-                timeout: 30000
-            })
-                .then(res => {
-                    const url = window.URL.createObjectURL(new Blob([res.data]));
-                    const link = document.createElement('a');
-                    link.href = url;
-
-                    const file_name = file_doi + ".dic"
-                    link.setAttribute('download', file_name);
-
-                    document.body.appendChild(link);
-                    link.click();
-                    message.success('Opensmoke input file downloaded')
-                })
-                .catch(function (error) {
-                    // handle error
-                    console.log(error);
-                    message.error('Error. The OS input is not available')
-                })
-        }
-        else if (e.key === 'excel') {
-
-            const request_url = window.$API_address + 'frontend/api/experiment/download/excel/' + exp_id.toString();
-            axios.get(request_url, {
-                responseType: 'blob',
-                timeout: 30000
-            })
-                .then(res => {
-                    const url = window.URL.createObjectURL(new Blob([res.data]));
-                    const link = document.createElement('a');
-                    link.href = url;
-
-                    const file_name = file_doi + ".xlsx"
-                    link.setAttribute('download', file_name);
-
-                    document.body.appendChild(link);
-                    link.click();
-                    message.success('Excel file downloaded')
-                })
-                .catch(function (error) {
-                    // handle error
-                    console.log(error);
-                    message.error('Error Downloading file')
-                })
-        }
-        else if (e.key === 'xml'){
-            const request_url =
-                window.$API_address + 'frontend/api/experiment/download/respecth_file/' + exp_id.toString();
-            axios.get(request_url, {
-                responseType: 'blob',
-                timeout: 30000
-            })
-                .then(res => {
-                    const url = window.URL.createObjectURL(new Blob([res.data]));
-                    const link = document.createElement('a');
-                    link.href = url;
-
-                    const file_name = file_doi + ".xml"
-                    link.setAttribute('download', file_name);
-
-                    document.body.appendChild(link);
-                    link.click();
-                    message.success('ReSpecTh input file downloaded')
-                })
-                .catch(function (error) {
-                    // handle error
-                    console.log(error);
-                    message.error('Error Downloading file')
-                })
+        const params = {
+            exp_id: this.props.e_id,
+            file: e.key,
         }
 
+        let extension;
 
-    };
+        if (e.key === 'OpenSMOKEpp') {
+            extension = '.dic'
+        } else if (e.key === 'ReSpecTh') {
+            extension = '.xml'
+        } else if (e.key === 'excel') {
+            extension = '.xlsx'
+        }
+
+        axios.get(window.$API_address + 'frontend/API/getExperimentFile',
+            {responseType: 'blob', params: params})
+            .then(res => {
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+
+                const file_name = this.props.file_doi + extension
+                link.setAttribute('download', file_name);
+
+                document.body.appendChild(link);
+                link.click();
+                message.success(e.key + ' file downloaded')
+            })
+            .catch(error => {
+                message.error("Error downloading the file. File could be missing, or you don't have the permissions.")
+            })
+    }
 
     render() {
         const menu = (
             <Menu onClick={this.handleClick}>
-                <Menu.Item key="xml">XML Respecth</Menu.Item>
+                <Menu.Item key="ReSpecTh">XML Respecth</Menu.Item>
                 <Menu.Item key="excel">Excel</Menu.Item>
-                <Menu.Item key="opensmoke">Opensmoke Input</Menu.Item>
+                <Menu.Item key="OpenSMOKEpp">Opensmoke Input</Menu.Item>
             </Menu>
         );
 
         return (
             <div>
                 <Dropdown overlay={menu}>
-                    <Button shape="circle" >
-                        <DownloadOutlined />
+                    <Button shape="circle">
+                        <DownloadOutlined/>
                     </Button>
                 </Dropdown>
                 <Popconfirm title="Are you sure delete this experiment?" onConfirm={this.handleDelete} okText="Yes"
                             cancelText="No">
-                    <Button shape="circle" loading={this.state.loadingDelete}><DeleteOutlined />
+                    <Button shape="circle" loading={this.state.loadingDelete}><DeleteOutlined/>
                     </Button>
                 </Popconfirm>
             </div>

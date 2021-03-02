@@ -4,13 +4,14 @@ import React from "react";
 // Third parties import
 const axios = require('axios');
 import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 import {message} from "antd";
 
 // Local import
 import GenericTable from "../../GenericTable";
 import {checkError} from "../../../components/Tool"
 
-axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
+
 
 class RawData extends React.Component{
     constructor(props) {

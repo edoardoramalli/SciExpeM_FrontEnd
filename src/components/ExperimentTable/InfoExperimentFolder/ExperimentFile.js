@@ -36,7 +36,7 @@ class ExperimentFile extends React.Component {
             onSuccess(file);
             const params = {
                 'model_name': ['Experiment'],
-                'id': [scope.state.exp_id.toString()],
+                'element_id': [scope.state.exp_id.toString()],
                 'property': [JSON.stringify({'os_input_file': file_text})]
             }
             axios.post(window.$API_address + 'ExperimentManager/API/updateElement', params)
@@ -60,9 +60,9 @@ class ExperimentFile extends React.Component {
         }
 
         const params = {
-            'model_name': ['Experiment'],
-            'id': [this.state.exp_id.toString()],
-            'property': [property_name]
+            'model_name': 'Experiment',
+            'element_id': this.state.exp_id.toString(),
+            'property_name': property_name
         }
 
 
@@ -78,7 +78,7 @@ class ExperimentFile extends React.Component {
                 }
             })
             .catch(error => {
-                message.error(error.response.data, 3);
+                checkError(error)
             })
 
 

@@ -57,7 +57,7 @@ class InsertExperimentFile extends React.Component {
             const { onSuccess, onError, file, onProgress } = options;
 
             const config = {
-                headers: { "X-CSRFToken": csrftoken }
+                headers: { "X-CSRFToken": csrftoken}
             };
 
             const reader = new FileReader();
@@ -66,8 +66,8 @@ class InsertExperimentFile extends React.Component {
             reader.onloadend = function(e) {
                 file_text = e.target.result
                 const data = {
-                    format_file : ['XML_ReSpecTh'],
-                    file_text: [file_text]
+                    format_file : 'XML_ReSpecTh',
+                    file_text: file_text
                 }
                 axios
                     .post(window.$API_address + 'ExperimentManager/API/loadExperiment', data, config)

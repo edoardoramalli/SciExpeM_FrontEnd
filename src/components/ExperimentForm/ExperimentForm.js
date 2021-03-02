@@ -7,17 +7,16 @@ const axios = require('axios');
 import Cookies from "js-cookie";
 
 // Local import
-import ExperimentType from "./InputForm/ExperimentType";
-import ReactorType from "./InputForm/ReactorType";
-import InitialSpecies from "./InputForm/InitialSpecies";
-import CommonProperty from "./InputForm/CommonProperty";
-import UploadExperimentData from "./InputForm/UploadExperimentData";
-import HelpGuide from "./InputForm/HelpGuide";
-import References from "./InputForm/References";
-import IgnitionDefinition from "./InputForm/IgnitionDefinition";
-import Characteristics from "./InputForm/Characteristics";
-import LoadOpenSmokeFile from "./InputForm/LoadOpenSmokeFile"
-import LoadDataColumn from "./InputForm/LoadDataColumn"
+import ExperimentType from "./ExperimentType";
+import ReactorType from "./ReactorType";
+import InitialSpecies from "./InitialSpecies";
+import CommonProperty from "./CommonProperty";
+import HelpGuide from "./HelpGuide";
+import References from "./References";
+import IgnitionDefinition from "./IgnitionDefinition";
+import Characteristics from "./Characteristics";
+import LoadOpenSmokeFile from "./LoadOpenSmokeFile"
+import LoadDataColumn from "./LoadDataColumn"
 
 
 const csrftoken = Cookies.get('csrftoken');
@@ -98,8 +97,8 @@ class ExperimentForm extends React.Component {
         this.handleValueForm(values)
 
         const params = {
-            'model_name': ['Experiment'],
-            'property': [JSON.stringify(this.state.experiment)]
+            'model_name': 'Experiment',
+            'property_dict': JSON.stringify(this.state.experiment)
         }
 
         axios.post(window.$API_address + 'ExperimentManager/API/insertElement', params)

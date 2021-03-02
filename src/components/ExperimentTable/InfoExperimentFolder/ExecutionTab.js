@@ -18,7 +18,7 @@ class ExecutionTab extends React.Component {
     componentDidMount() {
         let params = {
             fields: ['id', 'chemModel', 'execution_start', 'execution_end', 'username'],
-            experiment: this.props.exp_id.toString()
+            exp_id: this.props.exp_id.toString()
         }
         axios.post(window.$API_address + 'frontend/API/getExecutionList', params)
             .then(res => {

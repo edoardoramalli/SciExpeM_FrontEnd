@@ -10,7 +10,7 @@ import Highlighter from 'react-highlight-words';
 // Local Import
 import ActionCell from "./ActionCell";
 import TabExperiment from "./InfoExperimentFolder/TabExperiment";
-import {checkError} from "../../components/Tool"
+import {checkError} from "../Tool"
 
 // function CommonPropertiesList(props) {
 //     const common_properties = props.common_properties;
@@ -154,7 +154,7 @@ class ExperimentTable extends React.Component {
             fields: ['id', 'reactor', 'experiment_type', 'username',
                 'fileDOI', 'status', 'ignition_type', 'experiment_interpreter']
         }
-        axios.post(window.$API_address + 'frontend/api/getExperimentList', params)
+        axios.post(window.$API_address + 'frontend/API/getExperimentList', params)
             .then(res => {
                 const experiments = JSON.parse(res.data)
                 this.setState(
@@ -171,19 +171,6 @@ class ExperimentTable extends React.Component {
                 checkError(error)
             })
 
-
-
-        // axios.get(window.$API_address + 'frontend/api/opensmoke/species_names')
-        //     .then(res => {
-        //         const names = res.data.names
-        //         let list = []
-        //         let i;
-        //         for (i = 0; i < names.length; i++) {
-        //             list.push({text: names[i], value: names[i]})
-        //         }
-        //         this.setState({filter_type_exp: list.sort(function(a, b) {
-        //             return a.value > b.value;})});
-        //     })
     }
 
     // handle local delete

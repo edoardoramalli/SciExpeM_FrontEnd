@@ -61,9 +61,9 @@ class CommonPropertyTab extends React.Component {
         const params = {
             name: this.props['name'],
             fields: ['id', 'name', 'units', 'value'],
-            experiment: this.state.exp_id.toString()
+            exp_id: this.state.exp_id.toString()
         }
-        axios.post(window.$API_address + 'frontend/api/getPropertyList', params)
+        axios.post(window.$API_address + 'frontend/API/getPropertyList', params)
             .then(res => {
                 this.setState(
                     {

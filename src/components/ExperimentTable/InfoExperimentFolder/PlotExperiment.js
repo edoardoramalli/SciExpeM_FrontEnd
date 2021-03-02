@@ -44,7 +44,7 @@ class PlotExperiment extends React.Component{
 
     componentDidMount() {
         this.setState({loading: true});
-        const params = {experiment: this.props.exp_id.toString()}
+        const params = {exp_id: this.props.exp_id.toString()}
         axios.post(window.$API_address + 'frontend/API/getPlotExperiment', params)
             .then(res => {
                 const result = JSON.parse(res.data)

@@ -25,44 +25,28 @@ class ManagementExperiment extends React.Component{
 
     updateValues(id, properties){
         const params = {
-            'model_name': ['Experiment'],
-            'property': [JSON.stringify(properties)],
-            'id': [id]
+            'model_name': 'Experiment',
+            'property_dict': JSON.stringify(properties),
+            'element_id': id
         }
         axios.post(window.$API_address + 'ExperimentManager/API/updateElement', params)
             .then(res => {
-                message.success('Fields are not updated! Reload page to see the effects', 3);
+                message.success('Fields are updated! Reload page to see the effects', 3);
             }).catch(error => {
-            if (error.response.status === 403){
-                message.error("You don't have the authorization!", 3);
-            }
-            else if (error.response.status === 400){
-                message.error("Bad Request. " + error.response.data, 3);
-            }
-            else{
-                message.error(error.response.data, 3);
-            }
+                checkError(error)
         })
     }
 
     verifyExperiment(id, status){
         const params = {
-            'id': [id],
-            'status': [status]
+            'exp_id': id,
+            'status': status
         }
         axios.post(window.$API_address + 'ExperimentManager/API/verifyExperiment', params)
             .then(res => {
                 message.success('Experiment status is updated! Reload page to see the effects', 3);
             }).catch(error => {
-            if (error.response.status === 403){
-                message.error("You don't have the authorization!", 3);
-            }
-            else if (error.response.status === 400){
-                message.error("Bad Request. " + error.response.data, 3);
-            }
-            else{
-                message.error(error.response.data, 3);
-            }
+            checkError(error)
         })
     }
 
@@ -109,7 +93,7 @@ class ManagementExperiment extends React.Component{
 
         const params = {
             fields: ['t_inf', 't_sup', 'p_inf', 'p_sup', 'phi_inf', 'phi_sup', 'fuels', 'status'],
-            id: this.state.exp_id.toString(),
+            element_id: this.state.exp_id.toString(),
             model_name: 'Experiment'
         }
 

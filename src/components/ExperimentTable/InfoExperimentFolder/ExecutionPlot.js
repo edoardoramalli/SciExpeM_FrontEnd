@@ -2,6 +2,9 @@ import React from "react";
 import {Alert, Empty, Tabs} from "antd";
 
 const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
+
 const Plotly = require('plotly-latest')
 import createPlotlyComponent from "react-plotly.js/factory";
 import {checkError} from "../../Tool";
@@ -37,7 +40,7 @@ class ExecutionPlot extends React.Component{
     }
 
     componentDidMount() {
-        const params = {'id': this.props.id.toString()}
+        const params = {'e_id': this.props.id.toString()}
         axios.post(window.$API_address + this.props.api, params)
             .then(res => {
                 const result = JSON.parse(res.data)
