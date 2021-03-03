@@ -1,5 +1,5 @@
 import React from "react";
-import {Alert, Empty, Tabs} from "antd";
+import {Alert, Col, Empty, Spin, Tabs} from "antd";
 
 const axios = require('axios');
 import Cookies from "js-cookie";
@@ -15,7 +15,7 @@ class ExecutionPlot extends React.Component{
         super(props);
         this.state = {
             baseConfig: {width: 640, height: 480, showlegend: true, autosize: true},
-            renderObjectPlot: null,
+            renderObjectPlot: <Col span={1} offset={11}><Spin size="large" tip="Loading..."/></Col>,
         }
     }
 

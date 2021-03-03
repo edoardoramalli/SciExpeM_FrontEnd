@@ -12,9 +12,7 @@ import NavBar from "./NavBar";
 
 
 const ExperimentTable = lazy(() => import('./ExperimentTable/ExperimentTable'));
-// const SearchAndExecute = lazy(() => import('./Search'));
-
-
+const InsertCheModelFile = lazy(() => import('./ChemModelForm/InsertCheModelFile'));
 const InsertExperimentForm = lazy(() => import('./ExperimentForm/ExperimentForm'));
 const ModelTable = lazy(()=> import('./ModelTable/ModelTable'))
 const InsertExperimentFile = lazy(() => import('./ExperimentFile/InsertExperimentFile'));
@@ -45,9 +43,10 @@ class App extends React.Component {
         const currentMapping = {
             "experiments": <ExperimentTable/>,
             // "searchandexecute": <SearchAndExecute/>,
-            "input": <InsertExperimentFile/>,
-            "input-form": <InsertExperimentForm/>,
-            "models": <ModelTable/>
+            "experimentInputFile": <InsertExperimentFile/>,
+            "experimentInputForm": <InsertExperimentForm/>,
+            "models": <ModelTable/>,
+            "chemModelInputForm": <InsertCheModelFile />
         }
 
         return (

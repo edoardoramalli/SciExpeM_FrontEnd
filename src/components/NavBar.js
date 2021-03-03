@@ -63,9 +63,11 @@ class NavBar extends React.Component{
                         </span>
                     }>
 
-                    <Menu.Item key="input" >Insert ReSpecTh File</Menu.Item>
+                    <Menu.Item key="experimentInputFile" >Insert ReSpecTh File</Menu.Item>
 
-                    <Menu.Item key="input-form">Insert Experiment</Menu.Item>
+                    <Menu.Item key="experimentInputForm">Insert Experiment</Menu.Item>
+
+                    <Menu.Item key="chemModelInputForm">Insert ChemModel</Menu.Item>
                 </Menu.SubMenu>
 
                 <Menu.Item key="logout" style={{"float": "right"}}>

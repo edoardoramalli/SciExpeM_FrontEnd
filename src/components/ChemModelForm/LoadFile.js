@@ -1,9 +1,10 @@
 import React from "react";
 import {Button, Form, Upload, message, Modal} from "antd";
 import {UploadOutlined} from "@ant-design/icons";
+import XMLViewer from "react-xml-viewer";
 
 
-class LoadOpenSmokeFile extends React.Component{
+class LoadFile extends React.Component{
 
     constructor(props) {
         super(props);
@@ -33,23 +34,23 @@ class LoadOpenSmokeFile extends React.Component{
         reader.onloadend = function(e) {
             file_text = e.target.result
             onSuccess(file);
-            message.success(`OpenSMOKE file uploaded successfully`, 3);
+            message.success(`File uploaded successfully`, 3);
             scope.setState({file: file_text});
-            scope.props.handleOSinputFile(file_text)
+            scope.props.handleFile(file_text)
         }
     }
 
     render() {
 
 
-        const preview = <div dangerouslySetInnerHTML={{__html: this.state.file}}
-                           style={{whiteSpace: "pre-line"}}/>;
+        const preview = <XMLViewer xml={this.state.file}/>
 
         return(
             <>
                 <Form.Item
-                    name={'os_input_file'}
-                    rules={[{required: this.props.required, message: 'Please upload OpenSMOKE input file.'}]}
+                    label={this.props.name}
+                    name={this.props.labelForm}
+                    rules={[{required: this.props.required, message: 'Please upload ' + this.props.name +' file.'}]}
                 >
                     <Upload
                         multiple={false}
@@ -58,9 +59,9 @@ class LoadOpenSmokeFile extends React.Component{
                             {showRemoveIcon: false}
                         }
                         onPreview={this.handleDataPreview}
-                        accept={'.dic'}
+                        accept={'.xml'}
                     >
-                        <Button icon={<UploadOutlined />}>Upload OpenSMOKE++ File</Button>
+                        <Button icon={<UploadOutlined />}>Upload File</Button>
                     </Upload>
                 </Form.Item>
                 <Modal visible={this.state.dataPreviewVisible} footer={null} width={800}
@@ -72,4 +73,4 @@ class LoadOpenSmokeFile extends React.Component{
     }
 }
 
-export default LoadOpenSmokeFile;
+export default LoadFile;

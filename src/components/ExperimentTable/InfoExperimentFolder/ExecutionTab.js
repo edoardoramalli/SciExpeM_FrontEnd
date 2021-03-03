@@ -11,7 +11,8 @@ class ExecutionTab extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataSource: []
+            dataSource: [],
+            loading: true
         }
     }
 
@@ -22,10 +23,11 @@ class ExecutionTab extends React.Component {
         }
         axios.post(window.$API_address + 'frontend/API/getExecutionList', params)
             .then(res => {
-                this.setState({dataSource: JSON.parse(res.data)})
+                this.setState({dataSource: JSON.parse(res.data), loading: false})
             })
             .catch(error => {
                 checkError(error)
+                this.setState({loading: false})
             })
     }
 
@@ -86,6 +88,7 @@ class ExecutionTab extends React.Component {
                         rowKey="id"
                         dataSource={this.state.dataSource}
                         columns={columns}
+                        loading={this.state.loading}
                         expandedRowRender={record => {
                             return <DetailExecutionTab exec_id={record.id}/>
                         }}

@@ -35,9 +35,9 @@ class ExperimentFile extends React.Component {
             file_text = e.target.result
             onSuccess(file);
             const params = {
-                'model_name': ['Experiment'],
-                'element_id': [scope.state.exp_id.toString()],
-                'property': [JSON.stringify({'os_input_file': file_text})]
+                'model_name': 'Experiment',
+                'element_id': scope.state.exp_id.toString(),
+                'property_dict': JSON.stringify({'os_input_file': file_text})
             }
             axios.post(window.$API_address + 'ExperimentManager/API/updateElement', params)
                 .then(res => {

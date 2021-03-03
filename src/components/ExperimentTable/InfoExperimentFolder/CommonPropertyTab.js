@@ -34,11 +34,10 @@ class CommonPropertyTab extends React.Component {
 
         if (this.state.property_list === null){
             return(
-                <>
-                    <Col span={1} offset={11}>
-                        <Spin size="large" tip="Loading..."/>
-                    </Col>
-                </>
+
+                <Col span={1} offset={11}>
+                    <Spin size="large" tip="Loading..."/>
+                </Col>
             )
 
         }
