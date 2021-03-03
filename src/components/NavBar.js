@@ -1,6 +1,8 @@
 import React from "react";
-import {Icon, Menu} from "antd";
-import axios from "axios";
+import {Menu} from "antd";
+const axios = require('axios');
+import {UploadOutlined, DatabaseOutlined, HomeOutlined,
+    LogoutOutlined, ExperimentOutlined, FileOutlined} from '@ant-design/icons';
 
 class NavBar extends React.Component{
 
@@ -15,7 +17,12 @@ class NavBar extends React.Component{
         if (e.key === "logout"){
             window.location.href="/accounts/logout";
         }
-        this.props.updateStateApp(e);
+        else if (e.key === 'home'){
+            window.location.href="/";
+        }
+        else{
+            this.props.updateStateApp(e);
+        }
     };
 
     componentDidMount() {
@@ -31,29 +38,40 @@ class NavBar extends React.Component{
             <Menu
                 theme="dark"
                 mode="horizontal"
-                defaultSelectedKeys={[this.state.current]}
+                defaultSelectedKeys={[this.props.current]}
                 onClick={this.handleMenuClick}
                 style={{lineHeight: '64px'}}
             >
-                <Menu.Item key="main" disabled><b>SciExpeM</b></Menu.Item>
+                <Menu.Item key="home"><HomeOutlined />Home</Menu.Item>
                 <Menu.SubMenu
                     title={
                         <span className="submenu-title-wrapper">
-                            <Icon type="upload"/>
+                            <DatabaseOutlined />
+                            DataBase
+                        </span>
+                    }>
+
+                    <Menu.Item key="experiments"><ExperimentOutlined />Experiments</Menu.Item>
+
+                    <Menu.Item key="models"><FileOutlined />Models</Menu.Item>
+                </Menu.SubMenu>
+                <Menu.SubMenu
+                    title={
+                        <span className="submenu-title-wrapper">
+                            <UploadOutlined />
                             Insert
                         </span>
                     }>
 
-                    <Menu.Item key="input" disabled>Insert using input file</Menu.Item>
+                    <Menu.Item key="experimentInputFile" >Insert ReSpecTh File</Menu.Item>
 
-                    <Menu.Item key="input-form">Insert Experiment</Menu.Item>
+                    <Menu.Item key="experimentInputForm">Insert Experiment</Menu.Item>
+
+                    <Menu.Item key="chemModelInputForm">Insert ChemModel</Menu.Item>
                 </Menu.SubMenu>
 
-                <Menu.Item key="experiments"><Icon type="database"/>Experimental Database</Menu.Item>
-                <Menu.Item key="searchandexecute" disabled><Icon type="line-chart"/>Search & Execute</Menu.Item>
-                <Menu.Item key="about" disabled><Icon type="info-circle"/>About</Menu.Item>
                 <Menu.Item key="logout" style={{"float": "right"}}>
-                    <Icon type="logout"/>
+                    <LogoutOutlined />
                     Log Out - {this.state.username}
                 </Menu.Item>
 
