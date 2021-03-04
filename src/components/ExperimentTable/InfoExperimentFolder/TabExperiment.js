@@ -14,6 +14,7 @@ const ManagementExperiment = lazy(() => import('./ManagementExperiment'));
 const RawData = lazy(() => import('./RawData'))
 const PlotExperiment = lazy(() => import('./PlotExperiment'))
 const ExecutionTab = lazy(() => import('./ExecutionTab'))
+const CurveMatchingResult = lazy(() => import('./CurveMatchingResult'))
 
 
 
@@ -71,6 +72,11 @@ class TabExperiment extends React.Component{
                 </TabPane>
                 <TabPane tab="Execution" key="11">
                     <ExecutionTab
+                        exp_id={this.props.exp_id}
+                    />
+                </TabPane>
+                <TabPane tab="Curve Matching Result" key="21">
+                    <CurveMatchingResult
                         exp_id={this.props.exp_id}
                     />
                 </TabPane>

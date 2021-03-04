@@ -2,7 +2,7 @@
 import React from "react";
 
 // Third-parties import
-import {Form, Button, Collapse, Space, message, Select} from "antd"
+import {Form, Button, Collapse, Space, message, Select, Table, Row} from "antd"
 const axios = require('axios');
 import Cookies from "js-cookie";
 
@@ -17,6 +17,7 @@ import IgnitionDefinition from "./IgnitionDefinition";
 import Characteristics from "./Characteristics";
 import LoadOpenSmokeFile from "./LoadOpenSmokeFile"
 import LoadDataColumn from "./LoadDataColumn"
+import DataColumns from "./DataColumns";
 
 
 const csrftoken = Cookies.get('csrftoken');
@@ -36,7 +37,9 @@ class ExperimentForm extends React.Component {
             base_active: ['1', '2', '3', '4', '7', '8', '9'],
             active_key: ['1', '2', '3', '4', '7', '8', '9'],
             reactor_value: null,
-            experiment: null
+            experiment: null,
+            tableColumns: [],
+            dataTableColumns: [],
         }
         this.handleExperimentType = this.handleExperimentType.bind(this);
         this.handleReactorType = this.handleReactorType.bind(this);
@@ -50,6 +53,14 @@ class ExperimentForm extends React.Component {
             ignition_type = undefined
         }
         let data_columns;
+        let dc_len = []
+        for(let i in values.experimental_data){
+            dc_len.push(values.experimental_data[i]['data'].length)
+        }
+        if (!dc_len.every( (val, i, arr) => val === arr[0] )){
+            message.error("Data columns have different length.")
+            return true
+        }
         if (!values.volume_time) {
             data_columns = values.experimental_data
         } else {
@@ -94,21 +105,24 @@ class ExperimentForm extends React.Component {
     };
 
     onFinish = values => {
-        this.handleValueForm(values)
+        const error = this.handleValueForm(values)
 
-        const params = {
-            'model_name': 'Experiment',
-            'property_dict': JSON.stringify(this.state.experiment)
+        if(!error){
+            const params = {
+                'model_name': 'Experiment',
+                'property_dict': JSON.stringify(this.state.experiment)
+            }
+
+            axios.post(window.$API_address + 'ExperimentManager/API/insertElement', params)
+                .then(() => {
+                    this.formRef.current.resetFields();
+                    message.success('Experiment added successfully', 5);
+                })
+                .catch(error => {
+                    message.error(error.response.data, 5)
+                })
         }
 
-        axios.post(window.$API_address + 'ExperimentManager/API/insertElement', params)
-            .then(() => {
-                this.formRef.current.resetFields();
-                message.success('Experiment added successfully', 5);
-            })
-            .catch(error => {
-                message.error(error.response.data, 5)
-            })
     }
 
     handleKey = () => {
@@ -129,9 +143,9 @@ class ExperimentForm extends React.Component {
 
     }
 
-    handleDataColumn = text_file => {
-        this.formRef.current.setFieldsValue({experimental_data: text_file})
-    }
+    // handleDataColumn = text_file => {
+    //     this.formRef.current.setFieldsValue({experimental_data: text_file})
+    // }
 
     handleVolumeTime = text_file => {
         this.formRef.current.setFieldsValue({volume_time: text_file})
@@ -139,6 +153,41 @@ class ExperimentForm extends React.Component {
 
     handleOSinputFile = (text_file) => {
         this.formRef.current.setFieldsValue({os_input_file: text_file})
+    }
+
+    handleDataColumns = data_columns => {
+        let data_cols_array = []
+        for (let key in data_columns){
+            data_cols_array.push(data_columns[key])
+        }
+        this.formRef.current.setFieldsValue({experimental_data: data_cols_array})
+        let columns = []
+        let columns_name = []
+        let dataSource = []
+        const len_cols = data_cols_array.length
+        let deep_cols = 0
+        for (let i in data_cols_array){
+            let title;
+            if (data_cols_array[i]['label'] !== undefined){
+                title = data_cols_array[i]['name'] + ' - ' + data_cols_array[i]['label'] + ' - ' + '[' + data_cols_array[i]['units']+ ']'
+            }
+            else{
+                title = data_cols_array[i]['name'] +  ' [' + data_cols_array[i]['units']+ ']'
+            }
+            columns.push({title: title, dataIndex: title, key: title})
+            columns_name.push(title)
+            if (data_cols_array[i]['data'].length > deep_cols){
+                deep_cols = data_cols_array[i]['data'].length
+            }
+        }
+        for(let i=0 ; i < deep_cols; i++) {
+            let tmp_dict = {}
+            for (let j = 0; j < len_cols; j++) {
+                tmp_dict[columns_name[j]] = data_cols_array[j]['data'][i]
+            }
+            dataSource.push(tmp_dict)
+        }
+        this.setState({tableColumns: columns, dataTableColumns: dataSource})
     }
 
     handleReactorType = (reactorType) => {
@@ -226,15 +275,31 @@ class ExperimentForm extends React.Component {
                         <InitialSpecies/>
                     </Collapse.Panel>
                     <Collapse.Panel header="Varied experimental conditions and measured results" key="4">
-                        <Space style={{display: 'flex'}} align="baseline">
-                            <LoadDataColumn
-                                name={'experimental_data'}
-                                dataGroup={'dg1'}
-                                required={true}
-                                handleDataColumn={this.handleDataColumn}
-                            />
-                            <HelpGuide/>
-                        </Space>
+                        <Row>
+                            <Space style={{display: 'flex'}} align="baseline">
+                                <DataColumns handleDataColumns={this.handleDataColumns} />
+                            </Space>
+                        </Row>
+
+
+                            {/*<LoadDataColumn*/}
+                            {/*    name={'experimental_data'}*/}
+                            {/*    dataGroup={'dg1'}*/}
+                            {/*    required={true}*/}
+                            {/*    handleDataColumn={this.handleDataColumn}*/}
+                            {/*/>*/}
+                            {/*<HelpGuide/>*/}
+                            <Row>
+                                <Table
+                                    title={() => <div style={{textAlign: 'center',
+                                        fontWeight: '600', fontSize: 15}}>Preview Table Data Columns</div>}
+                                    size='small'
+                                    pagination={false}
+                                    bordered
+                                    columns={this.state.tableColumns}
+                                    dataSource={this.state.dataTableColumns}
+                                />
+                            </Row>
                     </Collapse.Panel>
                     <Collapse.Panel header="Volume-time profile (Only for 'Rapid Compression Machine')" key="5"
                                     disabled={!this.state.rcm} accordion>

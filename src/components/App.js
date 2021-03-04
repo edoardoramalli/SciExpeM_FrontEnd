@@ -18,7 +18,7 @@ const ModelTable = lazy(()=> import('./ModelTable/ModelTable'))
 const InsertExperimentFile = lazy(() => import('./ExperimentFile/InsertExperimentFile'));
 const {Header, Content, Footer} = Layout;
 
-
+import Tmp from'./tmp'
 
 class App extends React.Component {
 
@@ -46,7 +46,8 @@ class App extends React.Component {
             "experimentInputFile": <InsertExperimentFile/>,
             "experimentInputForm": <InsertExperimentForm/>,
             "models": <ModelTable/>,
-            "chemModelInputForm": <InsertCheModelFile />
+            "chemModelInputForm": <InsertCheModelFile />,
+            "tmp": <Tmp />
         }
 
         return (

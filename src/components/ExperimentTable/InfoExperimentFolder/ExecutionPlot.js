@@ -45,7 +45,7 @@ class ExecutionPlot extends React.Component{
             .then(res => {
                 const result = JSON.parse(res.data)
                 if(Object.keys(result['info']).length === 0){
-                    this.setState({renderObjectPlot: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />})
+                    this.setState({renderObjectPlot: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>})
                 }
                 else {
                     const tabs = this.renderTabs(result['info'], result['data'])
