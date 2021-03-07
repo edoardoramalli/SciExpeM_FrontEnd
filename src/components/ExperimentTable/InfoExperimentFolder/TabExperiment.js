@@ -72,7 +72,7 @@ class TabExperiment extends React.Component{
                 </TabPane>
                 <TabPane tab="Execution" key="11">
                     <ExecutionTab
-                        exp_id={this.props.exp_id}
+                        experiment={this.props.experiment}
                     />
                 </TabPane>
                 <TabPane tab="Curve Matching Result" key="21">

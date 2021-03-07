@@ -3,8 +3,10 @@ import React from "react";
 
 // Third-parties import
 import {Form, Button, Collapse, Space, message, Select, Table, Row} from "antd"
+
 const axios = require('axios');
 import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 // Local import
 import ExperimentType from "./ExperimentType";
@@ -19,9 +21,6 @@ import LoadOpenSmokeFile from "./LoadOpenSmokeFile"
 import LoadDataColumn from "./LoadDataColumn"
 import DataColumns from "./DataColumns";
 
-
-const csrftoken = Cookies.get('csrftoken');
-axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
 
 
 class ExperimentForm extends React.Component {

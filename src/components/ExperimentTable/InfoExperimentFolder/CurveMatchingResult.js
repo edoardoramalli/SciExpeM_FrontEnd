@@ -3,6 +3,9 @@ import {Alert, Col, Empty, Spin, Table, Tabs} from "antd";
 
 
 const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
+
 const Plotly = require('plotly-latest')
 import createPlotlyComponent from "react-plotly.js/factory";
 import {checkError} from "../../Tool";

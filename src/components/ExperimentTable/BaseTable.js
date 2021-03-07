@@ -321,7 +321,8 @@ class BaseTable extends React.Component{
                         model_name={'Experiment'}
                         handleDelete={this.handleDelete}
                     />
-            },];
+            },
+        ];
 
         const header =
             <>

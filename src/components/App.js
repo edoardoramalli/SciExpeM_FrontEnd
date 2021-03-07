@@ -30,7 +30,7 @@ class App extends React.Component {
         super(props);
         this.updateStateApp = this.updateStateApp.bind(this)
         this.state = {
-            current: 'models',
+            current: 'experiments',
             fuels: [],
             species: [],
         }

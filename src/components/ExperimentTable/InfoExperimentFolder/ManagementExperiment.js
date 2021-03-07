@@ -3,15 +3,16 @@ import {Button, message, Radio, Row, Col, Divider, Select, InputNumber, Typograp
 
 
 import {CheckOutlined} from "@ant-design/icons";
+
 const axios = require('axios');
 import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 
 const { Option } = Select;
-import {checkError} from "../../../components/Tool"
+import {checkError} from "../../Tool"
 
 
-axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 class ManagementExperiment extends React.Component{
     constructor(props) {
@@ -39,8 +40,8 @@ class ManagementExperiment extends React.Component{
 
     verifyExperiment(id, status){
         const params = {
+            'status': status,
             'exp_id': id,
-            'status': status
         }
         axios.post(window.$API_address + 'ExperimentManager/API/verifyExperiment', params)
             .then(res => {

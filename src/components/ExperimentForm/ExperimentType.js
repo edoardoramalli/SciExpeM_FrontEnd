@@ -1,6 +1,10 @@
 import React from "react";
 import {Form, Select} from "antd";
+
 const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
+
 
 class ExperimentType extends React.Component{
     constructor(props) {

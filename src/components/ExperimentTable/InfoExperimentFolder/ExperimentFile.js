@@ -1,13 +1,13 @@
 import React from "react";
-const axios = require('axios');
-import Cookies from "js-cookie";
+
 import XMLViewer from 'react-xml-viewer'
 import {message, Form, Button, Upload} from "antd";
 
 import {UploadOutlined} from "@ant-design/icons";
 
-const csrftoken = Cookies.get('csrftoken');
-axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
+const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 import {checkError} from "../../../components/Tool"
 

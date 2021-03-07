@@ -41,7 +41,7 @@ class ExecutionPlot extends React.Component{
     }
 
     componentDidMount() {
-        const params = {'e_id': this.props.id.toString()}
+        const params = {'execution_id': this.props.id.toString()}
         axios.post(window.$API_address + this.props.api, params)
             .then(res => {
                 const result = JSON.parse(res.data)

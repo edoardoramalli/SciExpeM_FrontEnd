@@ -2,7 +2,11 @@ import React from "react";
 
 import {Space, Form, Button, Select, InputNumber} from "antd";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
+
 const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
+
 
 class InitialSpecies extends React.Component{
     constructor() {

@@ -2,6 +2,8 @@ import React from "react";
 import {Alert, Cascader, Col, Form, Button, Input, Modal, Row, Select, Space, Typography, message} from "antd";
 
 const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 
 class AddColumnModal extends React.Component {

@@ -4,6 +4,8 @@ import {DeleteOutlined, DownloadOutlined} from "@ant-design/icons";
 import {checkError} from "../Tool";
 
 const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 
 class ActionCell extends React.Component{

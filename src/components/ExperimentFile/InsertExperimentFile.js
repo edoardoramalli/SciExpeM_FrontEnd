@@ -4,11 +4,10 @@ import React from "react";
 // Third-parties import
 import {Button, Upload, Space, Modal, Statistic, Row, Col} from "antd"
 import { UploadOutlined } from '@ant-design/icons';
+
 const axios = require('axios');
 import Cookies from "js-cookie";
-
-const csrftoken = Cookies.get('csrftoken');
-axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 class InsertExperimentFile extends React.Component {
     constructor() {

@@ -8,6 +8,8 @@ import {checkError} from "../Tool";
 import MinMaxRangeFormItem from "../Shared/MinMaxRangeFormItem";
 
 const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 const Plotly = require('plotly-latest')
 import createPlotlyComponent from "react-plotly.js/factory";

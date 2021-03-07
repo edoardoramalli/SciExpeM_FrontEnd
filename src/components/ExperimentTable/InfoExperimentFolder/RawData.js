@@ -5,7 +5,7 @@ import React from "react";
 const axios = require('axios');
 import Cookies from "js-cookie";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
-import {message} from "antd";
+
 
 // Local import
 import GenericTable from "../../GenericTable";

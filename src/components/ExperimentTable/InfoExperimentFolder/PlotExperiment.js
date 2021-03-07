@@ -2,6 +2,8 @@ import React from "react";
 import {Tabs, Alert, Descriptions} from "antd";
 
 const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 const Plotly = require('plotly-latest')
 

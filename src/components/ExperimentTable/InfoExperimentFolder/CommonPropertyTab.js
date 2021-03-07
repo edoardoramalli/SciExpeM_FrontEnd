@@ -1,6 +1,9 @@
 import React from "react";
 import {Descriptions, message, Spin, Col, Empty} from 'antd';
+
 const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 import "./styles.less"
 import {checkError} from "../../../components/Tool"

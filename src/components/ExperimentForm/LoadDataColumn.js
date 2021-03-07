@@ -1,13 +1,13 @@
 import React from "react";
 import {Button, Form, Upload, message, Modal} from "antd";
 import {UploadOutlined} from "@ant-design/icons";
-import Cookies from "js-cookie";
+
 const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 const GenericTable = React.lazy(() => import('../GenericTable'));
 
-const csrftoken = Cookies.get('csrftoken');
-axios.defaults.headers.post['X-CSRFToken'] = csrftoken;
 
 class LoadDataColumn extends React.Component{
 

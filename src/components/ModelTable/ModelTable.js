@@ -2,7 +2,10 @@ import React from "react";
 import {checkError} from "../Tool";
 import {Button, Input, Table} from "antd";
 import ActionCell from "../Shared/ActionCell";
+
 const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 class ModelTable extends React.Component{
     constructor(props) {
