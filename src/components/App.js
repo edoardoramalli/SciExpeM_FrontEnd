@@ -4,7 +4,7 @@ import React, { lazy, Suspense } from 'react';
 import './App.css';
 
 // Import Libraries
-import {BackTop, Layout, message, Spin} from "antd";
+import {BackTop, Layout, message, Select, Spin} from "antd";
 import NavBar from "./NavBar";
 
 
@@ -16,9 +16,13 @@ const InsertCheModelFile = lazy(() => import('./ChemModelForm/InsertCheModelFile
 const InsertExperimentForm = lazy(() => import('./ExperimentForm/ExperimentForm'));
 const ModelTable = lazy(()=> import('./ModelTable/ModelTable'))
 const InsertExperimentFile = lazy(() => import('./ExperimentFile/InsertExperimentFile'));
+const ExperimentFilterTable = lazy(() => import('./Analysis/ExperimentFilterTable'));
+
+
 const {Header, Content, Footer} = Layout;
 
-import Tmp from'./tmp'
+
+const axios = require('axios');
 
 class App extends React.Component {
 
@@ -26,7 +30,9 @@ class App extends React.Component {
         super(props);
         this.updateStateApp = this.updateStateApp.bind(this)
         this.state = {
-            current: 'experiments'
+            current: 'models',
+            fuels: [],
+            species: [],
         }
     }
 
@@ -47,7 +53,7 @@ class App extends React.Component {
             "experimentInputForm": <InsertExperimentForm/>,
             "models": <ModelTable/>,
             "chemModelInputForm": <InsertCheModelFile />,
-            "tmp": <Tmp />
+            "analysis": <ExperimentFilterTable />
         }
 
         return (

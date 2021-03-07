@@ -1,7 +1,7 @@
 import React from "react";
 import {Menu} from "antd";
 const axios = require('axios');
-import {UploadOutlined, DatabaseOutlined, HomeOutlined,
+import {UploadOutlined, DatabaseOutlined, HomeOutlined,LineChartOutlined,
     LogoutOutlined, ExperimentOutlined, FileOutlined} from '@ant-design/icons';
 
 class NavBar extends React.Component{
@@ -69,6 +69,8 @@ class NavBar extends React.Component{
 
                     <Menu.Item key="chemModelInputForm">Insert ChemModel</Menu.Item>
                 </Menu.SubMenu>
+
+                <Menu.Item key="analysis"><LineChartOutlined />Analysis</Menu.Item>
 
                 <Menu.Item key="logout" style={{"float": "right"}}>
                     <LogoutOutlined />

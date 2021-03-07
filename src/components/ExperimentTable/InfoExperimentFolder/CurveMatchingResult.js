@@ -19,13 +19,14 @@ class CurveMatchingResult extends React.Component{
     }
 
     componentDidMount() {
-        const params = {'exp_id': this.props.exp_id.toString()}
+        const params = {'exp_id': [this.props.exp_id.toString()]}
         axios.post(window.$API_address + 'ExperimentManager/API/getCurveMatching', params)
             .then(res => {
                 let x =[];
                 let y = [];
                 let y_error = [];
-                res.data.map((item) => {
+                console.log(res)
+                res.data[0]['models'].map((item) => {
                     x.push(item['name'])
                     y.push(item['score'])
                     y_error.push(item['error'])
@@ -39,7 +40,7 @@ class CurveMatchingResult extends React.Component{
                                     title: 'Curve Matching Score Vs. ChemModel',
                                     yaxis: {title: 'Curve Matching Score',}}}
                             />,
-                        dataSource: res.data
+                        dataSource: res.data[0]['models']
                     })
                 }
                 else{

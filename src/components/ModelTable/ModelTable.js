@@ -1,6 +1,7 @@
 import React from "react";
 import {checkError} from "../Tool";
 import {Button, Input, Table} from "antd";
+import ActionCell from "../Shared/ActionCell";
 const axios = require('axios');
 
 class ModelTable extends React.Component{
@@ -34,6 +35,8 @@ class ModelTable extends React.Component{
             })
     }
 
+    handleDelete = (e_id) => {this.setState({models: this.state.models.filter(item => item.id !== e_id)});};
+
     render() {
 
         const columns = [
@@ -55,7 +58,20 @@ class ModelTable extends React.Component{
                 sorter: (a, b) => {
                     return a.id > b.id
                 },
-            }
+            },
+            {
+                title: 'Action',
+                dataIndex: 'actions',
+                key: 'actions',
+                width: '50px',
+                render: (text, record) =>
+                    <ActionCell
+                        items={{'ChemModel': {'label': 'Model (.zip)', 'extension': '.zip', 'file': 'model'}}}
+                        element_id={record.id}
+                        model_name={'ChemModel'}
+                        handleDelete={this.handleDelete}
+                    />
+            },
             ]
         return(
             <Table

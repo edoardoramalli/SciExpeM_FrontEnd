@@ -20,10 +20,12 @@ import {
     LogoutOutlined, MinusOutlined, PlusOutlined, MinusCircleOutlined
 } from '@ant-design/icons';
 import AddColumnModal from "./ExperimentForm/AddColumnModal";
+import Variables from "./Variables";
 
 const axios = require('axios');
 
 const {confirm} = Modal;
+
 
 
 class Tmp extends React.Component {
@@ -37,6 +39,7 @@ class Tmp extends React.Component {
             visible: {},
             columnResult: {}
         }
+
 
     }
 
