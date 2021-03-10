@@ -1,6 +1,6 @@
 import React, {lazy} from "react";
 import {Table, Tabs} from "antd";
-import {checkError} from "../../Tool";
+import {checkError} from "../../../Tool";
 
 const axios = require('axios');
 import Cookies from "js-cookie";
@@ -22,7 +22,6 @@ class DetailExecutionTab extends React.Component {
         }
         axios.post(window.$API_address + 'frontend/API/getExecutionColumn', params)
             .then(res => {
-                console.log(res)
                 let columns = []
                 Object.entries(res.data[0]).map(([key, value], index) => {
                     columns.push({

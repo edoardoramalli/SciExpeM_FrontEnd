@@ -1,5 +1,5 @@
 import React from "react";
-import {Table} from "antd";
+import {Empty, Table} from "antd";
 
 class GenericTable extends React.Component {
 
@@ -8,7 +8,7 @@ class GenericTable extends React.Component {
         const names = this.props.names;
 
         if (names == null || names.length === 0) {
-            return <>No data present.</>;
+            return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>;
         }
 
         const columns = names.map(function (name) {
@@ -31,6 +31,7 @@ class GenericTable extends React.Component {
                     size='small'
                     pagination={false}
                     bordered
+                    loading={this.props.loading}
                 />
             </div>)
 

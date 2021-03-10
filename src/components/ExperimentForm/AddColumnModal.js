@@ -1,5 +1,5 @@
 import React from "react";
-import {Alert, Cascader, Col, Form, Button, Input, Modal, Row, Select, Space, Typography, message} from "antd";
+import {Alert, Cascader, Form, Button, Input, Modal, Row, Select, Space, Typography, message} from "antd";
 
 const axios = require('axios');
 import Cookies from "js-cookie";

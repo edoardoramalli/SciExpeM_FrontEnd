@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Input, InputNumber, Select, Slider} from "antd";
+import {Form, Input, InputNumber, Select} from "antd";
 
 const axios = require('axios');
 import Cookies from "js-cookie";

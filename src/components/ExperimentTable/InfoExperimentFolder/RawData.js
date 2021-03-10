@@ -9,7 +9,7 @@ axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 // Local import
 import GenericTable from "../../GenericTable";
-import {checkError} from "../../../components/Tool"
+import {checkError} from "../../Tool"
 
 
 
@@ -20,7 +20,8 @@ class RawData extends React.Component{
             exp_id: this.props.exp_id,
             type: this.props.type,
             data: [],
-            header: []
+            header: [],
+            loading: true,
         }
     }
     componentDidMount() {
@@ -30,14 +31,15 @@ class RawData extends React.Component{
                 const response = res.data;
                 let data = response.data;
                 let header = response.header
-                this.setState({data: data, header: header})
+                this.setState({data: data, header: header, loading: false})
             }).catch(error => {
                 checkError(error)
+                this.setState({loading: false})
         })
     }
     render() {
         return(
-            <GenericTable names={this.state.header} data={this.state.data} />
+            <GenericTable names={this.state.header} data={this.state.data} loading={this.state.loading}/>
         )
     }
 }

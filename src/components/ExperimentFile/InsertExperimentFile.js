@@ -2,7 +2,7 @@
 import React from "react";
 
 // Third-parties import
-import {Button, Upload, Space, Modal, Statistic, Row, Col} from "antd"
+import {Button, Upload, Space, Statistic, Row, Col} from "antd"
 import { UploadOutlined } from '@ant-design/icons';
 
 const axios = require('axios');

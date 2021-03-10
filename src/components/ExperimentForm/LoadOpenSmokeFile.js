@@ -14,11 +14,7 @@ class LoadOpenSmokeFile extends React.Component{
     }
 
 
-    handleDataPreview = (file) => {
-        this.setState({
-            dataPreviewVisible: true
-        })
-    };
+    handleDataPreview = (file) => {this.setState({dataPreviewVisible: true})};
 
     handleCancel = () => this.setState({dataPreviewVisible: false});
 

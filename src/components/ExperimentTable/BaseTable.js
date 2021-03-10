@@ -74,7 +74,8 @@ class BaseTable extends React.Component{
                 </Button>
             </div>
         ),
-        filterIcon: filtered => <SearchOutlined type="search" style={{color: filtered ? '#1890ff' : undefined}}/>,
+        filterIcon: filtered => <SearchOutlined style={{color: filtered ? '#1890ff' : 'black'}}/>
+            ,
         onFilter: (value, record) =>
             record[dataIndex]
                 ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())

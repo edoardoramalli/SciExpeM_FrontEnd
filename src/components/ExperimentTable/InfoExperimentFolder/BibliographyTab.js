@@ -1,5 +1,5 @@
 import React from "react";
-import {Descriptions, message, Spin, Col, Empty} from 'antd';
+import {Descriptions, Spin, Col, Empty} from 'antd';
 
 const axios = require('axios');
 import Cookies from "js-cookie";

@@ -1,7 +1,7 @@
 import React from "react";
 
 import XMLViewer from 'react-xml-viewer'
-import {message, Form, Button, Upload} from "antd";
+import {message, Button, Upload} from "antd";
 
 import {UploadOutlined} from "@ant-design/icons";
 
@@ -9,7 +9,7 @@ const axios = require('axios');
 import Cookies from "js-cookie";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
-import {checkError} from "../../../components/Tool"
+import {checkError} from "../../Tool"
 
 
 class ExperimentFile extends React.Component {

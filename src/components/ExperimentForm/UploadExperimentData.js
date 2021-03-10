@@ -1,7 +1,6 @@
 import React from "react";
 import {Button, Form, Upload, message, Modal} from "antd";
 import {UploadOutlined} from "@ant-design/icons";
-import Cookies from "js-cookie";
 
 const axios = require('axios');
 import Cookies from "js-cookie";

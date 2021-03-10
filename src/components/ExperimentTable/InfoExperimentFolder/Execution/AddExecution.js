@@ -1,6 +1,6 @@
 import React from "react";
 import {Modal, Row, Select, Button, Space, message} from "antd";
-import {checkError} from "../../Tool";
+import {checkError} from "../../../Tool";
 import {PlayCircleOutlined} from "@ant-design/icons";
 
 const axios = require('axios');
@@ -57,9 +57,9 @@ class AddExecution extends React.Component{
                 document.body.appendChild(link);
                 link.click();
                 message.success('File downloaded')
+                this.props.refreshTable()
             }).catch(error => {
-                console.log(error)
-            checkError(error)
+                checkError(error)
         })
 
     }

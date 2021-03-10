@@ -1,5 +1,5 @@
 import React from "react";
-import {Tabs, Alert, Descriptions} from "antd";
+import {Tabs, Alert} from "antd";
 
 const axios = require('axios');
 import Cookies from "js-cookie";

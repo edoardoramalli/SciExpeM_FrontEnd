@@ -1,6 +1,6 @@
 import React from "react";
 import {checkError} from "../Tool";
-import {Button, Input, Table} from "antd";
+import {Table} from "antd";
 import ActionCell from "../Shared/ActionCell";
 
 const axios = require('axios');

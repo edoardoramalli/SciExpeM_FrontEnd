@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Input, InputNumber, Space} from "antd";
+import {Form, Input, InputNumber} from "antd";
 
 class MinMaxRangeFormItem extends React.Component{
     constructor(props) {

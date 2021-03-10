@@ -5,7 +5,7 @@ const axios = require('axios');
 import Cookies from "js-cookie";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
-import {checkError} from "../../Tool";
+import {checkError} from "../../../Tool";
 
 const Plotly = require('plotly-latest')
 import createPlotlyComponent from "react-plotly.js/factory";
@@ -15,7 +15,7 @@ class ExecutionPlot extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            baseConfig: {width: 640, height: 480, showlegend: true, autosize: true},
+            baseConfig: {width: 1000, height: 500, showlegend: true, autosize: true},
             renderObjectPlot: <Col span={1} offset={11}><Spin size="large" tip="Loading..."/></Col>,
         }
     }
@@ -41,7 +41,7 @@ class ExecutionPlot extends React.Component{
     }
 
     componentDidMount() {
-        const params = {'execution_id': this.props.id.toString()}
+        const params = {'element_id': this.props.id.toString()}
         axios.post(window.$API_address + this.props.api, params)
             .then(res => {
                 const result = JSON.parse(res.data)
