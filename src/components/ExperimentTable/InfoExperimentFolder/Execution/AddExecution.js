@@ -58,6 +58,7 @@ class AddExecution extends React.Component{
                 link.click();
                 message.success('File downloaded')
                 this.props.refreshTable()
+                this.props.closeAddExecution()
             }).catch(error => {
                 checkError(error)
         })

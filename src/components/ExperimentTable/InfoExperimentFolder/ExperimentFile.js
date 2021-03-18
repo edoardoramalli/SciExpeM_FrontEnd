@@ -1,7 +1,7 @@
 import React from "react";
 
 import XMLViewer from 'react-xml-viewer'
-import {message, Button, Upload} from "antd";
+import {message, Button, Upload, Empty, Spin, Col} from "antd";
 
 import {UploadOutlined} from "@ant-design/icons";
 
@@ -19,7 +19,7 @@ class ExperimentFile extends React.Component {
             exp_id: this.props.exp_id,
             type: this.props.type,
             file: "",
-            render: null
+            renderObject: <Col span={1} offset={11}><Spin size="large" tip="Loading..."/></Col>,
         }
     }
 
@@ -107,17 +107,17 @@ class ExperimentFile extends React.Component {
                     </Upload>
             }
             else{
-                render = 'No file.'
+                render = <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
             }
         }
 
-        this.setState({render: render})
+        this.setState({renderObject: render})
 
     }
 
     render() {
         return (
-            <>{this.state.render}</>
+            <>{this.state.renderObject}</>
         )
     }
 }

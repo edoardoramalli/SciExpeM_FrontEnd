@@ -31,7 +31,6 @@ class GenericTable extends React.Component {
                     size='small'
                     pagination={false}
                     bordered
-                    loading={this.props.loading}
                 />
             </div>)
 

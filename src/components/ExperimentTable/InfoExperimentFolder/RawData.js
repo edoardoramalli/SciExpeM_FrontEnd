@@ -10,6 +10,7 @@ axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 // Local import
 import GenericTable from "../../GenericTable";
 import {checkError} from "../../Tool"
+import {Col, Empty, Spin} from "antd";
 
 
 
@@ -19,27 +20,27 @@ class RawData extends React.Component{
         this.state = {
             exp_id: this.props.exp_id,
             type: this.props.type,
-            data: [],
-            header: [],
             loading: true,
+            renderObject: <Col span={1} offset={11}><Spin size="large" tip="Loading..."/></Col>,
         }
     }
     componentDidMount() {
+        this.setState({loading: true})
         axios.post(window.$API_address + 'frontend/api/get_experiment_data_columns/' + this.state.exp_id.toString(),
             {params: {"type": this.state.type}})
             .then(res => {
                 const response = res.data;
                 let data = response.data;
                 let header = response.header
-                this.setState({data: data, header: header, loading: false})
+                this.setState({renderObject: <GenericTable names={header} data={data}/>})
             }).catch(error => {
                 checkError(error)
-                this.setState({loading: false})
+                this.setState({loading: false, renderObject: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>})
         })
     }
     render() {
         return(
-            <GenericTable names={this.state.header} data={this.state.data} loading={this.state.loading}/>
+            <>{this.state.renderObject}</>
         )
     }
 }

@@ -1,44 +1,39 @@
 import React from "react";
-import {Descriptions} from 'antd';
+import {Descriptions, Empty} from 'antd';
 
+const axios = require('axios');
+import Cookies from "js-cookie";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 import HyperLink from "../../HyperLink";
 
 import "./styles.less"
+import GenericTable from "../../GenericTable";
+import {checkError} from "../../Tool";
 
 class InfoExperiment extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             exp: this.props,
-            status: "None"
+            status: "None",
+            comment: 'loading...'
         }
     }
 
-    renderSpecies() {
-        return this.state.exp.props.initial_species.map((species) => {
-            return (
-                <>
-                    <Descriptions.Item label={"Name"}>{species.name}</Descriptions.Item>
-                    <Descriptions.Item label={"Value"}>{species.value}</Descriptions.Item>
-                    <Descriptions.Item label={"Units"}>{species.units}</Descriptions.Item>
-                    <Descriptions.Item label={"ID"}>{species.id}</Descriptions.Item>
-                </>
-            );
-        });
-    }
-
-    renderCommonProperties() {
-        return this.state.exp.props.common_properties.map((property) => {
-            return (
-                <>
-                    <Descriptions.Item label={"Name"}>{property.name}</Descriptions.Item>
-                    <Descriptions.Item label={"Value"}>{property.value}</Descriptions.Item>
-                    <Descriptions.Item label={"Units"}>{property.units}</Descriptions.Item>
-                    <Descriptions.Item label={"ID"}>{property.id}</Descriptions.Item>
-                </>
-            );
-        });
+    componentDidMount() {
+        const params = {
+            'model_name': 'Experiment',
+            'element_id': this.state.exp.props.id,
+            'property_name': 'comment'
+        }
+        axios.post(window.$API_address + 'ExperimentManager/API/requestProperty', params)
+            .then(res => {
+                this.setState({comment: res.data})
+            }).catch(error => {
+            checkError(error)
+            this.setState({comment: 'Error loading comment'})
+        })
     }
 
     render() {
@@ -61,6 +56,7 @@ class InfoExperiment extends React.Component {
                         label="Experiment Type">{this.state.exp.props.experiment_type}</Descriptions.Item>
                     <Descriptions.Item label="Reactor">{this.state.exp.props.reactor}</Descriptions.Item>
                     <Descriptions.Item label="Ignition Type">{this.state.exp.props.ignition_type}</Descriptions.Item>
+                    <Descriptions.Item label="Comment">{this.state.comment}</Descriptions.Item>
                 </Descriptions>
             </div>
 
