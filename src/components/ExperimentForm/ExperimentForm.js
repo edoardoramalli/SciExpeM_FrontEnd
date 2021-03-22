@@ -2,10 +2,11 @@
 import React from "react";
 
 // Third-parties import
-import {Form, Button, Collapse, Space, message, Select, Table, Row} from "antd"
+import {Form, Button, Collapse, Space, message, Select, Table, Row, InputNumber} from "antd"
 
 const axios = require('axios');
 import Cookies from "js-cookie";
+
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 // Local import
@@ -13,14 +14,14 @@ import ExperimentType from "./ExperimentType";
 import ReactorType from "./ReactorType";
 import InitialSpecies from "./InitialSpecies";
 import CommonProperty from "./CommonProperty";
-import HelpGuide from "./HelpGuide";
 import References from "./References";
 import IgnitionDefinition from "./IgnitionDefinition";
 import Characteristics from "./Characteristics";
 import LoadOpenSmokeFile from "./LoadOpenSmokeFile"
-import LoadDataColumn from "./LoadDataColumn"
 import DataColumns from "./DataColumns";
-
+import DataGroup from "./DataGroup";
+import {zip, checkError} from "../Tool"
+import ProfileColumns from "./ProfileColumns";
 
 
 class ExperimentForm extends React.Component {
@@ -33,12 +34,15 @@ class ExperimentForm extends React.Component {
             reactor_inactive: true,
             idt: false,
             rcm: false,
-            base_active: ['1', '2', '3', '4', '7', '8', '9'],
-            active_key: ['1', '2', '3', '4', '7', '8', '9'],
+            base_active: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp8', 'clp9', 'clp10'],
+            active_key: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp8', 'clp9', 'clp10'],
             reactor_value: null,
             experiment: null,
             tableColumns: [],
             dataTableColumns: [],
+            dataGroupAssociation: {},
+            dataGroup: 1,
+            dataColumns: {},
         }
         this.handleExperimentType = this.handleExperimentType.bind(this);
         this.handleReactorType = this.handleReactorType.bind(this);
@@ -53,17 +57,19 @@ class ExperimentForm extends React.Component {
         }
         let data_columns;
         let dc_len = []
-        for(let i in values.experimental_data){
-            dc_len.push(values.experimental_data[i]['data'].length)
+        const experimental_data = values.data_columns
+        for (let i in experimental_data) {
+            dc_len.push(experimental_data[i]['data'].length)
         }
-        if (!dc_len.every( (val, i, arr) => val === arr[0] )){
-            message.error("Data columns have different length.")
-            return true
-        }
-        if (!values.volume_time) {
-            data_columns = values.experimental_data
+        // This is checked by BE. bisognerebbe controllare se all'interno dello stesso dg ! non fra tutti
+        // if (!dc_len.every((val, i, arr) => val === arr[0])) {
+        //     message.error("Data columns have different length.")
+        //     return true
+        // }
+        if (!values.profile_data_column) {
+            data_columns = experimental_data
         } else {
-            data_columns = values.experimental_data.concat(values.volume_time)
+            data_columns = experimental_data.concat(values.profile_data_column)
         }
         let experiment = {
             // Model Mandatory
@@ -83,7 +89,6 @@ class ExperimentForm extends React.Component {
             phi_inf: values.phi_profile.phi_inf,
 
             os_input_file: values.os_input_file,
-            volume_time_profile: {},
             // Foreign Key
             data_columns: data_columns,
             common_properties: values.common_properties,
@@ -92,6 +97,12 @@ class ExperimentForm extends React.Component {
 
         }
         this.setState({experiment: experiment})
+    }
+
+    getDataGroup(){
+        const current = this.state.dataGroup;
+        this.setState({dataGroup: current + 1})
+        return current
     }
 
 
@@ -106,7 +117,7 @@ class ExperimentForm extends React.Component {
     onFinish = values => {
         const error = this.handleValueForm(values)
 
-        if(!error){
+        if (!error) {
             const params = {
                 'model_name': 'Experiment',
                 'property_dict': JSON.stringify(this.state.experiment)
@@ -118,7 +129,7 @@ class ExperimentForm extends React.Component {
                     message.success('Experiment added successfully', 5);
                 })
                 .catch(error => {
-                    message.error(error.response.data, 5)
+                    checkError(error)
                 })
         }
 
@@ -130,63 +141,96 @@ class ExperimentForm extends React.Component {
         })
         if (this.state.idt) {
             this.setState({
-                active_key: this.state.base_active.concat(['6'])
+                active_key: this.state.base_active.concat(['clp7'])
             })
         }
         if (this.state.idt && this.state.rcm) {
             this.setState({
-                active_key: this.state.base_active.concat(['5', '6'])
+                active_key: this.state.base_active.concat(['clp6', 'clp7'])
             })
         }
 
 
     }
 
-    // handleDataColumn = text_file => {
-    //     this.formRef.current.setFieldsValue({experimental_data: text_file})
-    // }
-
-    handleVolumeTime = text_file => {
-        this.formRef.current.setFieldsValue({volume_time: text_file})
-    }
 
     handleOSinputFile = (text_file) => {
         this.formRef.current.setFieldsValue({os_input_file: text_file})
     }
 
-    handleDataColumns = data_columns => {
-        let data_cols_array = []
-        for (let key in data_columns){
-            data_cols_array.push(data_columns[key])
+    addDataColumn = (key, data_column) => {
+        let tmp = this.state.dataColumns
+        tmp[key] = data_column
+        this.setState({dataColumns: tmp})
+        this.handleDataColumns(tmp)
+    }
+
+    removeDataColumn = (key) =>{
+        let tmp = this.state.dataColumns
+        if (key in tmp){
+            delete tmp[key]
+            this.setState({dataColumns: tmp})
+            this.handleDataColumns(tmp)
         }
-        this.formRef.current.setFieldsValue({experimental_data: data_cols_array})
-        let columns = []
+    }
+
+    handleDataColumns = (data_columns) => {
+        const data_cols_array = Object.values(data_columns)
+        this.previewTableDataColumns(JSON.stringify(data_cols_array))  // JSON is necessary otherwise is passed by reference
+        this.formRef.current.setFieldsValue({data_columns: data_cols_array})
+    }
+
+
+    handleProfileColumns = data_columns => {
+        const data_cols_array = Object.values(data_columns)
+        let result = [];
+        data_cols_array.forEach(item =>{item.forEach(col =>{result.push(col)})})
+        this.formRef.current.setFieldsValue({profile_data_column: result})
+    }
+
+    previewTableDataColumns(columns_list) {
+        let columns = JSON.parse(columns_list)
+        let columns_table = []
         let columns_name = []
         let dataSource = []
-        const len_cols = data_cols_array.length
-        let deep_cols = 0
-        for (let i in data_cols_array){
-            let title;
-            if (data_cols_array[i]['label'] !== undefined){
-                title = data_cols_array[i]['name'] + ' - ' + data_cols_array[i]['label'] + ' - ' + '[' + data_cols_array[i]['units']+ ']'
+        columns.forEach(col => {
+            if (col['uncertainty_reference'] !== undefined) {
+                let data = [];
+                col['data'].forEach((item, index) => {
+                    let text = item.toString() + ' +- ' + col['uncertainty_reference']['data'][index]
+                    text = col['uncertainty_reference']['uncertainty_kind'] === 'absolute' ? text : text + ' %'
+                    data.push(text)
+                })
+                col['data'] = data
             }
-            else{
-                title = data_cols_array[i]['name'] +  ' [' + data_cols_array[i]['units']+ ']'
+        })
+        columns.forEach(col => {
+            let title = col['name'] + ' [' + col['units'] + '] ' + '(' + col['dg_id'] + ') ';
+            if (col['label'] !== undefined) {
+                title += ' - ' + col['label']
             }
-            columns.push({title: title, dataIndex: title, key: title})
+            columns_table.push({title: title, dataIndex: title, key: title})
             columns_name.push(title)
-            if (data_cols_array[i]['data'].length > deep_cols){
-                deep_cols = data_cols_array[i]['data'].length
-            }
+            dataSource.push(col['data'])
+        })
+
+        let record = this.createRecord(columns_name, dataSource)
+
+        this.setState({tableColumns: columns_table, dataTableColumns: record})
+    }
+
+    createRecord(header_list, data_list_of_lists) {
+        let final = []
+        if (header_list.length !== data_list_of_lists.length) {
+            throw Error('createRecord. Different Length!')
         }
-        for(let i=0 ; i < deep_cols; i++) {
-            let tmp_dict = {}
-            for (let j = 0; j < len_cols; j++) {
-                tmp_dict[columns_name[j]] = data_cols_array[j]['data'][i]
-            }
-            dataSource.push(tmp_dict)
-        }
-        this.setState({tableColumns: columns, dataTableColumns: dataSource})
+        let zipped = zip(data_list_of_lists)
+        zipped.forEach(item => {
+            let result = {};
+            item.forEach((key, i) => result[header_list[i]] = key)
+            final.push(result)
+        })
+        return final
     }
 
     handleReactorType = (reactorType) => {
@@ -239,6 +283,10 @@ class ExperimentForm extends React.Component {
 
     }
 
+    onChangeDataGroupAssociation(value) {
+        this.setState({dataGroupAssociation: value})
+    }
+
     render() {
 
         const formItemLayoutWithOutLabel = {
@@ -263,35 +311,46 @@ class ExperimentForm extends React.Component {
                 ref={this.formRef}
             >
                 <Collapse activeKey={this.state.active_key}>
-                    <Collapse.Panel header="General" key="1">
+                    <Collapse.Panel header="General" key="clp1">
                         <ExperimentType handleExperimentType={this.handleExperimentType}/>
                         <ReactorType {...props_reactor}/>
+                        <Row>
+                            <Form.Item name={'data_columns'}/>
+                            <Form.Item name={'profile_data_column'}/>
+                        </Row>
                     </Collapse.Panel>
-                    <Collapse.Panel header="Common Properties" key="2">
+                    <Collapse.Panel header="Common Properties" key="clp2">
                         <CommonProperty/>
                     </Collapse.Panel>
-                    <Collapse.Panel header="Initial Species" key="3">
+                    <Collapse.Panel header="Initial Species" key="clp3">
                         <InitialSpecies/>
                     </Collapse.Panel>
-                    <Collapse.Panel header="Varied experimental conditions and measured results" key="4">
-                        <Row>
-                            <Space style={{display: 'flex'}} align="baseline">
-                                <DataColumns handleDataColumns={this.handleDataColumns} />
-                            </Space>
-                        </Row>
+                    <Collapse.Panel header="Data Groups" key="clp4">
+                        <DataGroup
+                            onChangeDataGroupAssociation={this.onChangeDataGroupAssociation.bind(this)}
+                            dataGroupAssociation={this.state.dataGroupAssociation}
+                            getDataGroup={this.getDataGroup.bind(this)}
+                        />
+                    </Collapse.Panel>
+                    <Collapse.Panel header="Varied experimental conditions and measured results" key="clp5">
+                        <Space direction="vertical">
+                            <Row>
+                                <Space style={{display: 'flex'}} align="baseline">
+                                    <DataColumns
+                                        addDataColumn={this.addDataColumn.bind(this)}
+                                        removeDataColumn={this.removeDataColumn.bind(this)}
+                                        handleDataColumns={this.handleDataColumns.bind(this)}
+                                        dataGroupAssociation={this.state.dataGroupAssociation}
+                                    />
+                                </Space>
+                            </Row>
 
-
-                            {/*<LoadDataColumn*/}
-                            {/*    name={'experimental_data'}*/}
-                            {/*    dataGroup={'dg1'}*/}
-                            {/*    required={true}*/}
-                            {/*    handleDataColumn={this.handleDataColumn}*/}
-                            {/*/>*/}
-                            {/*<HelpGuide/>*/}
                             <Row>
                                 <Table
-                                    title={() => <div style={{textAlign: 'center',
-                                        fontWeight: '600', fontSize: 15}}>Preview Table Data Columns</div>}
+                                    title={() => <div style={{
+                                        textAlign: 'center',
+                                        fontWeight: '600', fontSize: 15
+                                    }}>Preview Table Data Columns</div>}
                                     size='small'
                                     pagination={false}
                                     bordered
@@ -299,35 +358,38 @@ class ExperimentForm extends React.Component {
                                     dataSource={this.state.dataTableColumns}
                                 />
                             </Row>
+                        </Space>
+
                     </Collapse.Panel>
-                    <Collapse.Panel header="Volume-time profile (Only for 'Rapid Compression Machine')" key="5"
+                    <Collapse.Panel header="Profiles (Only for 'Rapid Compression Machine')" key="clp6"
                                     disabled={!this.state.rcm} accordion>
-                        <Space style={{display: 'flex'}} align="baseline">
-                            <LoadDataColumn
-                                name={'volume_time'}
-                                dataGroup={'dg2'}
-                                required={true}
-                                handleDataColumn={this.handleVolumeTime}
-                            />
-                            <HelpGuide/>
-                            {/*// todo helph guide deve essere diversa*/}
+                        <Space direction="vertical">
+                            <Row>
+                                <Space style={{display: 'flex'}} align="baseline">
+                                    <ProfileColumns
+                                        handleProfileColumns={this.handleProfileColumns}
+                                        getDataGroup={this.getDataGroup.bind(this)}
+                                    />
+                                </Space>
+                            </Row>
                         </Space>
                     </Collapse.Panel>
-                    <Collapse.Panel header="Ignition definition (Only for 'Ignition Delay Measurement') " key="6"
+                    <Collapse.Panel header="Ignition definition (Only for 'Ignition Delay Measurement') "
+                                    key="clp7"
                                     disabled={!this.state.idt}>
                         <IgnitionDefinition required={this.state.idt}/>
                     </Collapse.Panel>
-                    <Collapse.Panel header="OpenSMOKE++ input file" key="7">
+                    <Collapse.Panel header="OpenSMOKE++ input file" key="clp8">
                         <LoadOpenSmokeFile
                             required={true}
                             handleOSinputFile={this.handleOSinputFile}
                         />
                     </Collapse.Panel>
-                    <Collapse.Panel header="Characteristics" key="8">
+                    <Collapse.Panel header="Characteristics" key="clp9">
                         <Characteristics/>
                     </Collapse.Panel>
 
-                    <Collapse.Panel header="References" key="9">
+                    <Collapse.Panel header="References" key="clp10">
                         <References/>
                     </Collapse.Panel>
 

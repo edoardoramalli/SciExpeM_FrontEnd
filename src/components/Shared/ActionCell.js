@@ -47,7 +47,7 @@ class ActionCell extends React.Component{
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                const file_name = this.props.model_name + '_' + this.props.element_id + '_'
+                const file_name = this.props.model_name + '_' + this.props.file_name + '_'
                     + this.props.items[e.key]['file'] + this.props.items[e.key]['extension']
                 link.setAttribute('download', file_name);
                 document.body.appendChild(link);

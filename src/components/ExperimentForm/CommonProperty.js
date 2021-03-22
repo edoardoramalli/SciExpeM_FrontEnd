@@ -3,7 +3,7 @@ import {Button, Form, InputNumber, Select, Space} from "antd";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 
 class CommonProperty extends React.Component{
-    formRef = React.createRef();
+    // formRef = React.createRef();
 
     constructor() {
         super();
@@ -57,7 +57,7 @@ class CommonProperty extends React.Component{
 
 
         return(
-            <Form.List name="common_properties" ref={this.formRef}>
+            <Form.List name="common_properties" >
                 {(fields, { add, remove }) => (
                     <>
                         {fields.map(field => (
@@ -101,12 +101,28 @@ class CommonProperty extends React.Component{
                                         {this.state.properties_unit}
                                     </Select>
                                 </Form.Item>
+                                <Form.Item
+                                    {...field}
+                                    name={[field.name, 'source_type']}
+                                    fieldKey={[field.fieldKey, 'source_type']}
+                                    rules={[{ required: true, message: 'Missing Source Type.' }]}
+                                >
+                                    <Select
+                                        placeholder={'Select Source Type'}
+                                        style={{width: 200}}
+                                    >
+                                        <Select.Option value="reported">Reported</Select.Option>
+                                        <Select.Option value="digitized">Digitized</Select.Option>
+                                        <Select.Option value="calculated">Calculated</Select.Option>
+                                        <Select.Option value="estimated">Estimated</Select.Option>
+                                    </Select>
+                                </Form.Item>
 
                                 <MinusCircleOutlined onClick={() => remove(field.name)} />
                             </Space>
                         ))}
                         <Form.Item>
-                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} style={{width: 500}}>
+                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} style={{width: 750}}>
                                 Add field
                             </Button>
                         </Form.Item>

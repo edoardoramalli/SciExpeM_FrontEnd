@@ -7,6 +7,7 @@ import { UploadOutlined } from '@ant-design/icons';
 
 const axios = require('axios');
 import Cookies from "js-cookie";
+import {checkError} from "../Tool";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 class InsertExperimentFile extends React.Component {
@@ -55,10 +56,6 @@ class InsertExperimentFile extends React.Component {
 
             const { onSuccess, onError, file, onProgress } = options;
 
-            const config = {
-                headers: { "X-CSRFToken": csrftoken}
-            };
-
             const reader = new FileReader();
             let file_text;
             reader.readAsText(file);
@@ -69,13 +66,13 @@ class InsertExperimentFile extends React.Component {
                     file_text: file_text
                 }
                 axios
-                    .post(window.$API_address + 'ExperimentManager/API/loadExperiment', data, config)
+                    .post(window.$API_address + 'ExperimentManager/API/loadExperiment', data)
                     .then(res => {
                         onSuccess(file);
                     })
                     .catch(error=>{
-                        const text_error = 'HTTP ' + error.response.status + ' --> ' + error.response.data
-                        onError(error, text_error, file);
+                        file.response = error.response.data
+                        onError(file, error.response.data)
                     });
             };
 

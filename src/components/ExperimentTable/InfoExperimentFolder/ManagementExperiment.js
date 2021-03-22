@@ -9,7 +9,6 @@ import Cookies from "js-cookie";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 
-const { Option } = Select;
 import {checkError} from "../../Tool"
 
 
@@ -87,7 +86,7 @@ class ManagementExperiment extends React.Component{
                 const names = res.data.names
                 
                 this.setState({list_fuels: names.map(item =>
-                        <Option key={item} value={item}>{item}</Option>
+                        <Select.Option key={item} value={item}>{item}</Select.Option>
                     )})
 
                 })

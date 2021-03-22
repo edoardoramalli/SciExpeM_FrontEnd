@@ -22,13 +22,13 @@ class BibliographyTab extends React.Component {
         return (this.state.property_list.map((property) => {
             return(
                 <>
-                    <Descriptions.Item label="Reference" span={2}>
+                    <Descriptions.Item label="Reference" span={2} key={'Description1'}>
                         {property.references}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Paper DOI" >
+                    <Descriptions.Item label="Paper DOI" key={'Description2'}>
                         {<HyperLink link={property.reference_doi}/>}
                     </Descriptions.Item>
-                    <Descriptions.Item label="ID" >
+                    <Descriptions.Item label="ID" key={'Description3'}>
                         {property.id}
                     </Descriptions.Item>
                 </>
@@ -65,6 +65,7 @@ class BibliographyTab extends React.Component {
             );
         }
     }
+
 
 
     componentDidMount() {

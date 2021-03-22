@@ -21,7 +21,7 @@ class Characteristics extends React.Component {
 
                 this.setState({
                     list_fuels: names.map(item =>
-                        <Option key={item} value={item}>{item}</Option>
+                        <Select.Option key={item} value={item}>{item}</Select.Option>
                     )
                 })
 

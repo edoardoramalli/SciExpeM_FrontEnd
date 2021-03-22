@@ -79,12 +79,28 @@ class InitialSpecies extends React.Component{
                                         <Select.Option value={"mole fraction"}>mole fraction</Select.Option>
                                     </Select>
                                 </Form.Item>
+                                <Form.Item
+                                    {...field}
+                                    name={[field.name, 'source_type']}
+                                    fieldKey={[field.fieldKey, 'source_type']}
+                                    rules={[{ required: true, message: 'Missing Source Type.' }]}
+                                >
+                                    <Select
+                                        placeholder={'Select Source Type'}
+                                        style={{width: 200}}
+                                    >
+                                        <Select.Option value="reported">Reported</Select.Option>
+                                        <Select.Option value="digitized">Digitized</Select.Option>
+                                        <Select.Option value="calculated">Calculated</Select.Option>
+                                        <Select.Option value="estimated">Estimated</Select.Option>
+                                    </Select>
+                                </Form.Item>
 
                                 <MinusCircleOutlined onClick={() => remove(field.name)} />
                             </Space>
                         ))}
                         <Form.Item>
-                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} style={{width: 500}}>
+                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} style={{width: 750}}>
                                 Add field
                             </Button>
                         </Form.Item>

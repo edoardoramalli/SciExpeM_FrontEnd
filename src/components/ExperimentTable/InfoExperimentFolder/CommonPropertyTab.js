@@ -18,13 +18,14 @@ class CommonPropertyTab extends React.Component {
         }
     }
 
-    renderProperties(){
-        return (this.state.property_list.map((property) => {
+    renderProperties(property_list){
+        return (property_list.map((property) => {
             return(
                 <>
                     <Descriptions.Item label={"Name"}>{property.name}</Descriptions.Item>
                     <Descriptions.Item label={"Value"}>{property.value}</Descriptions.Item>
                     <Descriptions.Item label={"Units"}>{property.units}</Descriptions.Item>
+                    <Descriptions.Item label={"Source Type"}>{property.source_type}</Descriptions.Item>
                     <Descriptions.Item label={"ID"}>{property.id}</Descriptions.Item>
                 </>
                 )
@@ -33,9 +34,9 @@ class CommonPropertyTab extends React.Component {
     }
 
 
-    renderCommonProperties() {
+    renderCommonProperties(property_list) {
 
-        if (this.state.property_list === null){
+        if (property_list === null){
             return(
 
                 <Col span={1} offset={11}>
@@ -44,15 +45,15 @@ class CommonPropertyTab extends React.Component {
             )
 
         }
-        else if (this.state.property_list.length === 0){
+        else if (property_list.length === 0){
             return (
                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             )
         }
         else{
                 return (
-                    <Descriptions bordered column={4} className={"description"}>
-                        {this.renderProperties()}
+                    <Descriptions bordered column={5} className={"description"}>
+                        {this.renderProperties(property_list)}
                     </Descriptions>
                 );
             }
@@ -62,7 +63,7 @@ class CommonPropertyTab extends React.Component {
         this.setState({loading: true});
         const params = {
             name: this.props['name'],
-            fields: ['id', 'name', 'units', 'value'],
+            fields: ['id', 'name', 'units', 'value', 'source_type'],
             exp_id: this.state.exp_id.toString()
         }
         axios.post(window.$API_address + 'frontend/API/getPropertyList', params)
@@ -81,7 +82,7 @@ class CommonPropertyTab extends React.Component {
     render() {
         return(
             <>
-                {this.renderCommonProperties()}
+                {this.renderCommonProperties(this.state.property_list)}
             </>
 
             )

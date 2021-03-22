@@ -48,7 +48,6 @@ class App extends React.Component {
         const current = this.state.current;
         const currentMapping = {
             "experiments": <ExperimentTable/>,
-            // "searchandexecute": <SearchAndExecute/>,
             "experimentInputFile": <InsertExperimentFile/>,
             "experimentInputForm": <InsertExperimentForm/>,
             "models": <ModelTable/>,
