@@ -43,6 +43,7 @@ class ExperimentForm extends React.Component {
             dataGroupAssociation: {},
             dataGroup: 1,
             dataColumns: {},
+            submitLoading: false,
         }
         this.handleExperimentType = this.handleExperimentType.bind(this);
         this.handleReactorType = this.handleReactorType.bind(this);
@@ -75,7 +76,9 @@ class ExperimentForm extends React.Component {
             // Model Mandatory
             experiment_type: values.experiment_type,
             reactor: values.reactor,
-            fileDOI: values.fileDOI,
+
+            // fileDOI: values.fileDOI,
+
             // Model Optional
             comment: values.comment,
             ignition_type: ignition_type,
@@ -107,6 +110,7 @@ class ExperimentForm extends React.Component {
 
 
     onFinishFailed = ({values, errorFields}) => {
+        this.setState({submitLoading: false})
         this.handleValueForm(values)
         const reducer = (accumulator, currentValue) => accumulator + " " + currentValue.errors;
         const errors = errorFields.reduce(reducer, "")
@@ -123,13 +127,17 @@ class ExperimentForm extends React.Component {
                 'property_dict': JSON.stringify(this.state.experiment)
             }
 
+            this.setState({submitLoading: true})
+
             axios.post(window.$API_address + 'ExperimentManager/API/insertElement', params)
                 .then(() => {
                     this.formRef.current.resetFields();
                     message.success('Experiment added successfully', 5);
+                    this.setState({submitLoading: false})
                 })
                 .catch(error => {
                     checkError(error)
+                    this.setState({submitLoading: false})
                 })
         }
 
@@ -402,6 +410,7 @@ class ExperimentForm extends React.Component {
                         htmlType="submit"
                         style={{margin: "10px"}}
                         size={"large"}
+                        loading={this.state.submitLoading}
                     >
                         Submit
                     </Button>

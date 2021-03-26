@@ -20,12 +20,12 @@ class References extends React.Component{
                 >
                     <Input placeholder={"Insert paper DOI"} style={{width: "35%"}}/>
                 </Form.Item>
-                <Form.Item
-                    label="Experiment DOI (Without 'https://doi.org/')"
-                    name="fileDOI"
-                    rules={[{required: true, message: 'Please insert experiment DOI.'}]}>
-                    <Input placeholder={"Insert experiment reference"} style={{width: "35%"}}/>
-                </Form.Item>
+                {/*<Form.Item*/}
+                {/*    label="Experiment DOI (Without 'https://doi.org/')"*/}
+                {/*    name="fileDOI"*/}
+                {/*    rules={[{required: true, message: 'Please insert experiment DOI.'}]}>*/}
+                {/*    <Input placeholder={"Insert experiment reference"} style={{width: "35%"}}/>*/}
+                {/*</Form.Item>*/}
                 <Form.Item
                     label="Comment"
                     name="comment"

@@ -65,10 +65,10 @@ class TabExperiment extends React.Component{
                     <PlotExperiment exp_id={this.props.experiment.id}/>
                 </TabPane>
                 <TabPane tab="Raw Data" key="ExpTab6">
-                    <RawData exp_id={this.props.experiment.id} type={"dg1"}/>
+                    <RawData exp_id={this.props.experiment.id} type={"data"}/>
                 </TabPane>
-                <TabPane tab="V-t profile" key="ExpTab7">
-                    <RawData exp_id={this.props.experiment.id} type={"dg2"}/>
+                <TabPane tab="Profile" key="ExpTab7">
+                    <RawData exp_id={this.props.experiment.id} type={"profile"}/>
                 </TabPane>
                 <TabPane tab="OS Input File" key="ExpTab8">
                     <ExperimentFile exp_id={this.props.experiment.id} type={"OS"}/>

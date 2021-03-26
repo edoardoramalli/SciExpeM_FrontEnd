@@ -8,7 +8,6 @@ axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 import HyperLink from "../../HyperLink";
 
 import "./styles.less"
-import GenericTable from "../../GenericTable";
 import {checkError} from "../../Tool";
 
 class InfoExperiment extends React.Component {
