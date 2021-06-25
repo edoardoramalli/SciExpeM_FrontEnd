@@ -14,7 +14,8 @@ class AddProfileModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            profile: '',
+            profile_sx: '',
+            profile_dx: '',
             propertyDataTime: [],
             propertyData: [],
             dg_id: 'dg' + this.props.getDataGroup().toString()
@@ -23,15 +24,23 @@ class AddProfileModal extends React.Component {
 
 
     onChangeProfile(value) {
-        let profile;
+        let profile_sx;
+        let profile_dx;
         if (value === 'V-t history') {
-            profile = 'volume'
+            profile_sx = 'volume'
+            profile_dx = 'time'
         } else if (value === 'p-t history') {
-            profile = 'pressure'
+            profile_sx = 'pressure'
+            profile_dx = 'time'
         } else if (value === 'T-t history') {
-            profile = 'temperature'
+            profile_sx = 'temperature'
+            profile_dx = 'time'
         }
-        this.setState({profile: profile})
+        else if (value === 'T-l history') {
+            profile_sx = 'temperature'
+            profile_dx = 'length'
+        }
+        this.setState({profile_dx: profile_dx, profile_sx: profile_sx})
     }
 
     createUnitOptions(property) {
@@ -42,6 +51,10 @@ class AddProfileModal extends React.Component {
             units = ['Pa', 'kPa', 'MPa', 'Torr', 'torr', 'bar', 'mbar', 'atm']
         } else if (property === 'temperature') {
             units = ['K']
+        } else if (property === 'length') {
+            units = ['m', 'dm', 'cm', 'mm']
+        }else if (property === 'time') {
+            units = ['ms', 'us', 'ns', 's', 'min']
         }
         let result = []
         units.forEach(key => {
@@ -69,7 +82,7 @@ class AddProfileModal extends React.Component {
         }
 
         let data_column = {
-            name: this.state.profile,
+            name: this.state.profile_sx,
             units: values.profile_units,
             data: data_profile,
             source_type: values.source_type,
@@ -78,7 +91,7 @@ class AddProfileModal extends React.Component {
             data_group_profile: values.data_group_profile
         }
         let time_column = {
-            name: 'time',
+            name: this.state.profile_dx,
             units: values.time_units,
             data: data_time,
             source_type: values.source_type,
@@ -128,6 +141,7 @@ class AddProfileModal extends React.Component {
                                     <Select.Option value="V-t history">volume-time history</Select.Option>
                                     <Select.Option value="p-t history">pressure-time history</Select.Option>
                                     <Select.Option value="T-t history">temperature-time history</Select.Option>
+                                    <Select.Option value="T-l history">temperature-length history</Select.Option>
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -161,7 +175,7 @@ class AddProfileModal extends React.Component {
                     <Row>
                         <Col span={10}>
                             <Form.Item
-                                label={this.state.profile + " Unit"}
+                                label={this.state.profile_sx + " Unit"}
                                 name="profile_units"
                                 rules={[{required: true, message: 'Please insert Data Unit.'}]}
                             >
@@ -169,13 +183,13 @@ class AddProfileModal extends React.Component {
                                     placeholder={'Select time unit'}
                                     style={{width: 200}}
                                 >
-                                    {this.createUnitOptions(this.state.profile)}
+                                    {this.createUnitOptions(this.state.profile_sx)}
                                 </Select>
                             </Form.Item>
                         </Col>
                         <Col offset={4} span={10}>
                             <Form.Item
-                                label="Time Unit"
+                                label={this.state.profile_dx + " Unit"}
                                 name="time_units"
                                 rules={[{
                                     required: true,
@@ -186,11 +200,7 @@ class AddProfileModal extends React.Component {
                                     placeholder={'Select time unit'}
                                     style={{width: 200}}
                                 >
-                                    <Select.Option value="s">second</Select.Option>
-                                    <Select.Option value="ms">milli-second</Select.Option>
-                                    <Select.Option value="us">micro-second</Select.Option>
-                                    <Select.Option value="ns">nano-second</Select.Option>
-                                    <Select.Option value="min">minute</Select.Option>
+                                    {this.createUnitOptions(this.state.profile_dx)}
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -213,13 +223,13 @@ class AddProfileModal extends React.Component {
                         </Col>
                         <Col offset={4} span={10}>
                             <Form.Item
-                                label="Time Column"
+                                label={this.state.profile_dx + " Column"}
                                 name="time"
                                 rules={[{required: true, message: 'Please insert Time Column.'}]}
                             >
                                 <Input.TextArea
                                     autoSize={{minRows: 5, maxRows: 10}}
-                                    placeholder="Insert Time Column"
+                                    placeholder="Insert Column"
                                     allowClear
                                     onChange={this.onChangeDataTime.bind(this)}/>
                             </Form.Item>

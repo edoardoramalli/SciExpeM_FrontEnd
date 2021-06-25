@@ -197,6 +197,7 @@ class ExecutionTab extends React.Component {
                             dataSource={this.state.dataSource}
                             columns={columns}
                             loading={this.state.loading}
+                            expandRowByClick={true}
                             expandedRowRender={record => {
                                 return <DetailExecutionTab exec_id={record.id}/>
                             }}

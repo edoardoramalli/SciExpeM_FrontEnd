@@ -49,7 +49,7 @@ class InfoExperiment extends React.Component {
                     <Descriptions.Item label="Author">{this.state.exp.props.username}</Descriptions.Item>
                     <Descriptions.Item label="Status">{this.state.exp.props.status}</Descriptions.Item>
                     <Descriptions.Item
-                        label="Interpreter">{this.state.exp.props.experiment_interpreter}</Descriptions.Item>
+                        label="Interpreter">{this.state.exp.props.interpreter_name}</Descriptions.Item>
                     <Descriptions.Item label="Experiment ID">{this.state.exp.props.id}</Descriptions.Item>
                     <Descriptions.Item
                         label="Experiment Type">{this.state.exp.props.experiment_type}</Descriptions.Item>

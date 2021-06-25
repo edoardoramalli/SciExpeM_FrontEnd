@@ -1,7 +1,12 @@
 import React from "react";
-import {Button, Collapse, Form, Input, message} from "antd";
+import {Button, Collapse, Form, Input, message, Select} from "antd";
 
 import LoadFile from './LoadFile'
+
+const axios = require('axios');
+import Cookies from "js-cookie";
+import {checkError} from "../Tool";
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 
 class InsertCheModelFile extends React.Component {
@@ -11,7 +16,8 @@ class InsertCheModelFile extends React.Component {
         super(props);
         this.onFinish = this.onFinish.bind(this)
         this.state = {
-            chemModel: null
+            chemModel: null,
+            options: []
         }
     }
 
@@ -28,8 +34,27 @@ class InsertCheModelFile extends React.Component {
         const reducer = (accumulator, currentValue) => accumulator + " " + currentValue.errors;
         const errors = errorFields.reduce(reducer, "")
         message.error("There are some errors in the form! " + errors, 5)
-
     };
+
+    componentDidMount() {
+        axios.get(window.$API_address + 'frontend/api/get_chemModel_version_list')
+            .then(res => {
+                const experiment_type_list = res.data.chemModel_version;
+                let options = experiment_type_list.map((item) => {
+                    return(
+                        <Select.Option
+                            value={item}
+                            key={'ChemModelVersion' + item.toString()}
+                        >
+                            {item}
+                        </Select.Option>
+                    )
+                });
+                this.setState({options: options})
+            }).catch(error => {
+            checkError(error)
+        })
+    }
 
     handleValueForm = values => {
         let chemModel = {
@@ -37,6 +62,7 @@ class InsertCheModelFile extends React.Component {
             name: values.name,
             xml_file_kinetics: values.xml_file_kinetics,
             xml_file_reaction_names: values.xml_file_reaction_names,
+            version: values.version,
         }
         this.setState({chemModel: chemModel})
     }
@@ -72,8 +98,8 @@ class InsertCheModelFile extends React.Component {
                 autoComplete="off"
                 ref={this.formRef}
             >
-                <Collapse activeKey={[1, 2, 3]}>
-                    <Collapse.Panel header="ChemModel name" key="1">
+                <Collapse activeKey={['ChemModel1','ChemModel2','ChemModel3','ChemModel4']}>
+                    <Collapse.Panel header="ChemModel name" key="ChemModel1">
                         <Form.Item
                             label="CheModel Name"
                             name="name"
@@ -87,7 +113,22 @@ class InsertCheModelFile extends React.Component {
                                 style={{width: "35%"}}/>
                         </Form.Item>
                     </Collapse.Panel>
-                    <Collapse.Panel header="Kinetics File" key="2">
+                    <Collapse.Panel header="ChemModel Version" key="ChemModel2">
+                        <Form.Item
+                            label="ChemModel Version"
+                            name="version"
+                            rules={[{required: true, message: 'Please insert the version of the ChemModel.'}]}
+                        >
+                            <Select
+                                placeholder="Select a version"
+                                allowClear={true}
+                                style={{width: "35%"}}
+                            >
+                                {this.state.options}
+                            </Select>
+                        </Form.Item>
+                    </Collapse.Panel>
+                    <Collapse.Panel header="Kinetics File" key="ChemModel3">
                         <LoadFile
                             name={'Kinetics'}
                             labelForm={'xml_file_kinetics'}
@@ -95,7 +136,7 @@ class InsertCheModelFile extends React.Component {
                             required={true}
                         />
                     </Collapse.Panel>
-                    <Collapse.Panel header="Reaction Names File" key="3">
+                    <Collapse.Panel header="Reaction Names File" key="ChemModel4">
                         <LoadFile
                             name={'Reaction Names'}
                             labelForm={'xml_file_reaction_names'}

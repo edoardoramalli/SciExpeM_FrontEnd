@@ -69,6 +69,64 @@ class CurveMatchingResult extends React.Component{
     }
 
     render() {
+        const common = [
+            {
+                title: 'Score',
+                dataIndex: 'score',
+                key: 'score',
+                sorter: (a, b) => {
+                    return a.id > b.id
+                },
+            },
+            {
+                title: 'Error',
+                dataIndex: 'error',
+                key: 'error',
+                sorter: (a, b) => {
+                    return a.id > b.id
+                },
+            },
+            {
+                title: 'd0L2',
+                dataIndex: 'd0L2',
+                key: 'd0L2',
+                sorter: (a, b) => {
+                    return a.id > b.id
+                },
+            },
+            {
+                title: 'd1L2',
+                dataIndex: 'd1L2',
+                key: 'd1L2',
+                sorter: (a, b) => {
+                    return a.id > b.id
+                },
+            },
+            {
+                title: 'd0Pe',
+                dataIndex: 'd0Pe',
+                key: 'd0Pe',
+                sorter: (a, b) => {
+                    return a.id > b.id
+                },
+            },
+            {
+                title: 'd1Pe',
+                dataIndex: 'd1Pe',
+                key: 'd1Pe',
+                sorter: (a, b) => {
+                    return a.id > b.id
+                },
+            },
+            {
+                title: 'shift',
+                dataIndex: 'shift',
+                key: 'shift',
+                sorter: (a, b) => {
+                    return a.id > b.id
+                },
+            },
+        ]
         const columns = [
             {
                 title: 'ChemModel',
@@ -78,23 +136,8 @@ class CurveMatchingResult extends React.Component{
                     return a.id > b.id
                 },
             },
-            {
-                title: 'Score',
-                dataIndex: 'score',
-                key: 'score',
-                sorter: (a, b) => {
-                    return a.id > b.id
-                },
-            },
-            {
-                title: 'Error',
-                dataIndex: 'error',
-                key: 'error',
-                sorter: (a, b) => {
-                    return a.id > b.id
-                },
-            },
-        ];
+
+        ].concat(common);
         const columns_details = [
             {
                 title: 'Parameter',
@@ -104,23 +147,7 @@ class CurveMatchingResult extends React.Component{
                     return a.id > b.id
                 },
             },
-            {
-                title: 'Score',
-                dataIndex: 'score',
-                key: 'score',
-                sorter: (a, b) => {
-                    return a.id > b.id
-                },
-            },
-            {
-                title: 'Error',
-                dataIndex: 'error',
-                key: 'error',
-                sorter: (a, b) => {
-                    return a.id > b.id
-                },
-            },
-        ];
+        ].concat(common);
         return(
             <Tabs tabPosition={'left'}>
                 <Tabs.TabPane tab="Raw Data" key="1">
@@ -132,6 +159,7 @@ class CurveMatchingResult extends React.Component{
                         columns={columns}
                         loading={this.state.loading}
                         rowKey="name"
+                        expandRowByClick={true}
                         expandedRowRender={record => {
                             return(
                             <Table

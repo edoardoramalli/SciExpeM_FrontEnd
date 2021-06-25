@@ -30,7 +30,7 @@ class RawData extends React.Component{
         axios.post(window.$API_address + 'frontend/API/getRawData', params)
             .then(res => {
                 const response = res.data;
-                this.setState({renderObject: <GenericTable response={response}/>})
+                this.setState({renderObject: Object.keys(response).length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/> : <GenericTable response={response}/>})
             }).catch(error => {
                 checkError(error)
                 this.setState({loading: false, renderObject: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>})

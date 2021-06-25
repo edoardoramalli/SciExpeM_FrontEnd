@@ -22,13 +22,31 @@ class BibliographyTab extends React.Component {
         return (this.state.property_list.map((property) => {
             return(
                 <>
-                    <Descriptions.Item label="Reference" span={2} key={'Description1'}>
-                        {property.references}
+                    <Descriptions.Item label="Description" span={2} key={'Description1'}>
+                        {property.description}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Paper DOI" key={'Description2'}>
+                    <Descriptions.Item label="Title" span={2} key={'Description2'}>
+                        {property.title}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Author" span={2} key={'Description3'}>
+                        {property.author}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Journal" key={'Description4'}>
+                        {property.journal}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Year" key={'Description5'}>
+                        {property.year}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Volume" key={'Description6'}>
+                        {property.volume}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Page" key={'Description7'}>
+                        {property.page}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Paper DOI" key={'Description8'}>
                         {<HyperLink link={property.reference_doi}/>}
                     </Descriptions.Item>
-                    <Descriptions.Item label="ID" key={'Description3'}>
+                    <Descriptions.Item label="ID" key={'Description9'}>
                         {property.id}
                     </Descriptions.Item>
                 </>
@@ -71,7 +89,7 @@ class BibliographyTab extends React.Component {
     componentDidMount() {
         this.setState({loading: true});
         const params = {
-            fields: ['id', 'references', 'reference_doi'],
+            fields: ['id', 'description', 'reference_doi', 'title', 'author', 'year', 'volume', 'page', 'journal'],
             exp_id: this.state.exp_id.toString()
         }
         axios.post(window.$API_address + 'frontend/API/getFilePaper', params)

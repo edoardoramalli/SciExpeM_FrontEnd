@@ -1,5 +1,19 @@
 import React from "react";
-import {Alert, Cascader, Form, Button, Input, Modal, Row, Select, Space, Typography, message, Col} from "antd";
+import {
+    Alert,
+    Cascader,
+    Form,
+    Button,
+    Input,
+    Modal,
+    Row,
+    Select,
+    Space,
+    Typography,
+    message,
+    Col,
+    InputNumber
+} from "antd";
 
 const axios = require('axios');
 import Cookies from "js-cookie";
@@ -7,11 +21,12 @@ import Cookies from "js-cookie";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 import {extractData} from "../Tool";
+import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 
 class AddColumnModal extends React.Component {
 
     property_list = {
-        'temperature': 'K',
+        'temperature': ['K'],
         'pressure': ['Pa', 'kPa', 'MPa', 'Torr', 'torr', 'bar', 'mbar', 'atm'],
         'ignition delay': ['s', 'ms', 'us', 'ns', 'min'],
         'composition': ['mole fraction'],
@@ -23,7 +38,7 @@ class AddColumnModal extends React.Component {
         'rate coefficient': ['s-1', 'm3 mol-1 s-1', 'dm3 mol-1 s-1', 'cm3 mol-1 s-1', 'm3 molecule-1 s-1',
             'dm3 molecule-1 s-1', 'cm3 molecule-1 s-1', 'm6 mol-3 s-1', 'dm6 mol-2 s-1',
             'cm6 mol-2 s-1', 'm6 molecule-2 s-1', 'dm6 molecule-2 s-1', 'cm6 molecule-2 s-1'],
-        'equivalence ratio': [],
+        'equivalence ratio': ['unitless'],
         'length': ['m', 'dm', 'cm', 'mm'],
         'density': ['g m-3', 'g dm-3', 'g cm-3', 'g mm-3', 'kg m-3', 'kg dm-3', 'kg cm-3', 'kg mm-3'],
         'flow rate': ['g m-2x s-1', 'g dm-2 s-1', 'g cm-2 s-1', 'g mm-2 s-1', 'kg m-2 s-1', 'kg dm-2 s-1', 'kg cm-2 s-1', 'kg mm-2 s-1'],
@@ -93,7 +108,7 @@ class AddColumnModal extends React.Component {
         this.setState({propertyName: value[0], propertyUnit: value[1]})
     }
 
-    onChangeSpecie(value){
+    onChangeSpecie(value) {
         this.props.setColumnName(this.props.index, ' - ' + value.toString())
     }
 
@@ -111,7 +126,7 @@ class AddColumnModal extends React.Component {
     }
 
 
-    onChangeDataUncertainty = ({target: {value}}) =>{
+    onChangeDataUncertainty = ({target: {value}}) => {
         this.setState({propertyDataUncertainty: extractData(value)})
     }
 
@@ -124,7 +139,8 @@ class AddColumnModal extends React.Component {
         let species_array;
         if (values.species && this.state.speciesAllowed.indexOf(values.property[0]) > -1) {
             species_label = '[' + values.species.toString() + ']'
-            species_array = [values.species]
+            species_label = species_label.replaceAll(',', '+')
+            species_array = values.species
         } else {
             species_label = undefined
             species_array = undefined
@@ -138,7 +154,7 @@ class AddColumnModal extends React.Component {
 
         let uncertainty_reference = undefined
 
-        if (values.uncertainty !== 'none'){
+        if (values.uncertainty !== 'none') {
             let dataUncertainty = extractData(values.uncertaintyData)
             if (dataUncertainty.length === 0 || dataUncertainty.length !== data.length) {
                 message.error("Data Uncertainty field is empty or contains abnormal values.")
@@ -167,7 +183,8 @@ class AddColumnModal extends React.Component {
             dg_label: this.props.dataGroupAssociation[values.dg_id],
             label: species_label,
             species: species_array,
-            uncertainty_reference: uncertainty_reference
+            uncertainty_reference: uncertainty_reference,
+            fuel_oxidizer: values.fuel_oxidizer
         }
         this.props.handleModal({index: this.props.index, data_column: data_column})
     };
@@ -186,7 +203,7 @@ class AddColumnModal extends React.Component {
         return result
     }
 
-    onChangeUncertainty(value){
+    onChangeUncertainty(value) {
         this.setState({uncertaintyActive: value !== 'none'})
     }
 
@@ -271,7 +288,7 @@ class AddColumnModal extends React.Component {
                     </Row>
 
                     <Form.Item
-                        label="Specie"
+                        label="Specie(s)"
                         name="species"
                         rules={[{
                             required: (this.state.speciesAllowed.indexOf(this.state.propertyName) > -1),
@@ -281,6 +298,7 @@ class AddColumnModal extends React.Component {
                         <Select
                             showSearch
                             onChange={this.onChangeSpecie.bind(this)}
+                            mode="multiple"
                             placeholder={'Select Specie'}
                             optionFilterProp="children"
                             filterOption={(input, option) =>
@@ -291,6 +309,84 @@ class AddColumnModal extends React.Component {
                             {this.state.speciesOptions}
                         </Select>
                     </Form.Item>
+
+                    {this.state.propertyName === 'equivalence ratio' ?
+                        <Row>
+                            <Row>
+                                Fuels and Oxidizers
+                            </Row>
+                            <Row>
+
+                                <Form.List name="fuel_oxidizer">
+                                    {(fields, {add, remove}) => (
+                                        <>
+                                            {fields.map(field => (
+                                                <Space key={field.key} style={{display: 'flex', marginBottom: 8}}
+                                                       align="baseline">
+                                                    <Form.Item
+                                                        {...field}
+                                                        name={[field.name, 'specie']}
+                                                        fieldKey={[field.fieldKey, 'specie']}
+                                                        rules={[{required: true, message: 'Missing specie name.'}]}
+                                                        style={{width: 150}}
+                                                    >
+                                                        <Select
+                                                            showSearch
+                                                            onChange={this.onChangeSpecie.bind(this)}
+                                                            placeholder={'Select Specie'}
+                                                            optionFilterProp="children"
+                                                            filterOption={(input, option) =>
+                                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                            }
+                                                        >
+                                                            {this.state.speciesOptions}
+                                                        </Select>
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        {...field}
+                                                        name={[field.name, 'value']}
+                                                        fieldKey={[field.fieldKey, 'value']}
+                                                        rules={[{required: true, message: 'Missing property value.'}]}
+                                                    >
+                                                        <InputNumber
+                                                            min={0}
+                                                            max={1}
+                                                            defaultValue={0}
+                                                            style={{width: 100}}
+                                                        />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        {...field}
+                                                        name={[field.name, 'type']}
+                                                        fieldKey={[field.fieldKey, 'type']}
+                                                        rules={[{required: true, message: 'Missing property type.'}]}
+                                                    >
+                                                        <Select
+                                                            placeholder={"Select type"}
+                                                            style={{width: 150}}
+                                                        >
+                                                            <Select.Option value={'Fuel'}
+                                                                           key={'fuel'}>Fuel</Select.Option>
+                                                            <Select.Option value={'Oxidizer'}
+                                                                           key={'oxidizer'}>Oxidizer</Select.Option>
+                                                        </Select>
+                                                    </Form.Item>
+                                                    <MinusCircleOutlined onClick={() => remove(field.name)}/>
+                                                </Space>
+                                            ))}
+                                            <Form.Item>
+                                                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined/>}
+                                                        style={{width: 350}}>
+                                                    Add field
+                                                </Button>
+                                            </Form.Item>
+                                        </>
+                                    )}
+                                </Form.List>
+                            </Row>
+                        </Row>
+                        :
+                        <></>}
 
 
                     <Row>
@@ -311,7 +407,10 @@ class AddColumnModal extends React.Component {
                             <Form.Item
                                 label="Uncertainty Column"
                                 name="uncertaintyData"
-                                rules={[{required: this.state.uncertaintyActive, message: 'Please insert Uncertainty Column.'}]}
+                                rules={[{
+                                    required: this.state.uncertaintyActive,
+                                    message: 'Please insert Uncertainty Column.'
+                                }]}
                             >
                                 <Input.TextArea
                                     autoSize={{minRows: 5, maxRows: 10}}

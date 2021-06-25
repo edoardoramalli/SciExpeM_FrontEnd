@@ -28,7 +28,17 @@ export function zip(list_of_lists) {
     });
 }
 
-export function checkError(error){
+export async function checkError(error){
+    let type = '';
+
+    if (error.response.data instanceof ArrayBuffer){
+        type = 'buffer';
+    }
+
+    if (error.response.data instanceof Blob){
+        type = 'blob';
+    }
+
     if (error.response.status === 403){
         message.error("You are not authenticated!", 3);
     }
@@ -36,7 +46,16 @@ export function checkError(error){
         message.error("You don't have the authorization!", 3);
     }
     else if (error.response.status === 400){
-        message.error("Bad Request. " + error.response.data, 3);
+        let text = error.response.data
+        if (type === 'buffer'){
+            let enc = new TextDecoder("utf-8");
+            text = enc.decode(error.response.data).replaceAll('"', '')
+        }
+        else if (type === 'blob'){
+            let promise = await error.response.data.text()
+            text = promise.replaceAll('"', '')
+        }
+        message.error("Bad Request. " + text, 3);
     }
     else{
         message.error(error.response.data, 3);

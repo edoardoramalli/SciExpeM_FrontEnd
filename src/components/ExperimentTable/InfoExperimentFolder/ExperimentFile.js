@@ -1,9 +1,9 @@
 import React from "react";
 
 import XMLViewer from 'react-xml-viewer'
-import {message, Button, Upload, Empty, Spin, Col} from "antd";
+import {message, Button, Upload, Empty, Spin, Col, Space, Input, Row} from "antd";
 
-import {UploadOutlined} from "@ant-design/icons";
+import {UploadOutlined, EditOutlined, RollbackOutlined} from "@ant-design/icons";
 
 const axios = require('axios');
 import Cookies from "js-cookie";
@@ -20,6 +20,9 @@ class ExperimentFile extends React.Component {
             type: this.props.type,
             file: "",
             renderObject: <Col span={1} offset={11}><Spin size="large" tip="Loading..."/></Col>,
+            editButton: false,
+            cancelButton: true,
+            editButtonText: 'Edit',
         }
     }
 
@@ -83,6 +86,10 @@ class ExperimentFile extends React.Component {
 
 
     }
+    editButtonClick = () =>{
+        console.log(this)
+        this.setState({cancelButton: true})
+    }
 
     optional_render = () => {
         let render;
@@ -90,7 +97,45 @@ class ExperimentFile extends React.Component {
             if (this.state.type === "ReSpecTh") {
                 render = <XMLViewer xml={this.state.file}/>
             } else if (this.state.type === "OS") {
-                render = <div dangerouslySetInnerHTML={{__html: this.state.file}} style={{whiteSpace: "pre-line"}}/>
+                render =
+                    <>
+                        <Col>
+                            <Space direction="vertical">
+                            <Row>
+                                <Space direction="horizontal">
+                                    <Button
+                                        type="primary" size="large" shape="round"
+                                        icon={<EditOutlined />}
+                                        disabled={this.state.editButton}
+                                        onClick={this.editButtonClick.bind(this)}
+                                    >
+                                        {this.state.editButtonText}
+                                    </Button>
+                                    <Button
+                                        type="primary" size="large" shape="round"
+                                        icon={<RollbackOutlined />}
+                                        disabled={this.state.cancelButton}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Space>
+                            </Row>
+                            <Row>
+                                <Space direction="vertical">
+                                    <Input.TextArea
+                                        style={{width: '92vw'}}
+                                        autoSize={{ minRows: 10, maxRows: 100 }}
+                                        defaultValue={this.state.file}
+                                        disabled={this.state.cancelButton}
+                                    />
+                                </Space>
+                            </Row>
+
+                            </Space>
+                        </Col>
+
+                    </>
+                    // <div dangerouslySetInnerHTML={{__html: this.state.file}} style={{whiteSpace: "pre-line"}}/>
             }
         } else {
             if (this.state.type === "OS"){

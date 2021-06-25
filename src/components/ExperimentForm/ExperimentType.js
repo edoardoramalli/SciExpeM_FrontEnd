@@ -3,6 +3,7 @@ import {Form, Select} from "antd";
 
 const axios = require('axios');
 import Cookies from "js-cookie";
+import {checkError} from "../Tool";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 
@@ -31,7 +32,7 @@ class ExperimentType extends React.Component{
                 });
                 this.setState({options: options})
             }).catch(error => {
-            console.log(error.response);
+            checkError(error)
         })
     }
 

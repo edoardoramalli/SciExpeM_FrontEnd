@@ -34,6 +34,7 @@ class ExperimentForm extends React.Component {
             reactor_inactive: true,
             idt: false,
             rcm: false,
+            profile_active: false,
             base_active: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp8', 'clp9', 'clp10'],
             active_key: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp8', 'clp9', 'clp10'],
             reactor_value: null,
@@ -96,8 +97,17 @@ class ExperimentForm extends React.Component {
             data_columns: data_columns,
             common_properties: values.common_properties,
             initial_species: values.initial_species,
-            file_paper: {references: values.references, reference_doi: values.reference_doi},
-
+            file_paper:
+                {
+                    description: values.description,
+                    reference_doi: values.reference_doi,
+                    title: values.title,
+                    author: values.author,
+                    journal: values.journal,
+                    volume: values.volume,
+                    page: values.page,
+                    year: parseInt(values.year),
+                },
         }
         this.setState({experiment: experiment})
     }
@@ -110,6 +120,7 @@ class ExperimentForm extends React.Component {
 
 
     onFinishFailed = ({values, errorFields}) => {
+        console.log(values)
         this.setState({submitLoading: false})
         this.handleValueForm(values)
         const reducer = (accumulator, currentValue) => accumulator + " " + currentValue.errors;
@@ -133,7 +144,20 @@ class ExperimentForm extends React.Component {
                 .then(() => {
                     this.formRef.current.resetFields();
                     message.success('Experiment added successfully', 5);
-                    this.setState({submitLoading: false})
+                    this.setState({reactor_inactive: true,
+                        idt: false,
+                        rcm: false,
+                        profile_active: false,
+                        base_active: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp8', 'clp9', 'clp10'],
+                        active_key: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp8', 'clp9', 'clp10'],
+                        reactor_value: null,
+                        experiment: null,
+                        tableColumns: [],
+                        dataTableColumns: [],
+                        dataGroupAssociation: {},
+                        dataGroup: 1,
+                        dataColumns: {},
+                        submitLoading: false,})
                 })
                 .catch(error => {
                     checkError(error)
@@ -149,12 +173,12 @@ class ExperimentForm extends React.Component {
         })
         if (this.state.idt) {
             this.setState({
-                active_key: this.state.base_active.concat(['clp7'])
+                active_key: this.state.active_key.concat(['clp7'])
             })
         }
-        if (this.state.idt && this.state.rcm) {
+        if (this.state.profile_active) {
             this.setState({
-                active_key: this.state.base_active.concat(['clp6', 'clp7'])
+                active_key: this.state.active_key.concat(['clp6'])
             })
         }
 
@@ -164,6 +188,15 @@ class ExperimentForm extends React.Component {
 
     handleOSinputFile = (text_file) => {
         this.formRef.current.setFieldsValue({os_input_file: text_file})
+    }
+
+    setField = (pair) =>{
+        this.formRef.current.setFieldsValue(pair)
+
+    }
+
+    getFieldValue = (field) =>{
+        return this.formRef.current.getFieldValue(field)
     }
 
     addDataColumn = (key, data_column) => {
@@ -242,9 +275,15 @@ class ExperimentForm extends React.Component {
     }
 
     handleReactorType = (reactorType) => {
+        let active = false;
+        if (reactorType === 'rapid compression machine' || reactorType === 'shock tube' || reactorType === 'stirred reactor'){
+            active = true
+        }
         this.setState({
             reactor_value: reactorType,
-            rcm: reactorType === 'rapid compression machine'
+            rcm: reactorType === 'rapid compression machine',
+            profile_active: active,
+
         }, () => {
             this.handleKey()
         });
@@ -255,7 +294,7 @@ class ExperimentForm extends React.Component {
             {
                 idt: false,
                 rcm: false,
-                reactor_value: undefined
+                reactor_value: null,
             }
         )
 
@@ -369,8 +408,8 @@ class ExperimentForm extends React.Component {
                         </Space>
 
                     </Collapse.Panel>
-                    <Collapse.Panel header="Profiles (Only for 'Rapid Compression Machine')" key="clp6"
-                                    disabled={!this.state.rcm} accordion>
+                    <Collapse.Panel header="Profiles" key="clp6"
+                                    disabled={!this.state.profile_active} accordion>
                         <Space direction="vertical">
                             <Row>
                                 <Space style={{display: 'flex'}} align="baseline">
@@ -398,7 +437,7 @@ class ExperimentForm extends React.Component {
                     </Collapse.Panel>
 
                     <Collapse.Panel header="References" key="clp10">
-                        <References/>
+                        <References setField={this.setField} getFieldValue={this.getFieldValue}/>
                     </Collapse.Panel>
 
                 </Collapse>

@@ -19,7 +19,8 @@ class ManagementExperiment extends React.Component{
         this.state = {
             exp_id: this.props['exp_id'],
             exp: this.props,
-            list_fuels: []
+            list_fuels: [],
+            loading: false,
         }
     }
 
@@ -32,8 +33,11 @@ class ManagementExperiment extends React.Component{
         axios.post(window.$API_address + 'ExperimentManager/API/updateElement', params)
             .then(res => {
                 message.success('Fields are updated! Reload page to see the effects', 3);
+                this.verifyExperiment(this.state.exp_id.toString(), this.state.status)
+
             }).catch(error => {
                 checkError(error)
+                this.verifyExperiment(this.state.exp_id.toString(), this.state.status)
         })
     }
 
@@ -45,19 +49,23 @@ class ManagementExperiment extends React.Component{
         axios.post(window.$API_address + 'ExperimentManager/API/verifyExperiment', params)
             .then(res => {
                 message.success('Experiment status is updated! Reload page to see the effects', 3);
+                this.setState({loading: false})
             }).catch(error => {
             checkError(error)
+            this.setState({loading: false})
+
         })
+
     }
 
     ok(){
         let params = {
-            phi_inf: parseInt(this.state.phi_inf),
-            phi_sup: parseInt(this.state.phi_sup),
-            t_inf: parseInt(this.state.t_inf),
-            t_sup: parseInt(this.state.t_sup),
-            p_inf: parseInt(this.state.p_inf),
-            p_sup: parseInt(this.state.p_sup),
+            phi_inf: parseFloat(this.state.phi_inf),
+            phi_sup: parseFloat(this.state.phi_sup),
+            t_inf: parseFloat(this.state.t_inf),
+            t_sup: parseFloat(this.state.t_sup),
+            p_inf: parseFloat(this.state.p_inf),
+            p_sup: parseFloat(this.state.p_sup),
             fuels: this.state.fuels
         }
         if (this.state.status === 'verified') {
@@ -75,9 +83,11 @@ class ManagementExperiment extends React.Component{
                 params[key] = null
             }
         }
+        this.setState({loading: true}, () =>{
+            this.updateValues(this.state.exp_id.toString(), params)
+        })
 
-        this.updateValues(this.state.exp_id.toString(), params)
-        this.verifyExperiment(this.state.exp_id.toString(), this.state.status)
+
     }
 
     componentDidMount() {
@@ -312,8 +322,9 @@ class ManagementExperiment extends React.Component{
                 <Button
                     icon={<CheckOutlined />}
                     onClick={this.ok.bind(this)}
+                    loading={this.state.loading}
                 >
-                    Update Fields and Verify Experiment
+                    Update Fields and State
                 </Button>
 
             </>

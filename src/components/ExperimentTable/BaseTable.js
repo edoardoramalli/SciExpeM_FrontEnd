@@ -8,7 +8,7 @@ import Highlighter from "react-highlight-words";
 
 function StatusTag(props) {
     const status = props.status;
-    const experiment_interpreter = props.record.experiment_interpreter;
+    const interpreter_name = props.record.interpreter_name;
     let color_status;
     if (status === 'unverified'){
         color_status = 'orange';
@@ -21,7 +21,7 @@ function StatusTag(props) {
     }
     let type;
     let color_type;
-    if (experiment_interpreter){
+    if (interpreter_name){
         type = "managed"
         color_type = "blue"
     }
@@ -123,6 +123,7 @@ class BaseTable extends React.Component{
         clearFilters();
         this.setState({searchText: ''});
     };
+
     handleDelete = (e_id) => {
 
         this.setState({experiments: this.state.experiments.filter(item => item.id !== e_id)});
@@ -300,7 +301,7 @@ class BaseTable extends React.Component{
                         return true
                     }
                     let exp_type;
-                    if (record.experiment_interpreter === null){
+                    if (record.interpreter_name === null){
                         exp_type = "unmanaged"
                     }
                     else{

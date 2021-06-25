@@ -1,5 +1,5 @@
 import React from "react";
-import {Empty, Table, Tabs} from "antd";
+import {Table, Tabs} from "antd";
 
 class GenericTable extends React.Component {
 
@@ -17,8 +17,9 @@ class GenericTable extends React.Component {
             const data = content['data']
             const total_width = (content['header'].length * 200);
             const tab =
-                <Tabs.TabPane tab={'Data Group (' + dg_id +') - ' + content['type']} key={'KeyTabRawData' + dg_id}>
+                <Tabs.TabPane tab={'Data Group (' + dg_id + ') - ' + content['type']} key={'KeyTabRawData' + dg_id}>
                     <Table
+                        key={'TableRawData' + dg_id}
                         dataSource={data}
                         columns={header}
                         scroll={{x: total_width}}
@@ -32,46 +33,18 @@ class GenericTable extends React.Component {
         })
     }
 
-    createColumnTable(columns){
-        return(columns.map(function (name) {
+    createColumnTable(columns) {
+        return (columns.map(function (name) {
             return {
                 title: name,
                 key: name,
                 dataIndex: name,
                 width: 200
-            }}))
+            }
+        }))
     }
 
-    render() {
-        //
-        // console.log(this.props.response)
-        //
-        //
-        // const data = this.props.data;
-        // const names = this.props.names;
-
-        // if (names == null || names.length === 0) {
-        //     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>;
-        // }
-
-        // const columns = names.map(function (name) {
-        //     return {
-        //         title: name,
-        //         key: name,
-        //         dataIndex: name,
-        //         width: 200
-        //     }
-        // });
-
-
-
-        return (
-            <Tabs>
-                {this.state.tabList}
-            </Tabs>
-            )
-
-    }
+    render() {return (<Tabs>{this.state.tabList}</Tabs>)}
 }
 
 export default GenericTable;

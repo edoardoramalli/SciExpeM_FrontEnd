@@ -19,6 +19,7 @@ class  UploadExecution extends React.Component{
             dataPreviewVisible: false,
             file: '',
             listFiles: this.props.listFiles,
+            uploadLoading: false,
         }
     }
 
@@ -67,14 +68,18 @@ class  UploadExecution extends React.Component{
     }
 
     onFinish(value){
+        this.setState({uploadLoading: true})
         axios.post(window.$API_address + 'frontend/API/addExecutionFiles',
             {execution_id: this.props.execution_id, files: value})
             .then(res => {
                 message.success('Execution Files updated successfully!')
+                this.setState({uploadLoading: false})
                 this.props.uploadExecutionNotVisible()
                 this.props.refreshTable()
             })
             .catch(error => {
+                this.setState({uploadLoading: false})
+
                 checkError(error)
             })
     }
@@ -122,6 +127,7 @@ class  UploadExecution extends React.Component{
                             htmlType="submit"
                             style={{margin: "10px"}}
                             size={"large"}
+                            loading={this.state.uploadLoading}
                         >
                             Upload Files
                         </Button>

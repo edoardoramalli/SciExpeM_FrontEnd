@@ -1,6 +1,5 @@
 import React from "react";
 import {Button, Form, Space} from "antd";
-import AddColumnModal from "./AddColumnModal";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import AddProfileModal from "./AddProfileModal";
 

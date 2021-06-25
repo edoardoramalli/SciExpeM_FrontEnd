@@ -12,7 +12,8 @@ class AddExecution extends React.Component{
         super(props);
         this.state = {
             models_options: null,
-            chemModelsSelected: null
+            chemModelsSelected: null,
+            addExecutionLoading: false,
         }
     }
 
@@ -46,6 +47,8 @@ class AddExecution extends React.Component{
             'chemModel_id': this.state.chemModelsSelected,
         }
 
+        this.setState({addExecutionLoading: true})
+
         axios.get(window.$API_address + 'frontend/API/addExecution',
             {responseType: 'blob', params: params})
             .then(res => {
@@ -59,8 +62,10 @@ class AddExecution extends React.Component{
                 message.success('File downloaded')
                 this.props.refreshTable()
                 this.props.closeAddExecution()
+                this.setState({addExecutionLoading: false})
             }).catch(error => {
-                checkError(error)
+            this.setState({addExecutionLoading: false})
+            checkError(error)
         })
 
     }
@@ -96,6 +101,7 @@ class AddExecution extends React.Component{
                             shape="round"
                             icon={<PlayCircleOutlined />}
                             onClick={this.onClick.bind(this)}
+                            loading={this.state.addExecutionLoading}
                         >
                             Add Execution and Download Zip
                         </Button>

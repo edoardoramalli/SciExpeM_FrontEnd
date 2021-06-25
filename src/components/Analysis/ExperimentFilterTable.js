@@ -49,6 +49,7 @@ class ExperimentFilterTable extends React.Component {
             chemModelsSelected: [],
             loadingHeatMap: false,
             loading: false,
+            loadingDownloadReport: false,
 
         }
     }
@@ -107,7 +108,7 @@ class ExperimentFilterTable extends React.Component {
         this.setState({loading: true, experimentSelected: []})
         const params = {
             fields: ['id', 'reactor', 'experiment_type', 'username',
-                'fileDOI', 'status', 'ignition_type', 'experiment_interpreter'],
+                'fileDOI', 'status', 'ignition_type', 'interpreter_name'],
             args: {
                 'experiment_type': values.experiment_type,
                 'reactor': values.reactor,
@@ -115,6 +116,7 @@ class ExperimentFilterTable extends React.Component {
                 'fuels__contained_by': values.fuels && values.fuels.length > 0 ? values.fuels : undefined,
                 'executions__chemModel__id__in': values.chemModels && values.chemModels > 0 ? values.chemModels : undefined,
                 'executions__experiment__id__isnull': false,
+                'executions__execution_end__isnull': false, // solo le simulazioni terminate
                 't_inf__gte': this.checkField(values.t_profile, 't_inf'),
                 't_sup__lte': this.checkField(values.t_profile, 't_sup'),
                 'p_inf__gte': this.checkField(values.p_profile, 'p_inf'),
@@ -176,6 +178,30 @@ class ExperimentFilterTable extends React.Component {
             .catch(error => {
                 this.setState({renderPlot: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>, loadingHeatMap: false})
                 checkError(error)
+            })
+    }
+
+    downloadReport = () =>{
+        this.setState({loadingDownloadReport: true})
+        axios.post(window.$API_address + 'ExperimentManager/API/getReportSimulation',
+            {exp_list: this.state.experimentSelected, chemModel_list: this.state.chemModelsSelected}, {
+                responseType: 'arraybuffer',
+            })
+            .then(res => {
+
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'report.zip');
+                document.body.appendChild(link);
+                link.click();
+                message.success('File downloaded')
+                this.setState({loadingDownloadReport: false})
+
+            })
+            .catch(error => {
+                checkError(error)
+                this.setState({loadingDownloadReport: false})
             })
     }
 
@@ -314,13 +340,23 @@ class ExperimentFilterTable extends React.Component {
                     <Panel header={"Visualization"} key={"3"}>
                         <Space size={'large'} direction={'vertical'}>
                             <Row>
-                                <Button
-                                    type="primary"
-                                    onClick={this.loadHeatMap.bind(this)}
-                                    loading={this.state.loadingHeatMap}
-                                >
-                                    Load/Refresh Heat Map
-                                </Button>
+                                <Space>
+                                    <Button
+                                        type="primary"
+                                        onClick={this.loadHeatMap.bind(this)}
+                                        loading={this.state.loadingHeatMap}
+                                    >
+                                        Load/Refresh Heat Map
+                                    </Button>
+
+                                    <Button
+                                        type="primary"
+                                        onClick={this.downloadReport.bind(this)}
+                                        loading={this.state.loadingDownloadReport}
+                                    >
+                                        Download Report
+                                    </Button>
+                                </Space>
                             </Row>
                             <Row>
                                 {this.state.renderPlot}

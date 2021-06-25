@@ -17,12 +17,13 @@ const InsertExperimentForm = lazy(() => import('./ExperimentForm/ExperimentForm'
 const ModelTable = lazy(()=> import('./ModelTable/ModelTable'))
 const InsertExperimentFile = lazy(() => import('./ExperimentFile/InsertExperimentFile'));
 const ExperimentFilterTable = lazy(() => import('./Analysis/ExperimentFilterTable'));
+const SpeciesTable = lazy(() => import('./SpeciesTable/SpeciesTable'));
+const CrowdSourcing = lazy(() => import('./CrowdSourcing/CrowdSourcing'));
 
 
 const {Header, Content, Footer} = Layout;
 
 
-const axios = require('axios');
 
 class App extends React.Component {
 
@@ -51,8 +52,10 @@ class App extends React.Component {
             "experimentInputFile": <InsertExperimentFile/>,
             "experimentInputForm": <InsertExperimentForm/>,
             "models": <ModelTable/>,
+            "species": <SpeciesTable/>,
             "chemModelInputForm": <InsertCheModelFile />,
-            "analysis": <ExperimentFilterTable />
+            "analysis": <ExperimentFilterTable />,
+            "crowdSourcing": <CrowdSourcing />,
         }
 
         return (

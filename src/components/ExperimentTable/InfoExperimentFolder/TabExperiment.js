@@ -15,6 +15,7 @@ const RawData = lazy(() => import('./RawData'))
 const PlotExperiment = lazy(() => import('./PlotExperiment'))
 const ExecutionTab = lazy(() => import('./ExecutionTab'))
 const CurveMatchingResult = lazy(() => import('./CurveMatchingResult'))
+const OSFile = lazy(() => import('./OSFile'));
 
 
 
@@ -71,7 +72,7 @@ class TabExperiment extends React.Component{
                     <RawData exp_id={this.props.experiment.id} type={"profile"}/>
                 </TabPane>
                 <TabPane tab="OS Input File" key="ExpTab8">
-                    <ExperimentFile exp_id={this.props.experiment.id} type={"OS"}/>
+                    <OSFile exp_id={this.props.experiment.id} />
                 </TabPane>
                 <TabPane tab="ReSpecTh File" key="ExpTab9">
                     <ExperimentFile exp_id={this.props.experiment.id} type={"ReSpecTh"}/>
