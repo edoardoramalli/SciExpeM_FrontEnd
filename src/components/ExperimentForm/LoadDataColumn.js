@@ -6,7 +6,9 @@ const axios = require('axios');
 import Cookies from "js-cookie";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
-const GenericTable = React.lazy(() => import('../GenericTable'));
+// const GenericTable = React.lazy(() => import('../GenericTable'));
+
+import GenericTable from "../GenericTable";
 
 
 class LoadDataColumn extends React.Component{

@@ -3,15 +3,87 @@ import React from "react";
 const axios = require('axios');
 import Cookies from "js-cookie";
 import {message, Table, Button, Input, Space, Row, Col, Popconfirm} from "antd";
-import {DeleteOutlined, EditOutlined, SaveOutlined, RollbackOutlined, PlusOutlined} from "@ant-design/icons";
+import {
+    DeleteOutlined,
+    EditOutlined,
+    SaveOutlined,
+    RollbackOutlined,
+    PlusOutlined,
+    SearchOutlined
+} from "@ant-design/icons";
 
 import {checkError} from "../Tool";
 
 import AddSpecie from "./AddSpecie"
+import Highlighter from "react-highlight-words";
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 class SpeciesTable extends React.Component {
+    getColumnSearchProps = dataIndex => ({
+        filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
+            <div style={{padding: 8}}>
+                <Input
+                    ref={node => {
+                        this.searchInput = node;
+                    }}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                    style={{width: 188, marginBottom: 8, display: 'block'}}
+                />
+                <Button
+                    type="primary"
+                    onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                    icon={<SearchOutlined type="search"/>}
+                    size="small"
+                    style={{width: 90}}
+                >
+                    Search
+                </Button>
+                <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{width: 90}}>
+                    Reset
+                </Button>
+            </div>
+        ),
+        filterIcon: filtered => <SearchOutlined style={{color: filtered ? '#1890ff' : 'black'}}/>
+        ,
+        onFilter: (value, record) =>
+            record[dataIndex]
+                ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+                : '',
+        onFilterDropdownVisibleChange: visible => {
+            if (visible) {
+                setTimeout(() => this.searchInput.select(), 100);
+            }
+        },
+        render: text =>
+            this.state.searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{backgroundColor: '#ffc069', padding: 0}}
+                    searchWords={[this.state.searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            ),
+    });
+
+    handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        this.setState({
+            searchText: selectedKeys[0],
+            searchedColumn: dataIndex,
+        });
+    };
+
+    handleReset = clearFilters => {
+        clearFilters();
+        this.setState({searchText: ''});
+    };
+
     constructor() {
         super();
         this.state = {
@@ -27,15 +99,18 @@ class SpeciesTable extends React.Component {
 
             addSpecieVisible: false,
             loadingDelete: false,
+
+            loading: false,
         }
     }
 
     refreshSpecieList = () => {
+        this.setState({loading: true})
         const params = {args: {}, fields: {}}
         axios.post(window.$API_address + 'frontend/API/getSpecieList', params)
             .then(res => {
                 const species_list = JSON.parse(res.data)
-                this.setState({species: species_list, editableRow: undefined})
+                this.setState({species: species_list, editableRow: undefined, loading: false})
 
             })
             .catch(error => {
@@ -126,16 +201,30 @@ class SpeciesTable extends React.Component {
                 title: 'ID',
                 dataIndex: 'id',
                 key: 'id',
+                width: 100,
                 sorter: (a, b) => {
                     return a.id > b.id
                 },
                 defaultSortOrder: 'ascend',
+                fixed: 'left',
+            },
+            {
+                title: 'Preferred Name',
+                dataIndex: 'preferredKey',
+                width: 150,
+                key: 'preferredKey',
+                ...this.getColumnSearchProps('preferredKey'),
+                sorter: (a, b) => {
+                    return a.id > b.id
+                },
+                fixed: 'left',
             },
             {
                 title: 'InChI',
                 dataIndex: 'InChI',
                 key: 'InChI',
-                render: (text, record) => {return (this.renderEdit(record, 'InChI'))},
+                width: 600,
+                ...this.getColumnSearchProps('InChI'),
                 sorter: (a, b) => {
                     return a.id > b.id
                 }
@@ -144,7 +233,8 @@ class SpeciesTable extends React.Component {
                 title: 'CAS',
                 dataIndex: 'CAS',
                 key: 'CAS',
-                render: (text, record) => {return (this.renderEdit(record, 'CAS'))},
+                width: 150,
+                ...this.getColumnSearchProps('CAS'),
                 sorter: (a, b) => {
                     return a.id > b.id
                 }
@@ -153,24 +243,18 @@ class SpeciesTable extends React.Component {
                 title: 'SMILES',
                 dataIndex: 'SMILES',
                 key: 'SMILES',
-                render: (text, record) => {return (this.renderEdit(record, 'SMILES'))},
+                width: 550,
+                ...this.getColumnSearchProps('SMILES'),
                 sorter: (a, b) => {
                     return a.id > b.id
                 }
             },
-            {
-                title: 'Preferred Name',
-                dataIndex: 'preferredKey',
-                key: 'preferredKey',
-                render: (text, record) => {return (this.renderEdit(record, 'preferredKey'))},
-                sorter: (a, b) => {
-                    return a.id > b.id
-                }
-            },
+
             {
                 title: 'Alternative Names',
                 dataIndex: 'names',
                 key: 'names',
+                width: 150,
                 render: (text, record) => {return (this.renderEdit(record, 'names'))},
                 sorter: (a, b) => {
                     return a.id > b.id
@@ -180,7 +264,8 @@ class SpeciesTable extends React.Component {
                 title: 'Chemical Name',
                 dataIndex: 'chemName',
                 key: 'chemName',
-                render: (text, record) => {return (this.renderEdit(record, 'chemName'))},
+                width: 200,
+                ...this.getColumnSearchProps('chemName'),
                 sorter: (a, b) => {
                     return a.id > b.id
                 }
@@ -189,7 +274,8 @@ class SpeciesTable extends React.Component {
                 title: 'Formula',
                 dataIndex: 'formula',
                 key: 'formula',
-                render: (text, record) => {return (this.renderEdit(record, 'formula'))},
+                width: 150,
+                ...this.getColumnSearchProps('formula'),
                 sorter: (a, b) => {
                     return a.id > b.id
                 }
@@ -198,6 +284,8 @@ class SpeciesTable extends React.Component {
                 title: 'Actions',
                 dataIndex: '',
                 key: 'actions',
+                fixed: 'right',
+                width: 150,
                 render: (text, record) => <Space>
                     {record.id !== this.state.editableRow ? <Button
                         shape="circle"
@@ -254,8 +342,9 @@ class SpeciesTable extends React.Component {
                     dataSource={this.state.species}
                     rowKey="id"
                     size='small'
-                    // loading={this.props.loading}
+                    loading={this.state.loading}
                     bordered
+                    scroll={{x: 800}}
                     style={{minHeight: 100}}
                 />
                 </>

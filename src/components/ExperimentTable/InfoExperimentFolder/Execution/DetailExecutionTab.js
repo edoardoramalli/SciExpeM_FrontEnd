@@ -7,8 +7,10 @@ import Cookies from "js-cookie";
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
-const ExecutionPlot = lazy(() => import('./ExecutionPlot'))
-const ExecutionError = lazy(() => import('./ExecutionError'))
+// const ExecutionPlot = lazy(() => import('./ExecutionPlot'))
+// const ExecutionError = lazy(() => import('./ExecutionError'))
+import ExecutionPlot from "./ExecutionPlot";
+import ExecutionError from "./ExecutionError";
 
 class DetailExecutionTab extends React.Component {
     constructor(props) {

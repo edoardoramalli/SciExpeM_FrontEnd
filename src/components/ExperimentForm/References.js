@@ -79,7 +79,7 @@ class References extends React.Component {
                     rules={[{required: false, message: 'Please insert author(s).'}]}
                 >
                     <Input.TextArea
-                        placeholder={"Please insert author(s). Last name, first name. Use semi column to separated authors. E.g. Rossi, Mario; Lebron, James"}
+                        placeholder={"Please insert author(s). Last name, first name. Use semicolon to separate authors. E.g. Rossi, Mario; Lebron, James."}
                         rows={5}
                         style={{width: "35%"}}
                     />

@@ -3,19 +3,33 @@ import React, {lazy} from "react";
 
 // Third partis import
 import {Tabs} from 'antd';
+import InitialSpecies from "../../ExperimentForm/InitialSpecies";
 const { TabPane } = Tabs;
 
 // Local import
-const InfoExperiment = lazy(() => import('./InfoExperiment'));
-const CommonPropertyTab = lazy(() => import('./CommonPropertyTab'))
-const BibliographyTab = lazy(()=> import('./BibliographyTab'))
-const ExperimentFile = lazy(() => import('./ExperimentFile'));
-const ManagementExperiment = lazy(() => import('./ManagementExperiment'));
-const RawData = lazy(() => import('./RawData'))
-const PlotExperiment = lazy(() => import('./PlotExperiment'))
-const ExecutionTab = lazy(() => import('./ExecutionTab'))
-const CurveMatchingResult = lazy(() => import('./CurveMatchingResult'))
-const OSFile = lazy(() => import('./OSFile'));
+// const InfoExperiment = lazy(() => import('./InfoExperiment'));
+// const CommonPropertyTab = lazy(() => import('./CommonPropertyTab'))
+// const InitialSpecieTab = lazy(() => import('./InitialSpecieTab'))
+// const BibliographyTab = lazy(()=> import('./BibliographyTab'))
+// const ExperimentFile = lazy(() => import('./ExperimentFile'));
+// const ManagementExperiment = lazy(() => import('./ManagementExperiment'));
+// const RawData = lazy(() => import('./RawData'))
+// const PlotExperiment = lazy(() => import('./PlotExperiment'))
+// const ExecutionTab = lazy(() => import('./ExecutionTab'))
+// const CurveMatchingResult = lazy(() => import('./CurveMatchingResult'))
+// const OSFile = lazy(() => import('./OSFile'));
+
+import InfoExperiment from "./InfoExperiment";
+import CommonPropertyTab from "./CommonPropertyTab";
+import InitialSpecieTab from "./InitialSpecieTab";
+import BibliographyTab from "./BibliographyTab";
+import ExperimentFile from "./ExperimentFile";
+import ManagementExperiment from "./ManagementExperiment";
+import RawData from "./RawData";
+import PlotExperiment from "./PlotExperiment";
+import ExecutionTab from "./ExecutionTab";
+import CurveMatchingResult from "./CurveMatchingResult";
+import OSFile from "./OSFile";
 
 
 
@@ -52,10 +66,7 @@ class TabExperiment extends React.Component{
                     />
                 </TabPane>
                 <TabPane tab="Initial Specie" key="ExpTab3">
-                    <CommonPropertyTab
-                        exp_id={this.props.exp_id}
-                        name={'InitialSpecie'}
-                    />
+                    <InitialSpecieTab exp_id={this.props.exp_id} />
                 </TabPane>
                 <TabPane tab="Bibliography" key="ExpTab4">
                     <BibliographyTab

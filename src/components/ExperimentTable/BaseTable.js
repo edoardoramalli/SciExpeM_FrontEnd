@@ -223,6 +223,7 @@ class BaseTable extends React.Component{
                 title: 'Id',
                 dataIndex: 'id',
                 key: 'id',
+                ...this.getColumnSearchProps('id'),
                 sorter: (a, b) => {
                     return a.id > b.id
                 },

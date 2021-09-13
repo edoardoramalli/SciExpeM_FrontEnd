@@ -73,7 +73,8 @@ class NavBar extends React.Component{
 
                 <Menu.Item key="analysis"><LineChartOutlined />Analysis</Menu.Item>
 
-                <Menu.Item key="crowdSourcing"><TeamOutlined />Crowd Sourcing</Menu.Item>
+                {/*<Menu.Item key="crowdSourcing"><TeamOutlined />Crowd Sourcing</Menu.Item>*/}
+
 
                 <Menu.Item key="logout" style={{"float": "right"}}>
                     <LogoutOutlined />

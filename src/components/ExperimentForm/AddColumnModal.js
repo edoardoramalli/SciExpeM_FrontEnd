@@ -57,23 +57,31 @@ class AddColumnModal extends React.Component {
             speciesAllowed: ['composition', 'concentration'],
             uncertaintyActive: false,
             propertyDataUncertainty: [],
+            species: {},
         }
     }
 
     componentDidMount() {
         axios.get(window.$API_address + 'frontend/api/opensmoke/species_names')
             .then(res => {
-                let speciesOptions = res.data.names.map((item) => {
-                    return (
-                        <Select.Option
-                            value={item}
-                            key={item}
-                        >
-                            {item}
-                        </Select.Option>
-                    )
-                });
-                this.setState({speciesOptions: speciesOptions, propertyObject: this.createOptions()})
+
+                const specie_dict = res.data;
+                let speciesOptions = []
+                Object.entries(specie_dict).forEach(([key, value]) => {
+                    let text = value + ' (ID: ' + key + ')'
+                    speciesOptions.push(<Select.Option key={text} value={key}>{text}</Select.Option>)
+                })
+                // let speciesOptions = res.data.names.map((item) => {
+                //     return (
+                //         <Select.Option
+                //             value={item}
+                //             key={item}
+                //         >
+                //             {item}
+                //         </Select.Option>
+                //     )
+                // });
+                this.setState({species: specie_dict, speciesOptions: speciesOptions, propertyObject: this.createOptions()})
             }).catch(error => {
             console.log(error.response);
         })
@@ -109,7 +117,11 @@ class AddColumnModal extends React.Component {
     }
 
     onChangeSpecie(value) {
-        this.props.setColumnName(this.props.index, ' - ' + value.toString())
+        let text = []
+        value.map(i =>{
+            text.push(this.state.species[parseInt(i)])
+        })
+        this.props.setColumnName(this.props.index, ' - ' + text.toString())
     }
 
     createUnitOptions() {
@@ -137,10 +149,10 @@ class AddColumnModal extends React.Component {
     onFinish = (values) => {
         let species_label;
         let species_array;
-        if (values.species && this.state.speciesAllowed.indexOf(values.property[0]) > -1) {
-            species_label = '[' + values.species.toString() + ']'
-            species_label = species_label.replaceAll(',', '+')
-            species_array = values.species
+        if (values.species_object && this.state.speciesAllowed.indexOf(values.property[0]) > -1) {
+            // species_label = '[' + values.species.toString() + ']'
+            // species_label = species_label.replaceAll(',', '+')
+            species_array = values.species_object
         } else {
             species_label = undefined
             species_array = undefined
@@ -168,7 +180,6 @@ class AddColumnModal extends React.Component {
                 dg_id: values.dg_id,
                 dg_label: this.props.dataGroupAssociation[values.dg_id],
                 label: undefined,
-                species: undefined,
                 uncertainty_kind: values.uncertainty,
                 uncertainty_bound: 'plusminus'
             }
@@ -182,7 +193,7 @@ class AddColumnModal extends React.Component {
             dg_id: values.dg_id,
             dg_label: this.props.dataGroupAssociation[values.dg_id],
             label: species_label,
-            species: species_array,
+            species_object: species_array,
             uncertainty_reference: uncertainty_reference,
             fuel_oxidizer: values.fuel_oxidizer
         }
@@ -289,7 +300,7 @@ class AddColumnModal extends React.Component {
 
                     <Form.Item
                         label="Specie(s)"
-                        name="species"
+                        name="species_object"
                         rules={[{
                             required: (this.state.speciesAllowed.indexOf(this.state.propertyName) > -1),
                             message: 'Please select specie.'

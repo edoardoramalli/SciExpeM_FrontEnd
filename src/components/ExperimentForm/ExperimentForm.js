@@ -3,6 +3,7 @@ import React from "react";
 
 // Third-parties import
 import {Form, Button, Collapse, Space, message, Select, Table, Row, InputNumber} from "antd"
+import {DownloadOutlined, UploadOutlined} from '@ant-design/icons';
 
 const axios = require('axios');
 import Cookies from "js-cookie";
@@ -24,6 +25,7 @@ import {zip, checkError} from "../Tool"
 import ProfileColumns from "./ProfileColumns";
 
 
+
 class ExperimentForm extends React.Component {
     formRef = React.createRef();
 
@@ -35,8 +37,8 @@ class ExperimentForm extends React.Component {
             idt: false,
             rcm: false,
             profile_active: false,
-            base_active: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp8', 'clp9', 'clp10'],
-            active_key: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp8', 'clp9', 'clp10'],
+            base_active: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp6', 'clp8', 'clp9', 'clp10'],
+            active_key: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp6', 'clp8', 'clp9', 'clp10'],
             reactor_value: null,
             experiment: null,
             tableColumns: [],
@@ -45,6 +47,7 @@ class ExperimentForm extends React.Component {
             dataGroup: 1,
             dataColumns: {},
             submitLoading: false,
+            json: false,
         }
         this.handleExperimentType = this.handleExperimentType.bind(this);
         this.handleReactorType = this.handleReactorType.bind(this);
@@ -120,7 +123,9 @@ class ExperimentForm extends React.Component {
 
 
     onFinishFailed = ({values, errorFields}) => {
-        console.log(values)
+        if (this.state.json){
+            return
+        }
         this.setState({submitLoading: false})
         this.handleValueForm(values)
         const reducer = (accumulator, currentValue) => accumulator + " " + currentValue.errors;
@@ -131,6 +136,22 @@ class ExperimentForm extends React.Component {
 
     onFinish = values => {
         const error = this.handleValueForm(values)
+
+
+        if (this.state.json){
+            const json = JSON.stringify(this.state.experiment, (k, v) => v === undefined ? null : v)
+            this.setState({json: false})
+            const url = window.URL.createObjectURL(new Blob([json]));
+            const link = document.createElement('a');
+            link.href = url;
+            const file_name = 'SciExpeM_InsertForm.json'
+            link.setAttribute('download', file_name);
+            document.body.appendChild(link);
+            link.click();
+            message.success('File downloaded')
+            return
+        }
+
 
         if (!error) {
             const params = {
@@ -408,8 +429,7 @@ class ExperimentForm extends React.Component {
                         </Space>
 
                     </Collapse.Panel>
-                    <Collapse.Panel header="Profiles" key="clp6"
-                                    disabled={!this.state.profile_active} accordion>
+                    <Collapse.Panel header="Profiles" key="clp6" accordion>
                         <Space direction="vertical">
                             <Row>
                                 <Space style={{display: 'flex'}} align="baseline">
@@ -450,8 +470,21 @@ class ExperimentForm extends React.Component {
                         style={{margin: "10px"}}
                         size={"large"}
                         loading={this.state.submitLoading}
+                        icon={<UploadOutlined />}
                     >
-                        Submit
+                        Submit Form
+                    </Button>
+
+                    <Button
+                        type="default"
+                        htmlType="submit"
+                        style={{margin: "10px"}}
+                        size={"large"}
+                        loading={this.state.submitLoading}
+                        icon={<DownloadOutlined />}
+                        onClick={()=>{this.setState({json: true})}}
+                    >
+                        Download Json
                     </Button>
 
                 </Form.Item>

@@ -1,5 +1,5 @@
 import React from "react";
-import {Alert, Col, Empty, Spin, Table, Tabs} from "antd";
+import {Alert, Col, Empty, Spin, Table, Tabs, Row, Button} from "antd";
 
 
 const axios = require('axios');
@@ -11,6 +11,7 @@ import createPlotlyComponent from "react-plotly.js/factory";
 const Plot = createPlotlyComponent(Plotly);
 
 import {checkError} from "../../Tool";
+import {RetweetOutlined} from "@ant-design/icons";
 
 
 class CurveMatchingResult extends React.Component{
@@ -20,11 +21,12 @@ class CurveMatchingResult extends React.Component{
             renderObjectPlot: <Col span={1} offset={11}><Spin size="large" tip="Loading..."/></Col>,
             loading: true,
             dataSource: [],
-            dataSourceDetails: []
+            dataSourceDetails: [],
         }
     }
 
-    componentDidMount() {
+    refreshTable (){
+        this.setState({loading: true})
         const params = {'exp_id': [this.props.exp_id.toString()]}
         axios.post(window.$API_address + 'ExperimentManager/API/getCurveMatching', params)
             .then(res => {
@@ -58,14 +60,19 @@ class CurveMatchingResult extends React.Component{
                         renderObjectPlot: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>,
                     })
                 }
+                this.setState({loading: false})
             })
             .catch(error => {
                 this.setState({
                     renderObjectPlot: <Alert message="Bar Plot is not supported yet." type="warning" />
                 })
                 checkError(error)
+                this.setState({loading: false})
             })
-        this.setState({loading: false})
+    }
+
+    componentDidMount() {
+        this.refreshTable()
     }
 
     render() {
@@ -152,8 +159,26 @@ class CurveMatchingResult extends React.Component{
             <Tabs tabPosition={'left'}>
                 <Tabs.TabPane tab="Raw Data" key="1">
                     <Table
-                        title={() => <div style={{textAlign: 'center',
-                            fontWeight: 'bold', fontSize: 15}}>Curve Matching Score</div>}
+                        title={() =>
+                            <Row>
+                            <Col
+                                style={{textAlign: 'center', fontWeight: 'bold', fontSize: 15}}
+                                offset={10}
+                            >
+                                Curve Matching Score
+                            </Col>
+                            <Col offset={8}>
+                                <Button
+                                    type="primary"
+                                    shape="round"
+                                    icon={<RetweetOutlined />}
+
+                                    onClick={() => {this.refreshTable()}}
+                                >
+                                    Refresh
+                                </Button>
+                            </Col>
+                                </Row>}
                         bordered
                         dataSource={this.state.dataSource}
                         columns={columns}
@@ -170,6 +195,7 @@ class CurveMatchingResult extends React.Component{
                                 bordered
                                 columns={columns_details}
                                 dataSource={this.state.dataSourceDetails[record.name]}
+                                pagination={false}
                             />)
                         }}
                     />

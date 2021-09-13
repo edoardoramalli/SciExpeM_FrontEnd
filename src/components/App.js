@@ -1,4 +1,6 @@
-import React, { lazy, Suspense } from 'react';
+// import React, { lazy, Suspense } from 'react';
+import React from 'react';
+
 
 // Import CSS
 import './App.css';
@@ -11,14 +13,23 @@ import NavBar from "./NavBar";
 // import {SearchAndExecute} from "./Search";
 
 
-const ExperimentTable = lazy(() => import('./ExperimentTable/ExperimentTable'));
-const InsertCheModelFile = lazy(() => import('./ChemModelForm/InsertCheModelFile'));
-const InsertExperimentForm = lazy(() => import('./ExperimentForm/ExperimentForm'));
-const ModelTable = lazy(()=> import('./ModelTable/ModelTable'))
-const InsertExperimentFile = lazy(() => import('./ExperimentFile/InsertExperimentFile'));
-const ExperimentFilterTable = lazy(() => import('./Analysis/ExperimentFilterTable'));
-const SpeciesTable = lazy(() => import('./SpeciesTable/SpeciesTable'));
-const CrowdSourcing = lazy(() => import('./CrowdSourcing/CrowdSourcing'));
+// const ExperimentTable = lazy(() => import('./ExperimentTable/ExperimentTable'));
+// const InsertCheModelFile = lazy(() => import('./ChemModelForm/InsertCheModelFile'));
+// const InsertExperimentForm = lazy(() => import('./ExperimentForm/ExperimentForm'));
+// const ModelTable = lazy(()=> import('./ModelTable/ModelTable'))
+// const InsertExperimentFile = lazy(() => import('./ExperimentFile/InsertExperimentFile'));
+// const ExperimentFilterTable = lazy(() => import('./Analysis/ExperimentFilterTable'));
+// const SpeciesTable = lazy(() => import('./SpeciesTable/SpeciesTable'));
+// const CrowdSourcing = lazy(() => import('./CrowdSourcing/CrowdSourcing'));
+
+import ExperimentTable from "./ExperimentTable/ExperimentTable";
+import InsertCheModelFile from "./ChemModelForm/InsertCheModelFile";
+import InsertExperimentForm from './ExperimentForm/ExperimentForm';
+import ModelTable from "./ModelTable/ModelTable";
+import InsertExperimentFile from "./ExperimentFile/InsertExperimentFile";
+import ExperimentFilterTable from "./Analysis/ExperimentFilterTable";
+import SpeciesTable from "./SpeciesTable/SpeciesTable";
+import CrowdSourcing from "./CrowdSourcing/CrowdSourcing";
 
 
 const {Header, Content, Footer} = Layout;
@@ -55,7 +66,7 @@ class App extends React.Component {
             "species": <SpeciesTable/>,
             "chemModelInputForm": <InsertCheModelFile />,
             "analysis": <ExperimentFilterTable />,
-            "crowdSourcing": <CrowdSourcing />,
+            // "crowdSourcing": <CrowdSourcing />,
         }
 
         return (
@@ -65,9 +76,9 @@ class App extends React.Component {
                 </Header>
                 <Content style={{padding: '25px 25px', height: "100%"}}>
                     <div style={{background: '#fff', padding: 0, height: "100%"}}>
-                        <Suspense fallback={<div><Spin tip="Loading..." size="large" /></div>}>
+                        {/*<Suspense fallback={<div><Spin tip="Loading..." size="large" /></div>}>*/}
                             {currentMapping[current]}
-                        </Suspense>
+                        {/*</Suspense>*/}
                     </div>
                     <BackTop>
                         <div

@@ -36,7 +36,7 @@ class AddExecution extends React.Component{
         this.setState({chemModelsSelected: value})
     }
 
-    onClick(){
+    onClick = (value) => {
         if(!this.state.chemModelsSelected){
             message.error('Chem Model is not selected')
             return
@@ -45,6 +45,7 @@ class AddExecution extends React.Component{
         const params = {
             'experiment_id': this.props.experiment.id,
             'chemModel_id': this.state.chemModelsSelected,
+            'everything': value,
         }
 
         this.setState({addExecutionLoading: true})
@@ -100,10 +101,22 @@ class AddExecution extends React.Component{
                             type="primary"
                             shape="round"
                             icon={<PlayCircleOutlined />}
-                            onClick={this.onClick.bind(this)}
+                            onClick={() =>{this.onClick(true)}}
                             loading={this.state.addExecutionLoading}
                         >
-                            Add Execution and Download Zip
+                            Add Execution and Download Zip (Model and OS++ File)
+                        </Button>
+
+                    </Row>
+                    <Row>
+                        <Button
+                            type="primary"
+                            shape="round"
+                            icon={<PlayCircleOutlined />}
+                            onClick={() =>{this.onClick(false)}}
+                            loading={this.state.addExecutionLoading}
+                        >
+                            Add Execution and Download Zip (OS++ File)
                         </Button>
                     </Row>
                 </Space>
