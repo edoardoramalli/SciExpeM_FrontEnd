@@ -26,13 +26,11 @@ class RawData extends React.Component{
     }
     componentDidMount() {
         this.setState({loading: true})
-        axios.post(window.$API_address + 'frontend/api/get_experiment_data_columns/' + this.state.exp_id.toString(),
-            {params: {"type": this.state.type}})
+        const params = {'type': this.props.type, 'experiment_id': this.state.exp_id.toString()}
+        axios.post(window.$API_address + 'frontend/API/getRawData', params)
             .then(res => {
                 const response = res.data;
-                let data = response.data;
-                let header = response.header
-                this.setState({renderObject: <GenericTable names={header} data={data}/>})
+                this.setState({renderObject: Object.keys(response).length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/> : <GenericTable response={response}/>})
             }).catch(error => {
                 checkError(error)
                 this.setState({loading: false, renderObject: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>})

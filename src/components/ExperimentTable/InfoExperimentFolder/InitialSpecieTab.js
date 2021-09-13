@@ -8,7 +8,7 @@ axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 import "./styles.less"
 import {checkError} from "../../Tool"
 
-class CommonPropertyTab extends React.Component {
+class InitialSpecieTab extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,15 +20,16 @@ class CommonPropertyTab extends React.Component {
 
     renderProperties(property_list){
         return (property_list.map((property) => {
+            let text = property.specie.preferredKey + ' (ID: ' + property.specie.id + ')'
             return(
                 <>
-                    <Descriptions.Item label={"Name"}>{property.name}</Descriptions.Item>
+                    <Descriptions.Item label={"Specie"}>{text}</Descriptions.Item>
                     <Descriptions.Item label={"Value"}>{property.value}</Descriptions.Item>
                     <Descriptions.Item label={"Units"}>{property.units}</Descriptions.Item>
                     <Descriptions.Item label={"Source Type"}>{property.source_type}</Descriptions.Item>
                     <Descriptions.Item label={"ID"}>{property.id}</Descriptions.Item>
                 </>
-                )
+            )
 
         }))
     }
@@ -51,19 +52,19 @@ class CommonPropertyTab extends React.Component {
             )
         }
         else{
-                return (
-                    <Descriptions bordered column={5} className={"description"}>
-                        {this.renderProperties(property_list)}
-                    </Descriptions>
-                );
-            }
+            return (
+                <Descriptions bordered column={5} className={"description"}>
+                    {this.renderProperties(property_list)}
+                </Descriptions>
+            );
+        }
     }
 
     componentDidMount() {
         this.setState({loading: true});
         const params = {
-            name: this.props['name'],
-            fields: ['id', 'name', 'units', 'value', 'source_type'],
+            name: 'InitialSpecie',
+            fields: ['id', 'specie', 'units', 'value', 'source_type'],
             exp_id: this.state.exp_id.toString()
         }
         axios.post(window.$API_address + 'frontend/API/getPropertyList', params)
@@ -85,10 +86,10 @@ class CommonPropertyTab extends React.Component {
                 {this.renderCommonProperties(this.state.property_list)}
             </>
 
-            )
+        )
 
     }
 
 }
 
-export default CommonPropertyTab;
+export default InitialSpecieTab;

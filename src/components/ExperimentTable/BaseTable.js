@@ -8,7 +8,7 @@ import Highlighter from "react-highlight-words";
 
 function StatusTag(props) {
     const status = props.status;
-    const experiment_interpreter = props.record.experiment_interpreter;
+    const interpreter_name = props.record.interpreter_name;
     let color_status;
     if (status === 'unverified'){
         color_status = 'orange';
@@ -21,7 +21,7 @@ function StatusTag(props) {
     }
     let type;
     let color_type;
-    if (experiment_interpreter){
+    if (interpreter_name){
         type = "managed"
         color_type = "blue"
     }
@@ -106,7 +106,9 @@ class BaseTable extends React.Component{
             number_managed: 0,
             selectedRowKeys: []
         }
+        this.listRef = React.createRef();
     }
+
 
 
     handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -121,6 +123,7 @@ class BaseTable extends React.Component{
         clearFilters();
         this.setState({searchText: ''});
     };
+
     handleDelete = (e_id) => {
 
         this.setState({experiments: this.state.experiments.filter(item => item.id !== e_id)});
@@ -131,6 +134,11 @@ class BaseTable extends React.Component{
         this.props.selectHook(selectedRowKeys)
         this.setState({ selectedRowKeys });
     };
+
+    prova(event){
+        window.preventDefault()
+        console.log('ciaoooo', event)
+    }
 
     render() {
 
@@ -215,10 +223,12 @@ class BaseTable extends React.Component{
                 title: 'Id',
                 dataIndex: 'id',
                 key: 'id',
+                ...this.getColumnSearchProps('id'),
                 sorter: (a, b) => {
                     return a.id > b.id
                 },
                 width: '10%',
+                defaultSortOrder: 'descend'
             },
             //     {
             //     title: 'Paper',
@@ -292,7 +302,7 @@ class BaseTable extends React.Component{
                         return true
                     }
                     let exp_type;
-                    if (record.experiment_interpreter === null){
+                    if (record.interpreter_name === null){
                         exp_type = "unmanaged"
                     }
                     else{
@@ -319,6 +329,7 @@ class BaseTable extends React.Component{
                             'excel': {'label': 'Excel Raw Data', 'extension': '.xlsx', 'file': 'excel'}
                         }}
                         element_id={record.id}
+                        file_name={record.fileDOI ? record.fileDOI : record.name}
                         model_name={'Experiment'}
                         handleDelete={this.handleDelete}
                     />
@@ -335,7 +346,7 @@ class BaseTable extends React.Component{
                         <Statistic title="N° Managed" value={this.props.experiments_managed} />
                     </Col>
                     <Col span={3}>
-                        <Statistic title="N° Validated" value={this.props.experiments_valid} />
+                        <Statistic title="N° Verified" value={this.props.experiments_valid} />
                     </Col>
                 </Row>
             </>
@@ -348,20 +359,25 @@ class BaseTable extends React.Component{
         } : undefined
 
         return(
+            <div ref={this.listRef}>
             <Table
                 title={()=> this.props.header ? header : undefined}
-                scroll={{y: '100%'}}
                 columns={columns}
+                scroll={{y: '100%'}}
                 rowSelection={rowSelection}
                 dataSource={this.props.experiments}
                 rowKey="id"
+                size='small'
                 loading={this.props.loading}
                 bordered
+                style={{minHeight: 100}}
+                expandRowByClick={true}
                 expandedRowRender={record => {
                     return <TabExperiment exp_id={record.id} experiment={record}/>
                 }}
 
             />
+            </div>
         )
     }
 }

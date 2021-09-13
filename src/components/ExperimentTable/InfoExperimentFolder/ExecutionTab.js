@@ -7,12 +7,16 @@ import Cookies from "js-cookie";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 import {Button, Table, Tabs, Row, Col, Space} from "antd";
-import {UploadOutlined, PlusOutlined} from '@ant-design/icons';
+import {UploadOutlined, PlusOutlined, RetweetOutlined} from '@ant-design/icons';
 
 
-const DetailExecutionTab = lazy(() => import('./Execution/DetailExecutionTab'))
-const ExecutionPlot = lazy(() => import('./Execution/ExecutionPlot'))
-const AddExecution = lazy(() => import('./Execution/AddExecution'))
+// const DetailExecutionTab = lazy(() => import('./Execution/DetailExecutionTab'))
+// const ExecutionPlot = lazy(() => import('./Execution/ExecutionPlot'))
+// const AddExecution = lazy(() => import('./Execution/AddExecution'))
+
+import DetailExecutionTab from "./Execution/DetailExecutionTab";
+import ExecutionPlot from "./Execution/ExecutionPlot";
+import AddExecution from "./Execution/AddExecution";
 
 import ActionCell from "../../Shared/ActionCell";
 import UploadExecution from "./Execution/UploadExecution";
@@ -174,7 +178,7 @@ class ExecutionTab extends React.Component {
                         <Table
                             title={() =>
                                 <Row>
-                                    <Col>
+                                    <Col >
                                         <Button
                                             type="primary"
                                             shape="round"
@@ -190,6 +194,16 @@ class ExecutionTab extends React.Component {
                                     <Col offset={8}>
                                         <div style={{fontWeight: 'bold', fontSize: 15}}>Execution List</div>
                                     </Col>
+                                    <Col style={{'float': 'right'}} offset={8}>
+                                        <Button
+                                            type="primary"
+                                            shape="round"
+                                            icon={<RetweetOutlined />}
+                                            onClick={() => {this.refreshTable()}}
+                                        >
+                                            Refresh
+                                        </Button>
+                                    </Col>
                                 </Row>
                             }
                             bordered
@@ -197,6 +211,7 @@ class ExecutionTab extends React.Component {
                             dataSource={this.state.dataSource}
                             columns={columns}
                             loading={this.state.loading}
+                            expandRowByClick={true}
                             expandedRowRender={record => {
                                 return <DetailExecutionTab exec_id={record.id}/>
                             }}

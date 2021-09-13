@@ -4,15 +4,19 @@ import {checkError} from "../../../Tool";
 
 const axios = require('axios');
 import Cookies from "js-cookie";
+
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
-const ExecutionPlot = lazy(() => import('./ExecutionPlot'))
+// const ExecutionPlot = lazy(() => import('./ExecutionPlot'))
+// const ExecutionError = lazy(() => import('./ExecutionError'))
+import ExecutionPlot from "./ExecutionPlot";
+import ExecutionError from "./ExecutionError";
 
 class DetailExecutionTab extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true
+            loading: true,
         }
     }
 
@@ -25,10 +29,13 @@ class DetailExecutionTab extends React.Component {
                 let columns = []
                 Object.entries(res.data[0]).map(([key, value], index) => {
                     columns.push({
-                        title: key,
-                        dataIndex: key,
-                        key: key,
-                        sorter: (a, b) => {return a.id > b.id}}
+                            title: key,
+                            dataIndex: key,
+                            key: key,
+                            sorter: (a, b) => {
+                                return a.id > b.id
+                            }
+                        }
                     )
                 })
                 this.setState({dataSource: res.data, loading: false, columns: columns})
@@ -40,19 +47,25 @@ class DetailExecutionTab extends React.Component {
     }
 
     render() {
-        return(
+        return (
             <Tabs tabPosition={'top'}>
                 <Tabs.TabPane tab="Raw Data" key="1">
                     <Table
                         bordered
                         rowKey="id"
                         dataSource={this.state.dataSource}
+                        scroll={{x: true}}
                         columns={this.state.columns}
                         loading={this.state.loading}
+                        pagination={false}
+                        style={{width: '85vw'}}
                     />
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Plot" key="2">
                     <ExecutionPlot id={this.props.exec_id} api={'frontend/API/getPlotExecution'}/>
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="Error" key="3">
+                    <ExecutionError id={this.props.exec_id}/>
                 </Tabs.TabPane>
             </Tabs>
         )

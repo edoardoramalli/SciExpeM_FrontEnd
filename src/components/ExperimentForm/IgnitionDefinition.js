@@ -23,7 +23,9 @@ class IgnitionDefinition extends React.Component{
                         <Select.Option value="T">temperature</Select.Option>
                         <Select.Option value="CH">CH</Select.Option>
                         <Select.Option value="OH">OH</Select.Option>
-                        <Select.Option value="CO2">C02</Select.Option>
+                        <Select.Option value="CO2">CO2</Select.Option>
+                        <Select.Option value="CO">CO</Select.Option>
+                        <Select.Option value="H2">H2O</Select.Option>
                     </Select>
                 </Form.Item>
                 <Form.Item

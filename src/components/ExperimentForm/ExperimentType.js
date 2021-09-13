@@ -3,6 +3,7 @@ import {Form, Select} from "antd";
 
 const axios = require('axios');
 import Cookies from "js-cookie";
+import {checkError} from "../Tool";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 
@@ -20,12 +21,18 @@ class ExperimentType extends React.Component{
                 const experiment_type_list = res.data.experiment_type_list;
                 let options = experiment_type_list.map((item) => {
                     return(
-                        <Select.Option value={item} style={{"textTransform": "capitalize"}}>{item}</Select.Option>
+                        <Select.Option
+                            value={item}
+                            style={{"textTransform": "capitalize"}}
+                            key={'ExpType' + item.toString()}
+                        >
+                            {item}
+                        </Select.Option>
                     )
                 });
                 this.setState({options: options})
             }).catch(error => {
-            console.log(error.response);
+            checkError(error)
         })
     }
 

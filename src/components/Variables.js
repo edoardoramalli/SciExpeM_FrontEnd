@@ -9,4 +9,21 @@ const experimentTypeToReactor = {
     'direct rate coefficient measurement': ['shock tube','stirred reactor','flow reactor'],
 }
 
-export default {reactors, experimentTypeToReactor}
+const ignition_type = ['max','d/dt max','baseline max intercept from d/dt','baseline min intercept from d/dt','concentration', 'relative concentration']
+const ignition_quantity = ['T', 'p', 'OH', 'CH', 'CO2']
+
+
+function create_ignition(){
+    let tmp = []
+    ignition_quantity.map((item)=>{
+        ignition_type.map((item2) =>{
+            tmp.push(item + '-' + item2)
+        })
+    })
+    tmp = [undefined, ...tmp]
+    return tmp
+}
+
+const ignition = create_ignition()
+
+export default {reactors, experimentTypeToReactor, ignition_type, ignition_quantity, ignition}
