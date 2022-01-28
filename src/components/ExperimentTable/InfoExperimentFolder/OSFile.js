@@ -5,8 +5,13 @@ import Cookies from "js-cookie";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 import {checkError} from "../../Tool"
-import {Button, Col, Input, message, Row, Space, Spin} from "antd";
+import {Button, Col, Collapse, Input, message, Row, Space, Spin} from "antd";
 import {EditOutlined, RollbackOutlined, SaveOutlined} from "@ant-design/icons";
+
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import plaintext from 'react-syntax-highlighter/dist/esm/languages/hljs/plaintext';
+
+SyntaxHighlighter.registerLanguage('plaintext', plaintext);
 
 class OSFile extends React.Component {
     constructor(props) {
@@ -115,9 +120,13 @@ class OSFile extends React.Component {
                                 {
                                     this.state.editButtonText === 'Edit'
                                         ?
-                                        <div style={{whiteSpace: "pre-line"}}>
+                                        <SyntaxHighlighter
+                                            language="plaintext"
+                                            showLineNumbers={true}
+                                            wrapLongLines={true}
+                                        >
                                             {this.state.file}
-                                        </div>
+                                        </SyntaxHighlighter>
                                         :
                                         <Input.TextArea
                                             style={{width: '92vw'}}
@@ -126,6 +135,7 @@ class OSFile extends React.Component {
                                             disabled={this.state.cancelButton}
                                             onChange={this.textChanged.bind(this)}
                                         />
+
 
                                 }
 

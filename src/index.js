@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom'
+// import {BrowserRouter} from 'react-router-dom'
 
 // Import CSS
 import './components/index.css';
@@ -17,6 +17,8 @@ window.$API_address = "";
 
 
 
-ReactDOM.render(<BrowserRouter><App/></BrowserRouter>, document.getElementById("root"));
+ReactDOM.render(<App/>, document.getElementById("root"));
 
+
+// https://chrisbateman.github.io/webpack-visualizer/
 

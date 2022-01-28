@@ -380,6 +380,7 @@ class ExperimentFilterTable extends React.Component {
                         experiments={this.state.experiments}
                         loading={this.state.loading}
                         selectHook={this.experimentSelection.bind(this)}
+                        excludedColumns={[]}
                     />
                 </Panel>
                 <Panel header={"Visualization"} key={"3"}>

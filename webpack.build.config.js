@@ -8,7 +8,9 @@ const { merge } = require('webpack-merge');
 module.exports =  {
     externals: {
         axios: 'axios',
-        'plotly-latest': 'Plotly'
+        'plotly-latest': 'Plotly',
+        // 'react-highlight': 'SyntaxHighlighter',
+
     },
     mode: 'production',
     devtool: '',

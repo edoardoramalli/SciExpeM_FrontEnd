@@ -71,6 +71,27 @@ class AddExecution extends React.Component{
 
     }
 
+    createExecution = () =>{
+        if (this.state.chemModelsSelected){
+            this.setState({addExecutionLoading: true})
+            axios.post(window.$API_address + 'OpenSmoke/API/initializeSimulation',
+                {experiment: this.props.experiment.id, chemModel: this.state.chemModelsSelected})
+                .then(res => {
+                    message.success('Execution successfully created!')
+                    this.setState({addExecutionLoading: false})
+                    this.props.closeAddExecution()
+                    this.props.refreshTable()
+                }).catch(error => {
+                this.setState({addExecutionLoading: false})
+                checkError(error)
+            })
+        }
+        else{
+            message.error('Please insert chem Model.')
+        }
+
+    }
+
     render() {
         return(
             <Modal
@@ -95,6 +116,17 @@ class AddExecution extends React.Component{
                         >
                             {this.state.models_options}
                         </Select>
+                    </Row>
+                    <Row>
+                        <Button
+                            type="primary"
+                            shape="round"
+                            icon={<PlayCircleOutlined />}
+                            onClick={this.createExecution}
+                            loading={this.state.addExecutionLoading}
+                        >
+                            Add Execution
+                        </Button>
                     </Row>
                     <Row>
                         <Button

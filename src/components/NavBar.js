@@ -2,7 +2,7 @@ import React from "react";
 import {Menu} from "antd";
 const axios = require('axios');
 import {UploadOutlined, DatabaseOutlined, HomeOutlined,LineChartOutlined,DeploymentUnitOutlined,
-    LogoutOutlined, ExperimentOutlined, FileOutlined, TeamOutlined} from '@ant-design/icons';
+    LogoutOutlined, ExperimentOutlined, FileOutlined, DashboardOutlined, CheckOutlined} from '@ant-design/icons';
 
 class NavBar extends React.Component{
 
@@ -18,7 +18,7 @@ class NavBar extends React.Component{
             window.location.href="/accounts/logout";
         }
         else if (e.key === 'home'){
-            window.location.href="/";
+            window.location.href="https://sciexpem.polimi.it";
         }
         else{
             this.props.updateStateApp(e);
@@ -42,25 +42,23 @@ class NavBar extends React.Component{
                 onClick={this.handleMenuClick}
                 style={{lineHeight: '64px'}}
             >
-                <Menu.Item key="home"><HomeOutlined />Home</Menu.Item>
+                <Menu.Item key="home"><HomeOutlined /> Home</Menu.Item>
                 <Menu.SubMenu
                     title={
                         <span className="submenu-title-wrapper">
-                            <DatabaseOutlined />
-                            DataBase
+                            <DatabaseOutlined /> DataBase
                         </span>
                     }>
 
-                    <Menu.Item key="experiments"><ExperimentOutlined />Experiments</Menu.Item>
+                    <Menu.Item key="experiments"><ExperimentOutlined /> Experiments</Menu.Item>
 
-                    <Menu.Item key="models"><FileOutlined />Models</Menu.Item>
-                    <Menu.Item key="species"><DeploymentUnitOutlined />Species</Menu.Item>
+                    <Menu.Item key="models"><FileOutlined /> Models</Menu.Item>
+                    <Menu.Item key="species"><DeploymentUnitOutlined /> Species</Menu.Item>
                 </Menu.SubMenu>
                 <Menu.SubMenu
                     title={
                         <span className="submenu-title-wrapper">
-                            <UploadOutlined />
-                            Insert
+                            <UploadOutlined /> Insert
                         </span>
                     }>
 
@@ -71,14 +69,17 @@ class NavBar extends React.Component{
                     <Menu.Item key="chemModelInputForm">Insert ChemModel</Menu.Item>
                 </Menu.SubMenu>
 
-                <Menu.Item key="analysis"><LineChartOutlined />Analysis</Menu.Item>
+                <Menu.Item key="analysis"><LineChartOutlined /> Analysis</Menu.Item>
+
+                <Menu.Item key="validation"><CheckOutlined /> Validation</Menu.Item>
+
+                <Menu.Item key="dashboard"><DashboardOutlined /> Dashboard</Menu.Item>
 
                 {/*<Menu.Item key="crowdSourcing"><TeamOutlined />Crowd Sourcing</Menu.Item>*/}
 
 
-                <Menu.Item key="logout" style={{"float": "right"}}>
-                    <LogoutOutlined />
-                    Log Out - {this.state.username}
+                <Menu.Item key="logout" style={{ marginLeft: 'auto' }}>
+                    <LogoutOutlined />  Log Out - {this.state.username}
                 </Menu.Item>
 
             </Menu>

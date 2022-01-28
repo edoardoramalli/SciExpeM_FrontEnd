@@ -2,8 +2,8 @@
 import React from "react";
 
 // Third-parties import
-import {Form, Button, Collapse, Space, message, Select, Table, Row, InputNumber} from "antd"
-import {DownloadOutlined, UploadOutlined} from '@ant-design/icons';
+import {Form, Button, Collapse, Space, message, Select, Table, Row, Popconfirm} from "antd"
+import {DownloadOutlined, UploadOutlined, ClearOutlined} from '@ant-design/icons';
 
 const axios = require('axios');
 import Cookies from "js-cookie";
@@ -23,11 +23,14 @@ import DataColumns from "./DataColumns";
 import DataGroup from "./DataGroup";
 import {zip, checkError} from "../Tool"
 import ProfileColumns from "./ProfileColumns";
+import ReactorModeType from "./ReactorModeType";
 
 
 
 class ExperimentForm extends React.Component {
     formRef = React.createRef();
+    childRef = React.createRef();
+
 
     constructor() {
         super();
@@ -80,6 +83,7 @@ class ExperimentForm extends React.Component {
             // Model Mandatory
             experiment_type: values.experiment_type,
             reactor: values.reactor,
+            reactor_modes: values.reactor_modes,
 
             // fileDOI: values.fileDOI,
 
@@ -134,6 +138,26 @@ class ExperimentForm extends React.Component {
 
     };
 
+    resetForm = () =>{
+        this.formRef.current.resetFields();
+        message.success('Form cleaned!', 1)
+        this.setState({reactor_inactive: true,
+            idt: false,
+            rcm: false,
+            profile_active: false,
+            base_active: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp8', 'clp9', 'clp10'],
+            active_key: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp8', 'clp9', 'clp10'],
+            reactor_value: null,
+            experiment: null,
+            tableColumns: [],
+            dataTableColumns: [],
+            dataGroupAssociation: {},
+            dataGroup: 1,
+            dataColumns: {},
+            submitLoading: false,})
+        this.childRef.current.reset()
+    }
+
     onFinish = values => {
         const error = this.handleValueForm(values)
 
@@ -163,22 +187,8 @@ class ExperimentForm extends React.Component {
 
             axios.post(window.$API_address + 'ExperimentManager/API/insertElement', params)
                 .then(() => {
-                    this.formRef.current.resetFields();
                     message.success('Experiment added successfully', 5);
-                    this.setState({reactor_inactive: true,
-                        idt: false,
-                        rcm: false,
-                        profile_active: false,
-                        base_active: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp8', 'clp9', 'clp10'],
-                        active_key: ['clp1', 'clp2', 'clp3', 'clp4', 'clp5', 'clp8', 'clp9', 'clp10'],
-                        reactor_value: null,
-                        experiment: null,
-                        tableColumns: [],
-                        dataTableColumns: [],
-                        dataGroupAssociation: {},
-                        dataGroup: 1,
-                        dataColumns: {},
-                        submitLoading: false,})
+                    this.resetForm()
                 })
                 .catch(error => {
                     checkError(error)
@@ -259,7 +269,7 @@ class ExperimentForm extends React.Component {
             if (col['uncertainty_reference'] !== undefined) {
                 let data = [];
                 col['data'].forEach((item, index) => {
-                    let text = item.toString() + ' +- ' + col['uncertainty_reference']['data'][index]
+                    let text = item.toString() + ' +- ' + parseFloat(col['uncertainty_reference']['data'][index]) * 100
                     text = col['uncertainty_reference']['uncertainty_kind'] === 'absolute' ? text : text + ' %'
                     data.push(text)
                 })
@@ -382,9 +392,10 @@ class ExperimentForm extends React.Component {
                     <Collapse.Panel header="General" key="clp1">
                         <ExperimentType handleExperimentType={this.handleExperimentType}/>
                         <ReactorType {...props_reactor}/>
+                        <ReactorModeType {...props_reactor} />
                         <Row>
-                            <Form.Item name={'data_columns'}/>
-                            <Form.Item name={'profile_data_column'}/>
+                            <Form.Item name={'data_columns'} style={{height: 0}}/>
+                            <Form.Item name={'profile_data_column'} style={{height: 0}}/>
                         </Row>
                     </Collapse.Panel>
                     <Collapse.Panel header="Common Properties" key="clp2">
@@ -395,6 +406,7 @@ class ExperimentForm extends React.Component {
                     </Collapse.Panel>
                     <Collapse.Panel header="Data Groups" key="clp4">
                         <DataGroup
+                            ref={this.childRef}
                             onChangeDataGroupAssociation={this.onChangeDataGroupAssociation.bind(this)}
                             dataGroupAssociation={this.state.dataGroupAssociation}
                             getDataGroup={this.getDataGroup.bind(this)}
@@ -486,6 +498,26 @@ class ExperimentForm extends React.Component {
                     >
                         Download Json
                     </Button>
+
+                    <Popconfirm
+                        title="Are you sure to clean this form?"
+                        onConfirm={this.resetForm}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button
+                            type={'default'}
+                            danger
+                            style={{margin: "10px"}}
+                            size={"large"}
+                            icon={<ClearOutlined />}
+                        >
+                            Reset Form
+                        </Button>
+                    </Popconfirm>
+
+
+
 
                 </Form.Item>
             </Form>

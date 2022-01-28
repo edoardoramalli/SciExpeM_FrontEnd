@@ -22,8 +22,8 @@ const host = process.env.HOST || 'localhost';
 module.exports = {
     externals: {
         axios: 'axios',
-        // 'create-plotly-component': 'createPlotlyComponent',
-        'plotly-latest': 'Plotly'
+        'plotly-latest': 'Plotly',
+        // 'react-syntax-highlighter': 'SyntaxHighlighter',
     },
     optimization: {
         splitChunks: {

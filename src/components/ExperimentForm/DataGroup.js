@@ -11,6 +11,11 @@ class DataGroup extends React.Component {
             dataGroupObjectList: {},
         }
     }
+
+    reset(){
+        this.setState({dataGroupObjectList: {}})
+    }
+
     remove(name){
         let listObject = this.state.dataGroupObjectList
         delete listObject[name]

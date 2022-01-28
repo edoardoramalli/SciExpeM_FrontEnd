@@ -28,7 +28,7 @@ class MinMaxRangeFormItem extends React.Component{
                         rules={[{required: this.props.required, message: this.props.minMessage}]}
                     >
                         <InputNumber
-                            style={{width: 100, textAlign: 'center'}}
+                            style={{width: 80, textAlign: 'center'}}
                             min={this.props.min} max={this.props.max} step={this.props.step}
                             onChange={this.onChangeInf}
                             placeholder={'Min'}
@@ -53,7 +53,7 @@ class MinMaxRangeFormItem extends React.Component{
                         <InputNumber
                             className="site-input-right"
                             style={{
-                                width: 100,
+                                width: 80,
                                 textAlign: 'center',
                             }}
                             placeholder={'Max'}

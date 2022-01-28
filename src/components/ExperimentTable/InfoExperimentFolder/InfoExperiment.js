@@ -23,6 +23,7 @@ class InfoExperiment extends React.Component {
             status: "None",
             comment: 'loading...',
             notes: 'loading...',
+            reactor_modes: 'loading..',
             editable: false,
             savable: false,
             rollback: false,
@@ -43,12 +44,12 @@ class InfoExperiment extends React.Component {
         const params = {
             'model_name': 'Experiment',
             'element_id': this.state.exp.props.id,
-            'fields': ['comment', 'notes'],
+            'fields': ['comment', 'notes', 'reactor_modes'],
         }
         axios.post(window.$API_address + 'ExperimentManager/API/requestPropertyList', params)
             .then(res => {
                 const result = JSON.parse(res.data)
-                this.setState({comment: result.comment, notes: result.notes})
+                this.setState({comment: result.comment, notes: result.notes, reactor_modes: result.reactor_modes})
             }).catch(error => {
             checkError(error)
             // this.setState({comment: 'Error loading comment', notes})
@@ -212,6 +213,8 @@ class InfoExperiment extends React.Component {
                     <Descriptions.Item
                         label="Reactor">{this.renderEditOptions(this.state, 'reactor', reactors)}</Descriptions.Item>
                     <Descriptions.Item label="Ignition Type">{this.renderEditOptions(this.state, 'ignition_type', ignition)}</Descriptions.Item>
+                    {/*TODO mettere render options to reactor modes*/}
+                    <Descriptions.Item label="Reactor Modes" span={2}>{this.state.reactor_modes ? this.state.reactor_modes.toString() : undefined}</Descriptions.Item>
                     <Descriptions.Item label="Comment"
                                        span={2}>{this.renderEdit(this.state, 'comment')}</Descriptions.Item>
                     <Descriptions.Item label="Notes" span={2}>{this.renderEdit(this.state, 'notes', true)}</Descriptions.Item>

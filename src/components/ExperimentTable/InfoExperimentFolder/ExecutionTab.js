@@ -1,25 +1,23 @@
-import React, {lazy} from "react";
+import React from "react";
 import {checkError} from "../../Tool";
-
-const axios = require('axios');
 import Cookies from "js-cookie";
-
-axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
-
-import {Button, Table, Tabs, Row, Col, Space} from "antd";
-import {UploadOutlined, PlusOutlined, RetweetOutlined} from '@ant-design/icons';
+import {Button, Col, Dropdown, Menu, Popconfirm, Row, Space, Table, Tabs} from "antd";
+import {PlusOutlined, RetweetOutlined, UploadOutlined} from '@ant-design/icons';
 
 
 // const DetailExecutionTab = lazy(() => import('./Execution/DetailExecutionTab'))
 // const ExecutionPlot = lazy(() => import('./Execution/ExecutionPlot'))
 // const AddExecution = lazy(() => import('./Execution/AddExecution'))
-
 import DetailExecutionTab from "./Execution/DetailExecutionTab";
 import ExecutionPlot from "./Execution/ExecutionPlot";
 import AddExecution from "./Execution/AddExecution";
 
 import ActionCell from "../../Shared/ActionCell";
 import UploadExecution from "./Execution/UploadExecution";
+
+const axios = require('axios');
+
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 
 class ExecutionTab extends React.Component {
@@ -33,7 +31,8 @@ class ExecutionTab extends React.Component {
             listFiles: [],
             uploadExecutionObject: null,
             uploadButtonLoading: false,
-            execution_id: null
+            execution_id: null,
+            restartLoading: false,
         }
     }
 
@@ -84,7 +83,48 @@ class ExecutionTab extends React.Component {
 
     }
 
+    handleRestart = (exec_id) =>{
+        console.log(id)
+        this.refreshTable()
+    }
+
+    handleCurveMatching = (exec_id) =>{
+        const params = {'execution_id': exec_id}
+        this.setState({restartLoading: true})
+        axios.post(window.$API_address + 'CurveMatching/API/createUpdateExecutionCurveMatching', params)
+            .then(res => {
+                this.setState({restartLoading: false})
+                message.success('Request Sent!')
+            })
+            .catch(error => {
+                checkError(error)
+                this.setState({restartLoading: false})
+            })
+        this.refreshTable()
+    }
+
+    createMenu = (obj, id) =>{
+        return (
+            <Menu>
+                <Menu.Item>
+                    <Button shape="text" loading={obj.state.restartLoading}
+                            onClick={() => obj.handleCurveMatching(id)}>Compute Curve Matching</Button>
+                </Menu.Item>
+                <Menu.Item>
+                    <Popconfirm
+                        title="Are you sure to delete and restart?"
+                        onConfirm={() => obj.handleRestart(id)}
+                        okText="Yes"
+                        cancelText="No">
+                        <Button shape="text" loading={obj.state.restartLoading} disabled>Restart Simulation</Button>
+                    </Popconfirm>
+                </Menu.Item>
+            </Menu>
+        )
+    }
+
     render() {
+
         const columns = [
             {
                 title: 'ID',
@@ -139,7 +179,8 @@ class ExecutionTab extends React.Component {
                 title: 'Action',
                 dataIndex: 'actions',
                 key: 'actions',
-                width: '12%',
+                // width: '12%',
+                fixed: 'right',
                 render: (text, record) =>
                     <Space>
                         <ActionCell
@@ -148,6 +189,15 @@ class ExecutionTab extends React.Component {
                             model_name={'Execution'}
                             handleDelete={this.handleDelete}
                         />
+                        <Dropdown overlay={this.createMenu(this, record.id)}>
+                            <Button
+                                shape="circle"
+                                disabled={record.execution_end === null}
+                                // onClick={this.uploadExecution.bind(this, record.id)}
+                                icon={<RetweetOutlined />}
+                                loading={this.state.restartLoading}
+                            />
+                        </Dropdown>
                         <Button
                             shape="circle"
                             disabled={record.execution_end !== null}
@@ -211,7 +261,7 @@ class ExecutionTab extends React.Component {
                             dataSource={this.state.dataSource}
                             columns={columns}
                             loading={this.state.loading}
-                            expandRowByClick={true}
+                            // expandRowByClick={true}
                             expandedRowRender={record => {
                                 return <DetailExecutionTab exec_id={record.id}/>
                             }}

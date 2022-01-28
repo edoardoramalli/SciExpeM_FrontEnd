@@ -14,6 +14,8 @@ import Variables from "../Variables";
 
 const {reactors, experimentTypeToReactor} = Variables
 
+
+
 class ExperimentTable extends React.Component {
 
 
@@ -308,6 +310,7 @@ class ExperimentTable extends React.Component {
                         experiments_valid={this.state.experiments_valid}
                         experiments={this.state.experiments}
                         loading={this.state.loading}
+                        excludedColumns={[]}
                     />
                 </Panel>
             </Collapse>

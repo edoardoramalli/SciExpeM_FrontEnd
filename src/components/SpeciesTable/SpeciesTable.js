@@ -106,10 +106,11 @@ class SpeciesTable extends React.Component {
 
     refreshSpecieList = () => {
         this.setState({loading: true})
-        const params = {args: {}, fields: {}}
+        const params = {args: {}, fields: ['id', 'InChI', 'preferredKey', 'names', 'CAS', 'SMILES', 'chemName', 'formula']}
         axios.post(window.$API_address + 'frontend/API/getSpecieList', params)
             .then(res => {
                 const species_list = JSON.parse(res.data)
+                console.log(species_list)
                 this.setState({species: species_list, editableRow: undefined, loading: false})
 
             })

@@ -30,6 +30,8 @@ import InsertExperimentFile from "./ExperimentFile/InsertExperimentFile";
 import ExperimentFilterTable from "./Analysis/ExperimentFilterTable";
 import SpeciesTable from "./SpeciesTable/SpeciesTable";
 import CrowdSourcing from "./CrowdSourcing/CrowdSourcing";
+import Validation from "./Validation/Validation";
+import DashBoard from  "./DashBoard/DashBoard";
 
 
 const {Header, Content, Footer} = Layout;
@@ -66,7 +68,9 @@ class App extends React.Component {
             "species": <SpeciesTable/>,
             "chemModelInputForm": <InsertCheModelFile />,
             "analysis": <ExperimentFilterTable />,
-            // "crowdSourcing": <CrowdSourcing />,
+            "crowdSourcing": <CrowdSourcing />,
+            "validation": <Validation/>,
+            "dashboard": <DashBoard />
         }
 
         return (
@@ -75,7 +79,7 @@ class App extends React.Component {
                     <NavBar current={current} updateStateApp = {this.updateStateApp}/>
                 </Header>
                 <Content style={{padding: '25px 25px', height: "100%"}}>
-                    <div style={{background: '#fff', padding: 0, height: "100%"}}>
+                    <div style={{background: '#fff', padding: 0}}>
                         {/*<Suspense fallback={<div><Spin tip="Loading..." size="large" /></div>}>*/}
                             {currentMapping[current]}
                         {/*</Suspense>*/}

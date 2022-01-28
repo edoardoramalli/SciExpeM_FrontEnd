@@ -135,10 +135,16 @@ class BaseTable extends React.Component{
         this.setState({ selectedRowKeys });
     };
 
-    prova(event){
-        window.preventDefault()
-        console.log('ciaoooo', event)
+    prepareColumns = (baseColumns, columnsToRemove) =>{
+        let tmp = []
+        baseColumns.forEach(element =>{
+            if (!columnsToRemove.includes(element.title)){
+                tmp.push(element)
+            }
+        })
+        return tmp
     }
+
 
     render() {
 
@@ -362,7 +368,7 @@ class BaseTable extends React.Component{
             <div ref={this.listRef}>
             <Table
                 title={()=> this.props.header ? header : undefined}
-                columns={columns}
+                columns={this.prepareColumns(columns, this.props.excludedColumns)}
                 scroll={{y: '100%'}}
                 rowSelection={rowSelection}
                 dataSource={this.props.experiments}
@@ -372,10 +378,7 @@ class BaseTable extends React.Component{
                 bordered
                 style={{minHeight: 100}}
                 expandRowByClick={true}
-                expandedRowRender={record => {
-                    return <TabExperiment exp_id={record.id} experiment={record}/>
-                }}
-
+                expandedRowRender={record => {return <TabExperiment exp_id={record.id} experiment={record}/>}}
             />
             </div>
         )
