@@ -187,6 +187,7 @@ class VisualizeTwoParallelPlot extends React.Component {
             {
                 title: 'reactor',
                 dataIndex: 'execution_column__execution__experiment__reactor',
+                sorter: (a, b) => a.execution_column__execution__experiment__reactor.localeCompare(b.execution_column__execution__experiment__reactor)
 
             },
             {

@@ -21,6 +21,8 @@ class TabParallelCoordinates extends React.Component {
         let tmp_support = {}
 
         const ofInterest = {
+            'execution_column__execution__experiment__fuels':  {'name': 'fuels', 'type': 'string', 'props': {}},
+
             'execution_column__execution__experiment__t_inf': {'name': 't_inf', 'type': 'number', 'props': {}},
             'execution_column__execution__experiment__t_sup': {'name': 't_sup', 'type': 'number', 'props': {}},
             'execution_column__execution__experiment__p_inf': {'name': 'p_inf', 'type': 'number', 'props': {}},

@@ -174,7 +174,11 @@ class TableReport extends React.Component {
             {
                 title: 'Computer Name',
                 dataIndex: 'computer',
-                sorter: (a, b) => a.computer.localeCompare(b.computer)
+                sorter: (a, b) => {
+                    const aa = a.computer !== null ? a.computer : ''
+                    const bb = b.computer !== null ? b.computer : ''
+                    return aa.localeCompare(bb)
+                }
             },
         ];
 
