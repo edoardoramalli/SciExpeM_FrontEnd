@@ -21,7 +21,7 @@ class TabParallelCoordinates extends React.Component {
         let tmp_support = {}
 
         const ofInterest = {
-            'execution_column__execution__experiment__fuels':  {'name': 'fuels', 'type': 'string', 'props': {}},
+            'execution_column__execution__experiment__fuels':  {'name': 'fuels', 'type': 'string', 'props': {}, },
 
             'execution_column__execution__experiment__t_inf': {'name': 't_inf', 'type': 'number', 'props': {}},
             'execution_column__execution__experiment__t_sup': {'name': 't_sup', 'type': 'number', 'props': {}},
@@ -31,7 +31,8 @@ class TabParallelCoordinates extends React.Component {
             'execution_column__execution__experiment__phi_sup': {'name': 'phi_sup', 'type': 'number', 'props': {}},
 
             'execution_column__execution__experiment__reactor': {'name': 'reactor', 'type': 'string', 'props': {}},
-            'execution_column__label': {'name': 'target', 'type': 'string', 'props': {}},
+            'execution_column__execution__experiment__reactor_modes': {'name': 'reactor_modes', 'type': 'string', 'props': {}, 'order': 'ascending'},
+            'execution_column__label': {'name': 'target', 'type': 'string', 'props': {}, 'order': 'ascending'},
 
             'd0L2': {'name': 'd0L2', 'type': 'number', 'props': {range: [0, 1],}},
             'd1L2': {'name': 'd1L2', 'type': 'number', 'props': {range: [0, 1],}},

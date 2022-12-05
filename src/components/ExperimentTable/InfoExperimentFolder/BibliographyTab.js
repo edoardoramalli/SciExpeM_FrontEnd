@@ -90,13 +90,14 @@ class BibliographyTab extends React.Component {
         this.setState({loading: true});
         const params = {
             fields: ['id', 'description', 'reference_doi', 'title', 'author', 'year', 'volume', 'page', 'journal'],
-            exp_id: this.state.exp_id.toString()
+            query: {experiments__id: this.state.exp_id.toString()},
+            model_name: 'FilePaper'
         }
-        axios.post(window.$API_address + 'frontend/API/getFilePaper', params)
+        axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase', params)
             .then(res => {
                 this.setState(
                     {
-                        property_list: JSON.parse(res.data)
+                        property_list: res.data
                     }
                 )
             })

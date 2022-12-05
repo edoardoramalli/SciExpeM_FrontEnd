@@ -11,6 +11,7 @@ axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 // const ExecutionError = lazy(() => import('./ExecutionError'))
 import ExecutionPlot from "./ExecutionPlot";
 import ExecutionError from "./ExecutionError";
+import ROPA from "./ROPA";
 
 class DetailExecutionTab extends React.Component {
     constructor(props) {
@@ -22,7 +23,7 @@ class DetailExecutionTab extends React.Component {
 
     componentDidMount() {
         const params = {
-            execution_id: this.props.exec_id
+            execution_id: this.props.exec_id,
         }
         axios.post(window.$API_address + 'frontend/API/getExecutionColumn', params)
             .then(res => {
@@ -64,7 +65,10 @@ class DetailExecutionTab extends React.Component {
                 <Tabs.TabPane tab="Plot" key="2">
                     <ExecutionPlot id={this.props.exec_id} api={'frontend/API/getPlotExecution'}/>
                 </Tabs.TabPane>
-                <Tabs.TabPane tab="Error" key="3">
+                <Tabs.TabPane tab="ROPA" key="3">
+                    <ROPA id={this.props.exec_id} ropa={this.props.ropa}/>
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="Error" key="4">
                     <ExecutionError id={this.props.exec_id}/>
                 </Tabs.TabPane>
             </Tabs>

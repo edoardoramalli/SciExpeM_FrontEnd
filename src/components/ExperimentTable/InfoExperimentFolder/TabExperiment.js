@@ -30,6 +30,7 @@ import PlotExperiment from "./PlotExperiment";
 import ExecutionTab from "./ExecutionTab";
 import CurveMatchingResult from "./CurveMatchingResult";
 import OSFile from "./OSFile";
+import BackupTab from "./BackupTab";
 
 
 
@@ -59,13 +60,13 @@ class TabExperiment extends React.Component{
                 <TabPane tab="Info" key="ExpTab1">
                     <InfoExperiment props={this.props.experiment}/>
                 </TabPane>
-                <TabPane tab="Common Property" key="ExpTab2">
+                <TabPane tab="Common Properties" key="ExpTab2">
                     <CommonPropertyTab
                         exp_id={this.props.exp_id}
                         name={'CommonProperty'}
                     />
                 </TabPane>
-                <TabPane tab="Initial Specie" key="ExpTab3">
+                <TabPane tab="Initial Species" key="ExpTab3">
                     <InitialSpecieTab exp_id={this.props.exp_id} />
                 </TabPane>
                 <TabPane tab="Bibliography" key="ExpTab4">
@@ -79,7 +80,7 @@ class TabExperiment extends React.Component{
                 <TabPane tab="Raw Data" key="ExpTab6">
                     <RawData exp_id={this.props.experiment.id} type={"data"}/>
                 </TabPane>
-                <TabPane tab="Profile" key="ExpTab7">
+                <TabPane tab="Profiles" key="ExpTab7">
                     <RawData exp_id={this.props.experiment.id} type={"profile"}/>
                 </TabPane>
                 <TabPane tab="OS Input File" key="ExpTab8">
@@ -94,14 +95,19 @@ class TabExperiment extends React.Component{
                         props={this.props.experiment}
                     />
                 </TabPane>
-                <TabPane tab="Execution" key="ExpTab11">
+                <TabPane tab="Executions" key="ExpTab11">
                     <ExecutionTab
                         experiment={this.props.experiment}
                     />
                 </TabPane>
-                <TabPane tab="Curve Matching Result" key="ExpTab12">
+                <TabPane tab="Curve Matching Results" key="ExpTab12">
                     <CurveMatchingResult
                         exp_id={this.props.exp_id}
+                    />
+                </TabPane>
+                <TabPane tab="Backups" key="ExpTab13">
+                    <BackupTab
+                        experiment={this.props.experiment}
                     />
                 </TabPane>
             </Tabs>

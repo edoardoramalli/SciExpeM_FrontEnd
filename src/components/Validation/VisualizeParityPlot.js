@@ -25,8 +25,8 @@ class VisualizeParityPlot extends React.Component {
         Object.keys(obj_list).forEach(e => {
             let exp = []
             let sim = []
-            console.log(obj_list[e])
-            console.log(obj_list[e].data)
+            // console.log(obj_list[e])
+            // console.log(obj_list[e].data)
             obj_list[e].data.forEach(tuple => {
                 exp.push(tuple[0])
                 sim.push(tuple[1])
@@ -38,8 +38,8 @@ class VisualizeParityPlot extends React.Component {
             const min_abs = Math.min.apply(Math, [Math.min.apply(Math, exp), Math.min.apply(Math, sim)])
             const max_abs = Math.max.apply(Math, [Math.max.apply(Math, exp), Math.max.apply(Math, sim)])
 
-            console.log(min_abs)
-            console.log(sim)
+            // console.log(min_abs)
+            // console.log(sim)
 
             tmp.push(
                 <Row>

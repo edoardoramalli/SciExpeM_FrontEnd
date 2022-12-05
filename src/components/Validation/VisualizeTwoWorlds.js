@@ -53,10 +53,14 @@ class VisualizeTwoWorlds extends React.Component {
         });
     }
 
-    getWorld = (query, subject, chemModel_id) => {
+    getWorld = (query, subject, chemModel_id, other_id) => {
 
         if (query !== undefined && chemModel_id !== undefined && chemModel_id !== -1) {
-            return axios.post(window.$API_address + 'frontend/API/getWorld', {'query': query, 'subject':  subject})
+            let models = []
+            if (this.props.settings.common_experiments){
+                models = [chemModel_id, other_id]
+            }
+            return axios.post(window.$API_address + 'frontend/API/getWorld', {'query': query, 'subject':  subject, 'models': models})
                 .then(res => {
                     return {'chemModel_id': chemModel_id, 'result': JSON.parse(res.data)}
                 })

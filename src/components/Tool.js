@@ -30,6 +30,68 @@ export function zip(list_of_lists) {
     });
 }
 
+export function mean(arr=[]){
+    if(!arr.length){
+        return 0;
+    }
+    return arr.reduce((a,b) => a + b, 0) / arr.length;
+}
+
+export function median(values=[]){
+    if(!values.length){
+        return 0;
+    }
+    values.sort(function(a,b){
+        return a-b;
+    });
+
+    var half = Math.floor(values.length / 2);
+
+    if (values.length % 2)
+        return values[half];
+
+    return (values[half - 1] + values[half]) / 2.0;
+}
+
+export function findVariance (arr = []){
+    if(!arr.length){
+        return 0;
+    }
+    const sum = arr.reduce((acc, val) => acc + val);
+    const { length: num } = arr;
+    const median = sum / num;
+    let variance = 0;
+    arr.forEach(num => {
+        variance += ((num - median) * (num - median));
+    });
+    variance /= num;
+    return variance;
+};
+
+export function stdev(arr=[]){
+    // Creating the mean with Array.reduce
+    if(!arr.length){
+        return 0;
+    }
+    let mean = arr.reduce((acc, curr)=>{
+        return acc + curr
+    }, 0) / arr.length;
+
+    // Assigning (value - mean) ^ 2 to every array item
+    arr = arr.map((k)=>{
+        return (k - mean) ** 2
+    })
+
+    // Calculating the sum of updated array
+    let sum = arr.reduce((acc, curr)=> acc + curr, 0);
+
+    // Calculating the variance
+    let variance = sum / arr.length
+
+    // Returning the Standered deviation
+    return Math.sqrt(sum / arr.length)
+}
+
 export function replaceValueDiz(diz, old_value, new_value) {
     let tmp = {}
     Object.keys(diz).forEach(key => {

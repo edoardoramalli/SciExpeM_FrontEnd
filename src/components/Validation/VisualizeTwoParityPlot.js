@@ -54,8 +54,8 @@ class VisualizeTwoParityPlot extends React.Component {
         }
 
         Promise.all([
-            this.getParityPlot(queryA, this.props.target, this.props.modelA),
-            this.getParityPlot(queryB, this.props.target, this.props.modelB)]).then(function (values) {
+            this.getParityPlot(queryA, this.props.target, this.props.modelA, this.props.modelB),
+            this.getParityPlot(queryB, this.props.target, this.props.modelB, this.props.modelA)]).then(function (values) {
 
             const index_model_a = values[0]['chemModel_id'] === current.props.modelA ? 0 : 1
 
@@ -73,12 +73,17 @@ class VisualizeTwoParityPlot extends React.Component {
     }
 
 
-    getParityPlot = (query, target, chemModel_id) => {
+    getParityPlot = (query, target, chemModel_id, other_id) => {
 
         if (target !== undefined && chemModel_id !== undefined && chemModel_id !== -1) {
+            let models = []
+            if (this.props.settings.common_experiments){
+                models = [chemModel_id, other_id]
+            }
             return axios.post(window.$API_address + 'frontend/API/getParityPlot', {
                 'target': target,
                 'query': query,
+                'models': models
             })
                 .then(res => {
                     return {'chemModel_id': chemModel_id, 'result': JSON.parse(res.data)}

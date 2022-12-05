@@ -21,10 +21,11 @@ class QueryVisualizer extends React.Component{
                 <Panel header="Table" key="2A">
                     <VisualizeTwoTable {...common_props}/>
                 </Panel>
-                <Panel header="3D Word" key="2B">
+                <Panel header="3D World" key="2B">
                     <TabWorld {...common_props}/>
                 </Panel>
-                <Panel header="3D Word - Diff" key="2C">
+                <Panel header="3D World - Diff" key="2C">
+                    {/*TODO questa deve essere fatta in FE come diff delle due precedenti....*/}
                     <TabWorldDiff {...common_props}/>
                 </Panel>
                 <Panel header="Clustering" key="2D">

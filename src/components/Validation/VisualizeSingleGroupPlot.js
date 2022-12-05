@@ -23,7 +23,6 @@ class VisualizeSingleGroupPlot extends React.Component {
                 },
             }
         }
-        console.log(this.props)
     }
 
     componentDidMount() {
@@ -34,7 +33,6 @@ class VisualizeSingleGroupPlot extends React.Component {
         let queryA = {}
         let queryB = {}
 
-        console.log('edooo', this.props.query  )
 
         if (this.props.query !== undefined) {
 
@@ -50,12 +48,12 @@ class VisualizeSingleGroupPlot extends React.Component {
 
         }
 
-        console.log('new', newQuery)
 
         axios.post(window.$API_address + 'frontend/API/getPlotsValidation', {
             'query': newQuery,
             'target': this.props.target,
-            'chemModel_ids': [this.props.modelA, this.props.modelB]
+            'chemModel_ids': [this.props.modelA, this.props.modelB],
+            'common_experiments': this.props.settings.common_experiments,
         })
             .then(res => {
                 this.setState({plots: this.createGroupPlot(JSON.parse(res.data)), loading:false})

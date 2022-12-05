@@ -47,18 +47,44 @@ class Parallel extends React.Component {
         if (list_of_records.length > 0) {
             let current_mapping = JSON.parse(JSON.stringify(this.props.support))
             let tmp = {}
-                Object.keys(this.props.ofInterest).forEach(element => {
-                    tmp[this.props.ofInterest[element]['name']] = []
-                })
+            Object.keys(this.props.ofInterest).forEach(element => {
+                tmp[this.props.ofInterest[element]['name']] = []
+            })
+
+            let tmp_mapping = JSON.parse(JSON.stringify(this.props.support))
 
             list_of_records.forEach(row => {
                 if (!remove_targets.includes(row['execution_column__label'])) {
                     Object.keys(this.props.ofInterest).forEach(element => {
-                        let current = this.getMapping(current_mapping, this.props.ofInterest[element]['name'], row[element])
+                        this.getMapping(tmp_mapping, this.props.ofInterest[element]['name'], row[element])
+                    })
+                }
+            })
+
+            let new_mapping = {}
+
+
+
+            Object.keys(tmp_mapping).forEach(key =>{
+                const sorted = Object.keys(tmp_mapping[key])
+                sorted.sort()
+                new_mapping[key] = {}
+                for (let i = 0; i < sorted.length; i++){
+                    new_mapping[key][sorted[i]] = i
+                }
+            })
+
+            list_of_records.forEach(row => {
+                if (!remove_targets.includes(row['execution_column__label'])) {
+                    Object.keys(this.props.ofInterest).forEach(element => {
+                        let current = this.getMapping(new_mapping, this.props.ofInterest[element]['name'], row[element])
                         tmp[this.props.ofInterest[element]['name']].push(current)
                     })
                 }
             })
+
+
+
 
             let dim = {}
 
@@ -69,8 +95,8 @@ class Parallel extends React.Component {
                     ...this.props.ofInterest[element]['props']
                 }
                 if (this.props.ofInterest[element]['type'] === 'string') {
-                    a['tickvals'] = Object.values(current_mapping[this.props.ofInterest[element]['name']])
-                    a['ticktext'] = Object.keys(current_mapping[this.props.ofInterest[element]['name']])
+                    a['tickvals'] = Object.values(new_mapping[this.props.ofInterest[element]['name']])
+                    a['ticktext'] = Object.keys(new_mapping[this.props.ofInterest[element]['name']])
                 }
                 dim[this.props.ofInterest[element]['name']] = a
             })

@@ -62,15 +62,15 @@ class CommonPropertyTab extends React.Component {
     componentDidMount() {
         this.setState({loading: true});
         const params = {
-            name: this.props['name'],
             fields: ['id', 'name', 'units', 'value', 'source_type'],
-            exp_id: this.state.exp_id.toString()
+            query: {experiment_id: this.state.exp_id},
+            model_name: 'CommonProperty',
         }
-        axios.post(window.$API_address + 'frontend/API/getPropertyList', params)
+        axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase', params)
             .then(res => {
                 this.setState(
                     {
-                        property_list: JSON.parse(res.data)
+                        property_list: res.data
                     }
                 )
             })

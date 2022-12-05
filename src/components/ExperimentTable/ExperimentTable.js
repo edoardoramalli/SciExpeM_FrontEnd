@@ -7,13 +7,12 @@ axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 // Local Import
 import {checkError} from "../Tool"
 import BaseTable from "./BaseTable";
-import {Button, Col, Collapse, Form, message, Row, Select, Space, Input, InputNumber} from "antd";
+import {Button, Col, Collapse, Form, message, Row, Select, Space, Input, InputNumber, Empty, Tabs, Alert} from "antd";
 const { Panel } = Collapse
 import MinMaxRangeFormItem from "../Shared/MinMaxRangeFormItem";
 import Variables from "../Variables";
 
 const {reactors, experimentTypeToReactor} = Variables
-
 
 
 class ExperimentTable extends React.Component {
@@ -30,7 +29,6 @@ class ExperimentTable extends React.Component {
             reactors_options: this.createReactorOptions(),
         }
 
-
     }
 
     onFinishFailed = ({values, errorFields}) => {
@@ -41,16 +39,16 @@ class ExperimentTable extends React.Component {
         return dict ? (dict[name] ? dict[name] : undefined) : undefined
     }
 
-    onFinish = async values => {
-        this.setState({loading: true, experimentSelected: []})
+    onFinish = values => {
+
         const params = {
             fields: ['id', 'reactor', 'experiment_type', 'username',
                 'fileDOI', 'status', 'ignition_type', 'interpreter_name'],
-            args: {
+            query: {
                 'id': values.id ? parseInt(values.id) : undefined,
                 'experiment_type': values.experiment_type,
                 'reactor': values.reactor,
-                'username': values.username !== '' ? values.username : undefined,
+                'username__icontains': values.username !== '' ? values.username : undefined,
                 'fuels__contained_by': values.fuels && values.fuels.length > 0 ? values.fuels : undefined,
                 't_inf__gte': this.checkField(values.t_profile, 't_inf'),
                 't_sup__lte': this.checkField(values.t_profile, 't_sup'),
@@ -61,29 +59,46 @@ class ExperimentTable extends React.Component {
                 'file_paper__description__icontains': values.description !== '' ? values.description : undefined,
                 'file_paper__author__icontains': values.author !== '' ? values.author : undefined,
                 'file_paper__title__icontains': values.title !== '' ? values.title : undefined,
-
-            }
+            },
+            model_name: 'Experiment',
         }
 
+        this.query(params)
 
 
 
-        axios.post(window.$API_address + 'frontend/API/getExperimentList', params)
+
+    }
+    last_ten = () =>{
+        const params = {
+            fields: ['id', 'reactor', 'experiment_type', 'username',
+                'fileDOI', 'status', 'ignition_type', 'interpreter_name'],
+            query: {},
+            order_by: '-id',
+            n_elements: 10,
+            model_name: 'Experiment',
+        }
+
+        this.query(params)
+    }
+
+    query = (params) =>{
+        this.setState({loading: true, experimentSelected: []})
+        axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase', params)
             .then(res => {
-            message.success('Filter successful!');
-            const experiments = JSON.parse(res.data)
-            this.setState({
-                experiments: experiments,
-                loading: false,
-                experiments_managed: experiments.filter((exp) => exp.interpreter_name != null).length,
-                experiments_valid: experiments.filter((exp) => exp.status === "verified").length
+                message.success('Filter successful!');
+                const experiments = res.data
+                this.setState({
+                    experiments: experiments,
+                    loading: false,
+                    experiments_managed: experiments.filter((exp) => exp.interpreter_name != null).length,
+                    experiments_valid: experiments.filter((exp) => exp.status === "verified").length
+                })
             })
-        })
             .catch(error => {
                 this.setState({loading: false})
                 checkError(error)
             })
-
     }
 
     // componentDidMount() {
@@ -137,6 +152,31 @@ class ExperimentTable extends React.Component {
             }).catch(error => {
             checkError(error)
         })
+
+        // Development
+        // const params = {
+        //     fields: ['id', 'reactor', 'experiment_type', 'username',
+        //         'fileDOI', 'status', 'ignition_type', 'interpreter_name'],
+        //     query: {
+        //         'id': 205
+        //     },
+        //     model_name: 'Experiment',
+        // }
+        // axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase', params)
+        //     .then(res => {
+        //         message.success('Filter successful!');
+        //         const experiments = res.data
+        //         this.setState({
+        //             experiments: experiments,
+        //             loading: false,
+        //             experiments_managed: experiments.filter((exp) => exp.interpreter_name != null).length,
+        //             experiments_valid: experiments.filter((exp) => exp.status === "verified").length
+        //         })
+        //     })
+        //     .catch(error => {
+        //         this.setState({loading: false})
+        //         checkError(error)
+        //     })
     }
 
 
@@ -299,7 +339,17 @@ class ExperimentTable extends React.Component {
                                 Filter DataBase
                             </Button>
 
+                            <Button
+                                style={{margin: "10px"}}
+                                size={"large"}
+                                loading={this.state.loading}
+                                onClick={this.last_ten}
+                            >
+                                Last 10 Experiments
+                            </Button>
+
                         </Form.Item>
+
                     </Form>
                 </Panel>
                 <Panel header="Result Table" key="2">

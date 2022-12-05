@@ -1,5 +1,5 @@
 import React from "react";
-import {Descriptions, Spin, Col, Empty} from 'antd';
+import {Descriptions, Spin, Col, Empty,} from 'antd';
 
 const axios = require('axios');
 import Cookies from "js-cookie";
@@ -26,6 +26,7 @@ class InitialSpecieTab extends React.Component {
                     <Descriptions.Item label={"Specie"}>{text}</Descriptions.Item>
                     <Descriptions.Item label={"Value"}>{property.value}</Descriptions.Item>
                     <Descriptions.Item label={"Units"}>{property.units}</Descriptions.Item>
+                    <Descriptions.Item label={"Configuration"}>{property.configuration}</Descriptions.Item>
                     <Descriptions.Item label={"Source Type"}>{property.source_type}</Descriptions.Item>
                     <Descriptions.Item label={"ID"}>{property.id}</Descriptions.Item>
                 </>
@@ -53,7 +54,7 @@ class InitialSpecieTab extends React.Component {
         }
         else{
             return (
-                <Descriptions bordered column={5} className={"description"}>
+                <Descriptions bordered column={6} className={"description"}>
                     {this.renderProperties(property_list)}
                 </Descriptions>
             );
@@ -63,15 +64,15 @@ class InitialSpecieTab extends React.Component {
     componentDidMount() {
         this.setState({loading: true});
         const params = {
-            name: 'InitialSpecie',
-            fields: ['id', 'specie', 'units', 'value', 'source_type'],
-            exp_id: this.state.exp_id.toString()
+            model_name: 'InitialSpecie',
+            fields: ['id', 'specie', 'units', 'value', 'source_type', 'configuration'],
+            query: {experiment_id: this.state.exp_id.toString()}
         }
-        axios.post(window.$API_address + 'frontend/API/getPropertyList', params)
+        axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase', params)
             .then(res => {
                 this.setState(
                     {
-                        property_list: JSON.parse(res.data)
+                        property_list: res.data
                     }
                 )
             })

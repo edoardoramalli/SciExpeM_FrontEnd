@@ -22,15 +22,15 @@ class VisualizeTwoIntervalAnalysis extends React.Component {
         this.setState({loading: true})
 
         Promise.all([
-            this.getIntervalAnalysis(queryA, this.props.modelA),
-            this.getIntervalAnalysis(queryB, this.props.modelB)]).then(function (values) {
+            this.getIntervalAnalysis(queryA, this.props.modelA, this.props.modelB),
+            this.getIntervalAnalysis(queryB, this.props.modelB, this.props.modelA)]).then(function (values) {
 
             const index_model_a = values[0]['chemModel_id'] === current.props.modelA ? 0 : 1
 
             const modelA_result = values[index_model_a].result
             const modelB_result = values[index_model_a === 1 ? 0 : 1].result
 
-            console.log(modelA_result)
+            // console.log(modelA_result)
 
 
             current.setState({modelA_result: modelA_result, modelB_result: modelB_result, loading: false})
@@ -39,12 +39,17 @@ class VisualizeTwoIntervalAnalysis extends React.Component {
         });
     }
 
-    getIntervalAnalysis(query, chemModel_id) {
+    getIntervalAnalysis(query, chemModel_id, other_id) {
         if (query !== undefined && chemModel_id !== undefined && chemModel_id !== -1) {
+            let models = []
+            if (this.props.settings.common_experiments){
+                models = [chemModel_id, other_id]
+            }
             return axios.post(window.$API_address + 'frontend/API/getIntervalAnalysis',
                 {
                     'query': query,
-                    'chemModel_id': chemModel_id
+                    'chemModel_id': chemModel_id,
+                    'models': models,
                 })
                 .then(res => {
 

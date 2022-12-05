@@ -13,7 +13,15 @@ class CommonProperty extends React.Component{
                 'pressure': ['Pa', 'atm', 'bar', 'Torr', 'mbar'],
                 'residence time': ['s', 'ms', 'us'],
                 'volume': ['cm3'],
-                'laminar burning velocity': ['cm/s']
+                'laminar burning velocity': ['cm/s'],
+                'length': ['cm', 'mm'],
+                'velocity': ['cm/s'],
+                'fuel velocity': ['cm/s'],
+                'fuel temperature': ['K'],
+                'oxidizer velocity': ['cm/s'],
+                'oxidizer temperature': ['K'],
+                'stoichiometric mixture fraction': ['unitless'],
+                'strain rate': ['s-1']
             },
             properties: null,
             properties_unit: null

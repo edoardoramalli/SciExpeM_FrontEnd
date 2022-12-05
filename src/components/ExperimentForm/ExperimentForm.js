@@ -83,7 +83,7 @@ class ExperimentForm extends React.Component {
             // Model Mandatory
             experiment_type: values.experiment_type,
             reactor: values.reactor,
-            reactor_modes: values.reactor_modes,
+            reactor_modes: [values.reactor_modes],
 
             // fileDOI: values.fileDOI,
 

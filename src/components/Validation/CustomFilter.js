@@ -47,7 +47,7 @@ class CustomFilter extends React.Component {
             'execution_column__execution__experiment__experiment_type': values.experiment_type,
             'execution_column__execution__experiment__reactor': values.reactor,
             'execution_column__execution__experiment__file_paper__description__icontains': values.description !== '' ? values.description : undefined,
-
+            'execution_column__label': this.props.target,
             ...this.props.query
         }
 

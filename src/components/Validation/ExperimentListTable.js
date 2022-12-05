@@ -24,18 +24,18 @@ class ExperimentListTable extends React.Component {
 
     componentDidMount() {
         this.setState({loading: true, experimentSelected: []})
-        console.log(this.props.exp_list_id)
         const params = {
             fields: ['id', 'reactor', 'experiment_type', 'username',
                 'fileDOI', 'status', 'ignition_type', 'interpreter_name'],
-            args: {
+            query: {
                 'id__in': this.props.exp_list_id,
-            }
+            },
+            model_name: 'Experiment'
         }
-        axios.post(window.$API_address + 'frontend/API/getExperimentList', params)
+        axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase', params)
             .then(res => {
                 message.success('Filter successful! Please select the experiments in the following tab.');
-                const experiments = JSON.parse(res.data)
+                const experiments = res.data
                 this.setState({experiments: experiments, loading: false,})
             })
             .catch(error => {

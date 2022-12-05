@@ -13,14 +13,18 @@ class AddExecution extends React.Component{
         this.state = {
             models_options: null,
             chemModelsSelected: null,
+            chemModelsSelectedBackup: null,
             addExecutionLoading: false,
         }
     }
 
     componentDidMount() {
-        axios.post(window.$API_address + 'frontend/API/getModelList', {fields: ['id', 'name']})
+        axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase',
+            {fields: ['id', 'name'],
+            model_name: 'ChemModel',
+            query: {}})
             .then(res => {
-                this.setState({models_options: this.createCheModelOptions(JSON.parse(res.data))})
+                this.setState({models_options: this.createCheModelOptions(res.data)})
             }).catch(error => {
             checkError(error)
         })
@@ -36,6 +40,10 @@ class AddExecution extends React.Component{
         this.setState({chemModelsSelected: value})
     }
 
+    changeModelsBackup(value){
+        this.setState({chemModelsSelectedBackup: value})
+    }
+
     onClick = (value) => {
         if(!this.state.chemModelsSelected){
             message.error('Chem Model is not selected')
@@ -45,6 +53,7 @@ class AddExecution extends React.Component{
         const params = {
             'experiment_id': this.props.experiment.id,
             'chemModel_id': this.state.chemModelsSelected,
+            'backup_chemModel': this.state.chemModelsSelectedBackup,
             'everything': value,
         }
 
@@ -75,7 +84,7 @@ class AddExecution extends React.Component{
         if (this.state.chemModelsSelected){
             this.setState({addExecutionLoading: true})
             axios.post(window.$API_address + 'OpenSmoke/API/initializeSimulation',
-                {experiment: this.props.experiment.id, chemModel: this.state.chemModelsSelected})
+                {experiment: this.props.experiment.id, chemModel: this.state.chemModelsSelected, backup_chemModel: this.state.chemModelsSelectedBackup})
                 .then(res => {
                     message.success('Execution successfully created!')
                     this.setState({addExecutionLoading: false})
@@ -113,6 +122,19 @@ class AddExecution extends React.Component{
                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
                             onChange={this.changeModels.bind(this)}
+                        >
+                            {this.state.models_options}
+                        </Select>
+                    </Row>
+                    <Row>
+                        <Select
+                            showSearch
+                            placeholder="Please select Backup Chem Model"
+                            style={{width: 400}}
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            onChange={this.changeModelsBackup.bind(this)}
                         >
                             {this.state.models_options}
                         </Select>

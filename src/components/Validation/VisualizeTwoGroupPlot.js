@@ -80,6 +80,8 @@ class VisualizeTwoGroupPlot extends React.Component {
             return axios.post(window.$API_address + 'frontend/API/getPlotsValidation', {
                 'query': query,
                 'target': target,
+                'chemModel_ids': [this.props.modelA, this.props.modelB],
+                'common_experiments': this.props.settings.common_experiments,
             })
                 .then(res => {
                     return {'chemModel_id': chemModel_id, 'result': JSON.parse(res.data)}

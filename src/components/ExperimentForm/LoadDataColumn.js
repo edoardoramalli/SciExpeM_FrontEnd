@@ -58,7 +58,6 @@ class LoadDataColumn extends React.Component{
             axios
                 .post(window.$API_address + 'frontend/API/getProfile', {data: file_text})
                 .then(res => {
-                    console.log(res)
                     message.success(`Profile uploaded successfully`, 3);
                     onSuccess(file);
                 })

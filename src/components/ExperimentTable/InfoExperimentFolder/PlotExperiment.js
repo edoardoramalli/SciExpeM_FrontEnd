@@ -32,11 +32,12 @@ class PlotExperiment extends React.Component{
 
     renderTabs = (info, data) => {
         return (Object.entries(info).map(([key, value], index) => {
+
             return(
                 <Tabs.TabPane tab={key} key={index}>
                     <Plot
                         data={data[key]}
-                        layout={this.extend(this.state.baseConfig, value)}
+                        layout={{...this.state.baseConfig, ...value}}
                     />
                 </Tabs.TabPane>
             )
@@ -49,8 +50,16 @@ class PlotExperiment extends React.Component{
         const params = {exp_id: this.props.exp_id.toString()}
         axios.post(window.$API_address + 'frontend/API/getPlotExperiment', params)
             .then(res => {
-                const result = JSON.parse(res.data)
+                const result = res.data
+                // console.log('prima', result)
+                // const edo = {'Data Group (dg2)': {'xaxis': {'title': 'distance [m] (lin)', 'linecolor': 'lightgrey', 'linewidth': 2, 'mirror': true}, 'yaxis': {'title': 'particle diameter [nm] (lin)', 'linecolor': 'lightgrey', 'linewidth': 2, 'mirror': true}}, 'Data Group (dg1)': {'xaxis': {'title': 'distance [m] (lin)', 'linecolor': 'lightgrey', 'linewidth': 2, 'mirror': true}, 'yaxis': {'title': 'soot volume fraction [unitless] (lin)', 'linecolor': 'lightgrey', 'linewidth': 2, 'mirror': true}}}
                 const tabs =  this.renderTabs(result['info'], result['data'])
+                // const tabs =  this.renderTabs(edo, result['data'])
+
+                // console.log('dopo', result)
+                // console.log('edooo', result['info'])
+                // console.log('ellle', result)
+                // console.log(res.data)
                 this.setState({
                     renderObject:
                         <Tabs defaultActiveKey="1">

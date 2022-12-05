@@ -2,7 +2,7 @@ import React from "react";
 
 const axios = require('axios');
 import Cookies from "js-cookie";
-import {message, Table, Button, Input, Space, Row, Col, Popconfirm} from "antd";
+import {message, Table, Button, Input, Space, Row, Col, Popconfirm, Tag} from "antd";
 import {
     DeleteOutlined,
     EditOutlined,
@@ -106,13 +106,10 @@ class SpeciesTable extends React.Component {
 
     refreshSpecieList = () => {
         this.setState({loading: true})
-        const params = {args: {}, fields: ['id', 'InChI', 'preferredKey', 'names', 'CAS', 'SMILES', 'chemName', 'formula']}
-        axios.post(window.$API_address + 'frontend/API/getSpecieList', params)
+        const params = {model_name: 'Specie', query: {}, fields: ['id', 'InChI', 'preferredKey', 'names', 'CAS', 'SMILES', 'chemName', 'formula']}
+        axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase', params)
             .then(res => {
-                const species_list = JSON.parse(res.data)
-                console.log(species_list)
-                this.setState({species: species_list, editableRow: undefined, loading: false})
-
+                this.setState({species: res.data, editableRow: undefined, loading: false})
             })
             .catch(error => {
                 this.setState({loading: false})
@@ -170,7 +167,14 @@ class SpeciesTable extends React.Component {
     }
 
     renderEdit = (record, name) => {
-        const content = name !== 'names' ? record[name] : record[name].join(', ')
+        let content;
+        if (name === 'names'){
+            content = record[name].join(', ')
+        }
+        else{
+            content = record[name]
+        }
+
         return this.state.editableRow === record.id ?
             <Input defaultValue={content} onChange={(e) => this.onChange(e, name)} values/> : content
     }

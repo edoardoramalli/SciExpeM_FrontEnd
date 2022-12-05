@@ -7,6 +7,7 @@ const axios = require('axios');
 import Cookies from "js-cookie";
 import TabExperiment from "../ExperimentTable/InfoExperimentFolder/TabExperiment";
 import {RetweetOutlined, SettingOutlined} from "@ant-design/icons";
+import {table_columns} from "../Variables";
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
@@ -22,7 +23,7 @@ class TableReport extends React.Component {
         }
     }
 
-    refreshTable = () =>{
+    refreshTable = () => {
         this.setState({loading: true, selectedRowKeys: []});
 
         const params = {
@@ -51,17 +52,14 @@ class TableReport extends React.Component {
         this.refreshTable()
     }
 
-    parseTime(timeString) {
-        return timeString ? <>{new Date(timeString).toUTCString()}</> : <></>
-    }
 
     onSelectChange = (e) => {
         this.setState({selectedRowKeys: e})
     }
 
-    confirmCurveMatching = () =>{
+    confirmCurveMatching = () => {
         this.setState({loading: true})
-        this.state.selectedRowKeys.forEach(exec_id =>{
+        this.state.selectedRowKeys.forEach(exec_id => {
             const params = {'execution_id': exec_id}
             axios.post(window.$API_address + 'CurveMatching/API/createUpdateExecutionCurveMatching', params)
                 .then(res => {
@@ -74,9 +72,9 @@ class TableReport extends React.Component {
         this.delay(1000).then(() => this.refreshTable());
     }
 
-    confirmDeleteAll = () =>{
+    confirmDeleteAll = () => {
         this.setState({loading: true})
-        this.state.selectedRowKeys.forEach(exec_id =>{
+        this.state.selectedRowKeys.forEach(exec_id => {
             const params = {
                 'element_id': exec_id,
                 'model_name': 'Execution'
@@ -94,9 +92,9 @@ class TableReport extends React.Component {
 
     }
 
-    removeErrorAll = () =>{
+    removeErrorAll = () => {
         this.setState({loading: true})
-        this.state.selectedRowKeys.forEach(exec_id =>{
+        this.state.selectedRowKeys.forEach(exec_id => {
             const params = {
                 'element_id': exec_id,
                 'model_name': 'Execution',
@@ -112,11 +110,26 @@ class TableReport extends React.Component {
         this.delay(1000).then(() => this.refreshTable());
 
     }
+
+    restartExecutionAll = () => {
+        this.setState({loading: true})
+        this.state.selectedRowKeys.forEach(exec_id => {
+            const params = {
+                'execution_id': exec_id,
+            }
+            axios.post(window.$API_address + 'OpenSmoke/API/restartExecution', params)
+                .then(res => {
+                }).catch(error => {
+                checkError(error)
+            });
+        })
+        this.setState({loading: false})
+        this.delay(1000).then(() => this.refreshTable());
+    }
+
     delay(time) {
         return new Promise(resolve => setTimeout(resolve, time));
     }
-
-
 
 
     render() {
@@ -147,42 +160,14 @@ class TableReport extends React.Component {
                     multiple: 2,
                 },
             },
-            {
-                title: 'Username',
-                dataIndex: 'username',
-                sorter: (a, b) => a.username.localeCompare(b.username)
-
-            },
-            {
-                title: 'Exec. Created',
-                dataIndex: 'execution_created',
-                render: (props, record) => <>{this.parseTime(record.execution_created)}</>,
-                sorter: (a, b) => new Date(a.execution_created) - new Date(b.execution_created),
-            },
-            {
-                title: 'Exec. Started',
-                dataIndex: 'execution_start',
-                render: (props, record) => <>{this.parseTime(record.execution_start)}</>,
-                sorter: (a, b) => new Date(a.execution_start) - new Date(b.execution_start),
-            },
-            {
-                title: 'Exec. End',
-                dataIndex: 'execution_end',
-                render: (props, record) => <>{this.parseTime(record.execution_end)}</>,
-                sorter: (a, b) => new Date(a.execution_end) - new Date(b.execution_end),
-            },
-            {
-                title: 'Computer Name',
-                dataIndex: 'computer',
-                sorter: (a, b) => {
-                    const aa = a.computer !== null ? a.computer : ''
-                    const bb = b.computer !== null ? b.computer : ''
-                    return aa.localeCompare(bb)
-                }
-            },
+            table_columns['execution__username'],
+            table_columns['execution__execution_created'],
+            table_columns['execution__execution_start'],
+            table_columns['execution__execution_end'],
+            table_columns['execution__computer'],
         ];
 
-        const rowSelection =  {
+        const rowSelection = {
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.onSelectChange,
             selections: [Table.SELECTION_ALL],
@@ -190,26 +175,31 @@ class TableReport extends React.Component {
         }
 
 
-
         const menu = (
             <Menu>
                 <Menu.Item>
-                    <Popconfirm placement="bottomRight" title={'Are you sure?'} onConfirm={this.confirmCurveMatching} okText="Yes" cancelText="No">
+                    <Popconfirm placement="bottomRight" title={'Are you sure?'} onConfirm={this.confirmCurveMatching}
+                                okText="Yes" cancelText="No">
                         <Button loading={this.state.loading}>Compute Curve Matching</Button>
                     </Popconfirm>
                 </Menu.Item>
                 <Menu.Item>
-                    <Popconfirm placement="bottomRight" title={'Are you sure?'} onConfirm={this.confirmDeleteAll} okText="Yes" cancelText="No">
+                    <Popconfirm placement="bottomRight" title={'Are you sure?'} onConfirm={this.confirmDeleteAll}
+                                okText="Yes" cancelText="No">
                         <Button loading={this.state.loading}>Delete Execution</Button>
                     </Popconfirm>
                 </Menu.Item>
                 <Menu.Item>
-                    <Popconfirm placement="bottomRight" title={'Are you sure?'} onConfirm={this.removeErrorAll} okText="Yes" cancelText="No">
+                    <Popconfirm placement="bottomRight" title={'Are you sure?'} onConfirm={this.removeErrorAll}
+                                okText="Yes" cancelText="No">
                         <Button loading={this.state.loading}>Remove Error</Button>
                     </Popconfirm>
                 </Menu.Item>
                 <Menu.Item>
-                    <Button disabled loading={this.state.loading}>Restart Execution</Button>
+                    <Popconfirm placement="bottomRight" title={'Are you sure?'} onConfirm={this.restartExecutionAll}
+                                okText="Yes" cancelText="No">
+                        <Button loading={this.state.loading}>Restart Execution</Button>
+                    </Popconfirm>
                 </Menu.Item>
             </Menu>
         );
@@ -225,26 +215,31 @@ class TableReport extends React.Component {
                     pagination={true}
                     rowKey="id"
                     title={() => <Row>
-                        <Col span={20}><Typography.Title level={5}>Number of record: {this.state.record.length}</Typography.Title></Col>
-                        <Col span={4} >
+                        <Col span={20}><Typography.Title level={5}>Number of
+                            record: {this.state.record.length}</Typography.Title></Col>
+                        <Col span={4}>
                             <Space>
                                 <Dropdown overlay={menu} placement="bottomCenter" arrow>
-                                    <Button icon={<SettingOutlined />}>Actions</Button>
+                                    <Button icon={<SettingOutlined/>}>Actions</Button>
                                 </Dropdown>
                                 <Button
                                     type="primary"
                                     shape="round"
-                                    icon={<RetweetOutlined />}
-                                    onClick={() => {this.refreshTable()}}
+                                    icon={<RetweetOutlined/>}
+                                    onClick={() => {
+                                        this.refreshTable()
+                                    }}
                                 >
                                     Refresh
                                 </Button>
                             </Space>
                         </Col>
-                        </Row>}
+                    </Row>}
                     bordered
                     expandRowByClick={true}
-                    expandedRowRender={record => {return <><h2>Error:</h2>{record.execution_error}</>}}
+                    expandedRowRender={record => {
+                        return <><h2>Error:</h2>{record.execution_error}</>
+                    }}
                 />
             </>
         )

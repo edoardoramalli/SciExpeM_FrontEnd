@@ -52,8 +52,8 @@ class VisualizeTwoCluster extends React.Component {
         this.setState({loading: true})
 
         Promise.all([
-            this.getCluster(queryA, this.props.subject, this.props.modelA),
-            this.getCluster(queryB, this.props.subject, this.props.modelB)]).then(function (values) {
+            this.getCluster(queryA, this.props.subject, this.props.modelA, this.props.modelB),
+            this.getCluster(queryB, this.props.subject, this.props.modelB, this.props.modelA)]).then(function (values) {
 
             const index_model_a = values[0]['chemModel_id'] === current.props.modelA ? 0 : 1
 
@@ -91,10 +91,14 @@ class VisualizeTwoCluster extends React.Component {
     }
 
 
-    getCluster = (query, subject, chemModel_id) => {
+    getCluster = (query, subject, chemModel_id, other_id) => {
 
         if (query !== undefined && chemModel_id !== undefined && chemModel_id !== -1) {
-            return axios.post(window.$API_address + 'frontend/API/getCluster', {'query': query, 'subject': subject})
+            let models = []
+            if (this.props.settings.common_experiments){
+                models = [chemModel_id, other_id]
+            }
+            return axios.post(window.$API_address + 'frontend/API/getCluster', {'query': query, 'subject': subject, 'models': models})
                 .then(res => {
                     console.log(res.data)
                     return {'chemModel_id': chemModel_id, 'result': res.data}

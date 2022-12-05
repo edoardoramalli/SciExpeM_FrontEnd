@@ -79,6 +79,21 @@ class InitialSpecies extends React.Component {
                                 </Form.Item>
                                 <Form.Item
                                     {...field}
+                                    name={[field.name, 'configuration']}
+                                    fieldKey={[field.fieldKey, 'configuration']}
+                                    rules={[{required: true, message: 'Missing Configuration.'}]}
+                                >
+                                    <Select
+                                        placeholder={'Select Configuration'}
+                                        style={{width: 200}}
+                                    >
+                                        <Select.Option value="premixed">Premixed</Select.Option>
+                                        <Select.Option value="fuel">Fuel</Select.Option>
+                                        <Select.Option value="oxidizer">Oxidizer</Select.Option>
+ì                                    </Select>
+                                </Form.Item>
+                                <Form.Item
+                                    {...field}
                                     name={[field.name, 'source_type']}
                                     fieldKey={[field.fieldKey, 'source_type']}
                                     rules={[{required: true, message: 'Missing Source Type.'}]}

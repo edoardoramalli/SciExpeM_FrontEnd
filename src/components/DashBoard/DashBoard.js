@@ -6,6 +6,7 @@ import ActionCell from "../Shared/ActionCell";
 const axios = require('axios');
 import Cookies from "js-cookie";
 import TableReport from "./TableReport";
+import TableWorker from "./TableWorker";
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
@@ -13,7 +14,10 @@ class DashBoard extends React.Component {
 
     render() {
         return (
-            <Tabs defaultActiveKey="1" centered>
+            <Tabs defaultActiveKey="0" centered>
+                <Tabs.TabPane tab="Workers" key="0">
+                    <TableWorker />
+                </Tabs.TabPane>
                 <Tabs.TabPane tab="Waiting" key="1">
                     <TableReport api={'OpenSmoke/API/Report/getReportWaitingExecution'} />
                 </Tabs.TabPane>

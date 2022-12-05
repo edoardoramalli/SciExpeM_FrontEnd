@@ -1,7 +1,7 @@
 import React from "react";
 import {checkError} from "../../Tool";
 import Cookies from "js-cookie";
-import {Button, Col, Dropdown, Menu, Popconfirm, Row, Space, Table, Tabs} from "antd";
+import {Button, Col, Dropdown, Menu, Popconfirm, Row, Space, Table, Tabs, message} from "antd";
 import {PlusOutlined, RetweetOutlined, UploadOutlined} from '@ant-design/icons';
 
 
@@ -14,6 +14,8 @@ import AddExecution from "./Execution/AddExecution";
 
 import ActionCell from "../../Shared/ActionCell";
 import UploadExecution from "./Execution/UploadExecution";
+
+import {table_columns} from "../../Variables";
 
 const axios = require('axios');
 
@@ -43,12 +45,13 @@ class ExecutionTab extends React.Component {
     refreshTable() {
         this.setState({loading: true})
         let params = {
-            fields: ['id', 'chemModel', 'execution_start', 'execution_end', 'username'],
-            experiment_id: this.props.experiment.id.toString()
+            fields: ['id', 'chemModel', 'execution_start', 'execution_end', 'username', 'num_files', 'folder_size', 'has_error', 'backup_chemModel'],
+            query: {experiment__id: this.props.experiment.id.toString()},
+            model_name: 'Execution'
         }
-        axios.post(window.$API_address + 'frontend/API/getExecutionList', params)
+        axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase', params)
             .then(res => {
-                this.setState({dataSource: JSON.parse(res.data), loading: false})
+                this.setState({dataSource: res.data, loading: false})
             })
             .catch(error => {
                 checkError(error)
@@ -59,10 +62,6 @@ class ExecutionTab extends React.Component {
 
     closeAddExecution() {
         this.setState({addExecutionVisible: false})
-    }
-
-    parseTime(timeString) {
-        return timeString ? <>{new Date(timeString).toUTCString()}</> : <></>
     }
 
     handleDelete = (e_id) => {
@@ -76,19 +75,26 @@ class ExecutionTab extends React.Component {
     uploadExecution(execution_id) {
         axios.post(window.$API_address + 'frontend/API/getExecutionFileList', {execution_id: execution_id})
             .then(res => {
-                this.setState({uploadExecutionVisible: true, listFiles: res.data, execution_id: execution_id})            })
+                this.setState({uploadExecutionVisible: true, listFiles: res.data, execution_id: execution_id})
+            })
             .catch(error => {
                 checkError(error)
             })
 
     }
 
-    handleRestart = (exec_id) =>{
-        console.log(id)
-        this.refreshTable()
+    handleRestart = (exec_id) => {
+        axios.post(window.$API_address + 'OpenSmoke/API/restartExecution', {execution_id: exec_id})
+            .then(res => {
+                message.success('Execution Restarted!')
+                this.refreshTable()
+            })
+            .catch(error => {
+                checkError(error)
+            })
     }
 
-    handleCurveMatching = (exec_id) =>{
+    handleCurveMatching = (exec_id) => {
         const params = {'execution_id': exec_id}
         this.setState({restartLoading: true})
         axios.post(window.$API_address + 'CurveMatching/API/createUpdateExecutionCurveMatching', params)
@@ -103,7 +109,7 @@ class ExecutionTab extends React.Component {
         this.refreshTable()
     }
 
-    createMenu = (obj, id) =>{
+    createMenu = (obj, id) => {
         return (
             <Menu>
                 <Menu.Item>
@@ -116,7 +122,7 @@ class ExecutionTab extends React.Component {
                         onConfirm={() => obj.handleRestart(id)}
                         okText="Yes"
                         cancelText="No">
-                        <Button shape="text" loading={obj.state.restartLoading} disabled>Restart Simulation</Button>
+                        <Button shape="text" loading={obj.state.restartLoading}>Restart Simulation</Button>
                     </Popconfirm>
                 </Menu.Item>
             </Menu>
@@ -142,39 +148,24 @@ class ExecutionTab extends React.Component {
                 sorter: (a, b) => {
                     return a.id > b.id
                 },
-                width: '20%'
+                width: '15%'
 
             },
             {
-                title: 'Execution Start Time',
-                dataIndex: 'execution_start',
-                key: 'execution_start',
+                title: 'Backup ChemModel',
+                dataIndex: ['backup_chemModel', 'name'],
+                key: 'backup_chemModel',
                 sorter: (a, b) => {
                     return a.id > b.id
                 },
-                render: (props, record) => <>{this.parseTime(record.execution_start)}</>,
-                width: '22%'
+                width: '15%'
 
             },
-            {
-                title: 'Execution End Time',
-                dataIndex: 'execution_end',
-                key: 'execution_end',
-                sorter: (a, b) => {
-                    return a.id > b.id
-                },
-                render: (props, record) => <>{this.parseTime(record.execution_end)}</>,
-                width: '22%'
-            },
-            {
-                title: 'Username',
-                dataIndex: 'username',
-                key: 'username',
-                sorter: (a, b) => {
-                    return a.id > b.id
-                },
-                width: '17%'
-            },
+            table_columns['execution__execution_start'],
+            table_columns['execution__execution_end'],
+            table_columns['execution__username'],
+            table_columns['execution__num_files'],
+            table_columns['execution__folder_size'],
             {
                 title: 'Action',
                 dataIndex: 'actions',
@@ -194,7 +185,7 @@ class ExecutionTab extends React.Component {
                                 shape="circle"
                                 disabled={record.execution_end === null}
                                 // onClick={this.uploadExecution.bind(this, record.id)}
-                                icon={<RetweetOutlined />}
+                                icon={<RetweetOutlined/>}
                                 loading={this.state.restartLoading}
                             />
                         </Dropdown>
@@ -228,7 +219,7 @@ class ExecutionTab extends React.Component {
                         <Table
                             title={() =>
                                 <Row>
-                                    <Col >
+                                    <Col>
                                         <Button
                                             type="primary"
                                             shape="round"
@@ -248,8 +239,10 @@ class ExecutionTab extends React.Component {
                                         <Button
                                             type="primary"
                                             shape="round"
-                                            icon={<RetweetOutlined />}
-                                            onClick={() => {this.refreshTable()}}
+                                            icon={<RetweetOutlined/>}
+                                            onClick={() => {
+                                                this.refreshTable()
+                                            }}
                                         >
                                             Refresh
                                         </Button>
@@ -263,7 +256,7 @@ class ExecutionTab extends React.Component {
                             loading={this.state.loading}
                             // expandRowByClick={true}
                             expandedRowRender={record => {
-                                return <DetailExecutionTab exec_id={record.id}/>
+                                return <DetailExecutionTab exec_id={record.id} ropa={record.num_files > 0}/>
                             }}
                         />
                     </Tabs.TabPane>

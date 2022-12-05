@@ -87,7 +87,6 @@ class ExperimentFile extends React.Component {
 
     }
     editButtonClick = () =>{
-        console.log(this)
         this.setState({cancelButton: true})
     }
 

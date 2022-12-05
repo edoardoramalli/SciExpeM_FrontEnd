@@ -15,13 +15,13 @@ class ReactorModeType extends React.Component{
     render() {
         return(
             <Form.Item
-                label="Reactor Type"
+                label="Reactor Mode"
                 name="reactor_modes"
                 rules={[{required: this.props.reactor_value === 'flame', message: 'Please insert reactor modes.'}]}
             >
                 <Select
                     placeholder="Select a reactor mode"
-                    mode="multiple"
+                    // mode="multiple"
                     allowClear={true}
                     style={{width: "35%"}}
                     disabled={this.props.reactor_value !== 'flame'}

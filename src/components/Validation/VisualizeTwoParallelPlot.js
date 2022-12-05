@@ -46,8 +46,8 @@ class VisualizeTwoParallelPlot extends React.Component {
         this.setState({loading: true})
 
         Promise.all([
-            this.getParallelPlot(this.props.modelA),
-            this.getParallelPlot(this.props.modelB)]).then(function (values) {
+            this.getParallelPlot(this.props.modelA, this.props.modelB),
+            this.getParallelPlot(this.props.modelB, this.props.modelA)]).then(function (values) {
 
             const index_model_a = values[0]['chemModel_id'] === current.props.modelA ? 0 : 1
 
@@ -76,7 +76,11 @@ class VisualizeTwoParallelPlot extends React.Component {
         });
     }
 
-    getParallelPlot = (chemModel_id) => {
+    getParallelPlot = (chemModel_id, other_id) => {
+        let models = []
+        if (this.props.settings.common_experiments){
+            models = [chemModel_id, other_id]
+        }
 
         if (chemModel_id !== undefined && chemModel_id !== -1) {
             return axios.post(window.$API_address + 'frontend/API/getDataFrameExecution',
@@ -87,10 +91,12 @@ class VisualizeTwoParallelPlot extends React.Component {
                         'execution_column__execution__experiment__id',
                         'execution_column__execution__experiment__fuels',
                         'execution_column__execution__experiment__reactor',
+                        'execution_column__execution__experiment__reactor_modes',
                         'execution_column__execution__experiment__file_paper__year',
                         'execution_column__execution__experiment__t_inf', 'execution_column__execution__experiment__t_sup',
                         'execution_column__execution__experiment__p_inf', 'execution_column__execution__experiment__p_sup',
-                        'execution_column__execution__experiment__phi_inf', 'execution_column__execution__experiment__phi_sup']
+                        'execution_column__execution__experiment__phi_inf', 'execution_column__execution__experiment__phi_sup'],
+                    models: models
                 })
                 .then(res => {
                     return {'chemModel_id': chemModel_id, 'result': res.data}

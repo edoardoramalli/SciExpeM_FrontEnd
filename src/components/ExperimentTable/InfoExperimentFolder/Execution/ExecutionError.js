@@ -23,8 +23,6 @@ class ExecutionError extends React.Component {
         }
         axios.post(window.$API_address + 'ExperimentManager/API/requestProperty', params)
             .then(res => {
-                console.log(res.data)
-
                 let object;
 
                 if (res.data !== '') {

@@ -23,27 +23,12 @@ axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 import {extractData} from "../Tool";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 
-class AddColumnModal extends React.Component {
 
-    property_list = {
-        'temperature': ['K'],
-        'pressure': ['Pa', 'kPa', 'MPa', 'Torr', 'torr', 'bar', 'mbar', 'atm'],
-        'ignition delay': ['s', 'ms', 'us', 'ns', 'min'],
-        'composition': ['mole fraction'],
-        'laminar burning velocity': ['m/s', 'dm/s', 'cm/s', 'mm/s', 'm s-1', 'dm s-1', 'cm s-1', 'mm s-1'],
-        'volume': ['m3', 'dm3', 'cm3', 'mm3', 'L'],
-        'time': ['s', 'ms', 'us', 'ns', 'min'],
-        'residence time': ['s', 'ms', 'us', 'ns', 'min'],
-        'distance': ['m', 'dm', 'cm', 'mm'],
-        'rate coefficient': ['s-1', 'm3 mol-1 s-1', 'dm3 mol-1 s-1', 'cm3 mol-1 s-1', 'm3 molecule-1 s-1',
-            'dm3 molecule-1 s-1', 'cm3 molecule-1 s-1', 'm6 mol-3 s-1', 'dm6 mol-2 s-1',
-            'cm6 mol-2 s-1', 'm6 molecule-2 s-1', 'dm6 molecule-2 s-1', 'cm6 molecule-2 s-1'],
-        'equivalence ratio': ['unitless'],
-        'length': ['m', 'dm', 'cm', 'mm'],
-        'density': ['g m-3', 'g dm-3', 'g cm-3', 'g mm-3', 'kg m-3', 'kg dm-3', 'kg cm-3', 'kg mm-3'],
-        'flow rate': ['g m-2x s-1', 'g dm-2 s-1', 'g cm-2 s-1', 'g mm-2 s-1', 'kg m-2 s-1', 'kg dm-2 s-1', 'kg cm-2 s-1', 'kg mm-2 s-1'],
-        'concentration': ['mol/m3', 'mol/dm3', 'mol/cm3', 'mol m-3', 'mol dm-3', 'mol cm-3', 'molecule/m3', 'molecule/dm3', 'molecule/cm3', 'molecule m-3', 'molecule dm-3', 'molecule cm-3'],
-    }
+import Variables from "../Variables";
+
+const {property_list} = Variables
+
+class AddColumnModal extends React.Component {
 
     constructor(props) {
         super(props);
@@ -83,7 +68,6 @@ class AddColumnModal extends React.Component {
                 // });
                 this.setState({species: specie_dict, speciesOptions: speciesOptions, propertyObject: this.createOptions()})
             }).catch(error => {
-            console.log(error.response);
         })
 
     }
@@ -95,10 +79,10 @@ class AddColumnModal extends React.Component {
 
     createOptions() {
         let opt = []
-        for (let key in this.property_list) {
+        for (let key in property_list) {
             let children = [];
-            for (let item in this.property_list[key]) {
-                children.push({value: this.property_list[key][item], label: this.property_list[key][item]})
+            for (let item in property_list[key]) {
+                children.push({value: property_list[key][item], label: property_list[key][item]})
             }
             opt.push({value: key, label: key, children: children})
         }
@@ -125,7 +109,7 @@ class AddColumnModal extends React.Component {
     }
 
     createUnitOptions() {
-        this.property_list[this.state.propertyName].map((key) => {
+        property_list[this.state.propertyName].map((key) => {
             return (
                 <Select.Option
                     value={key}

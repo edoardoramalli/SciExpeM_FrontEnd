@@ -69,12 +69,16 @@ class ExperimentFilterTable extends React.Component {
         })
 
 
-        axios.post(window.$API_address + 'frontend/API/getModelList', {fields: ['id', 'name']})
+        axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase',
+            {fields: ['id', 'name'],
+            model_name: 'ChemModel',
+            query: {}})
             .then(res => {
-                this.setState({models_options: this.createCheModelOptions(JSON.parse(res.data))})
+                this.setState({models_options: this.createCheModelOptions(res.data)})
             }).catch(error => {
             checkError(error)
         })
+
         axios.get(window.$API_address + 'frontend/api/opensmoke/species_names')
             .then(res => {
                 const specie_dict = res.data;
@@ -133,7 +137,7 @@ class ExperimentFilterTable extends React.Component {
         const params = {
             fields: ['id', 'reactor', 'experiment_type', 'username',
                 'fileDOI', 'status', 'ignition_type', 'interpreter_name'],
-            args: {
+            query: {
                 'experiment_type': values.experiment_type,
                 'reactor': values.reactor,
                 'status': 'verified',
@@ -147,12 +151,13 @@ class ExperimentFilterTable extends React.Component {
                 'p_sup__lte': this.checkField(values.p_profile, 'p_sup'),
                 'phi_inf__gte': this.checkField(values.phi_profile, 'phi_inf'),
                 'phi_sup__lte': this.checkField(values.phi_profile, 'phi_sup'),
-            }
+            },
+            model_name: 'Experiment',
         }
-        axios.post(window.$API_address + 'frontend/API/getExperimentList', params)
+        axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase', params)
             .then(res => {
                 message.success('Filter successful! Please select the experiments in the following tab.');
-                const experiments = JSON.parse(res.data)
+                const experiments = res.data
                 this.setState({experiments: experiments, loading: false,})
             })
             .catch(error => {
@@ -317,6 +322,14 @@ class ExperimentFilterTable extends React.Component {
                                             placeholder="Please select Chem Models"
                                             style={{width: 450}}
                                             allowClear
+                                            showSearch={true}
+                                            filterOption={(input, option) => {
+                                                return (
+                                                    option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
+                                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                );
+
+                                            }}
                                             onChange={this.changeModels.bind(this)}
                                         >
                                             {this.state.models_options}

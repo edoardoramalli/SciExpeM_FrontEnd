@@ -47,7 +47,8 @@ class WorldDiff extends React.Component {
                     'query': this.props.query,
                     'subject': this.props.subject,
                     'modelA': this.props.modelA,
-                    'modelB': this.props.modelB
+                    'modelB': this.props.modelB,
+                    'common_experiments': this.props.settings.common_experiments
                 })
 
                 .then(res => {
