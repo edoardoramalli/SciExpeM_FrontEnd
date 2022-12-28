@@ -175,7 +175,7 @@ class ExecutionTab extends React.Component {
                 render: (text, record) =>
                     <Space>
                         <ActionCell
-                            items={{'Execution': {'label': 'Raw Data (.csv)', 'extension': '.csv', 'file': 'rawData'}}}
+                            items={{'Execution': {'label': 'Raw Data (.zip)', 'extension': '.zip', 'file': 'rawData'}}}
                             element_id={record.id}
                             model_name={'Execution'}
                             handleDelete={this.handleDelete}

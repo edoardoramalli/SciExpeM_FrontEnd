@@ -147,7 +147,6 @@ class BaseTable extends React.Component{
 
 
     render() {
-
         const filter_exp_type = [
             {
                 text: 'Ignition delay measurement',
@@ -215,16 +214,16 @@ class BaseTable extends React.Component{
         ]
 
         const columns = [
-            {
-                title: 'File DOI',
-                dataIndex: 'fileDOI',
-                key: 'fileDOI',
-                ...this.getColumnSearchProps('fileDOI'),
-                sorter: (a, b) => {
-                    return a.fileDOI.localeCompare(b.fileDOI)
-                },
-
-            },
+            // {
+            //     title: 'File DOI',
+            //     dataIndex: 'fileDOI',
+            //     key: 'fileDOI',
+            //     ...this.getColumnSearchProps('fileDOI'),
+            //     sorter: (a, b) => {
+            //         return a.fileDOI.localeCompare(b.fileDOI)
+            //     },
+            //
+            // },
             {
                 title: 'Id',
                 dataIndex: 'id',
@@ -263,6 +262,21 @@ class BaseTable extends React.Component{
                     return a.experiment_type.localeCompare(b.experiment_type)
                 },
             },
+            {
+                title: 'Fuels',
+                dataIndex: 'fuels',
+                key: 'fuels',
+                // filters: filter_exp_type,
+                // onFilter: (value, record) => record.experiment_type.toLowerCase().includes(value),
+                // sorter: (a, b) => {
+                //     return a.experiment_type.localeCompare(b.experiment_type)
+                // },
+                render: (props, record) => {
+                    return record.fuels ? record.fuels.map(i=>{
+                        return <Tag color="default">{i}</Tag>
+                    }) : <></>
+                }
+                },
             // {
             //     title: 'Properties',
             //     dataIndex: 'common_properties',

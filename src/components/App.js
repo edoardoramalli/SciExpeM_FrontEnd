@@ -6,21 +6,9 @@ import React from 'react';
 import './App.css';
 
 // Import Libraries
-import {BackTop, Layout, message, Select, Spin} from "antd";
+import {BackTop, Layout, message, Select, Spin, ConfigProvider, theme} from "antd";
 import NavBar from "./NavBar";
 
-
-// import {SearchAndExecute} from "./Search";
-
-
-// const ExperimentTable = lazy(() => import('./ExperimentTable/ExperimentTable'));
-// const InsertCheModelFile = lazy(() => import('./ChemModelForm/InsertCheModelFile'));
-// const InsertExperimentForm = lazy(() => import('./ExperimentForm/ExperimentForm'));
-// const ModelTable = lazy(()=> import('./ModelTable/ModelTable'))
-// const InsertExperimentFile = lazy(() => import('./ExperimentFile/InsertExperimentFile'));
-// const ExperimentFilterTable = lazy(() => import('./Analysis/ExperimentFilterTable'));
-// const SpeciesTable = lazy(() => import('./SpeciesTable/SpeciesTable'));
-// const CrowdSourcing = lazy(() => import('./CrowdSourcing/CrowdSourcing'));
 
 import ExperimentTable from "./ExperimentTable/ExperimentTable";
 import InsertCheModelFile from "./ChemModelForm/InsertCheModelFile";
@@ -31,79 +19,103 @@ import ExperimentFilterTable from "./Analysis/ExperimentFilterTable";
 import SpeciesTable from "./SpeciesTable/SpeciesTable";
 import CrowdSourcing from "./CrowdSourcing/CrowdSourcing";
 import Validation from "./Validation/Validation";
-import DashBoard from  "./DashBoard/DashBoard";
+import DashBoard from "./DashBoard/DashBoard";
+import Homepage from "./Homepage/Homepage";
 
 
 const {Header, Content, Footer} = Layout;
 
 
+const {defaultAlgorithm, darkAlgorithm} = theme;
 
 class App extends React.Component {
 
     constructor(props) {
         super(props);
-        this.updateStateApp = this.updateStateApp.bind(this)
+        // this.updateStateApp = this.updateStateApp.bind(this)
+
+
         this.state = {
-            current: 'experiments',
+            current: 'homepage',
             fuels: [],
             species: [],
+            current_theme: defaultAlgorithm,
         }
     }
 
-    updateStateApp(e) {
-        this.setState({
-            current: e.key
-        })
+    updateStateApp = (e) => {
+        this.setState({current: e.key})
     }
 
+    updateStateUpDirect = (e) => {
+        this.setState({current: e})
+    }
+
+    switchTheme = () => {
+        let new_theme;
+        if (this.state.current_theme === defaultAlgorithm) {
+            new_theme = darkAlgorithm
+        } else {
+            new_theme = defaultAlgorithm
+        }
+        this.setState({current_theme: new_theme})
+    }
 
     render() {
 
         const current = this.state.current;
         const currentMapping = {
+            "homepage": <Homepage updateStateUpDirect={this.updateStateUpDirect}/>,
             "experiments": <ExperimentTable/>,
             "experimentInputFile": <InsertExperimentFile/>,
             "experimentInputForm": <InsertExperimentForm/>,
             "models": <ModelTable/>,
             "species": <SpeciesTable/>,
-            "chemModelInputForm": <InsertCheModelFile />,
-            "analysis": <ExperimentFilterTable />,
-            "crowdSourcing": <CrowdSourcing />,
+            "chemModelInputForm": <InsertCheModelFile/>,
+            "analysis": <ExperimentFilterTable/>,
+            "crowdSourcing": <CrowdSourcing/>,
             "validation": <Validation/>,
-            "dashboard": <DashBoard />
+            "dashboard": <DashBoard/>
         }
 
-        return (
-            <Layout className="layout">
-                <Header>
-                    <NavBar current={current} updateStateApp = {this.updateStateApp}/>
-                </Header>
-                <Content style={{padding: '25px 25px', height: "100%"}}>
-                    <div style={{background: '#fff', padding: 0}}>
-                        {/*<Suspense fallback={<div><Spin tip="Loading..." size="large" /></div>}>*/}
-                            {currentMapping[current]}
-                        {/*</Suspense>*/}
-                    </div>
-                    <BackTop>
-                        <div
-                            style={{  height: 40,
-                                width: 40,
-                                lineHeight: '40px',
-                                borderRadius: 4,
-                                backgroundColor: '#1088e9',
-                                color: '#fff',
-                                textAlign: 'center',
-                                fontSize: 14,}}
-                        >
-                            UP
-                        </div>
-                    </BackTop>
 
-                </Content>
-                <Footer style={{textAlign: 'center', float: 'bottom', padding: '25px'}}>
-                    ©2020 Politecnico di Milano
-                </Footer>
-            </Layout>)
+        return (
+            <ConfigProvider
+                theme={{
+                    algorithm: this.state.current_theme,
+                }}>
+                <Layout className="layout" style={{minHeight: "100vh"}}>
+                    <Header>
+                        <NavBar current={current} updateStateApp={this.updateStateApp} switchTheme={this.switchTheme}/>
+                    </Header>
+                    <Content style={{padding: '25px 25px', height: "100%"}}>
+                        {/*<div style={{background: '#fff', padding: 0}}>*/}
+                        {currentMapping[current]}
+                        {/*</div>*/}
+                        <BackTop>
+                            <div
+                                style={{
+                                    height: 40,
+                                    width: 40,
+                                    lineHeight: '40px',
+                                    borderRadius: 4,
+                                    backgroundColor: '#1088e9',
+                                    color: '#fff',
+                                    textAlign: 'center',
+                                    fontSize: 14,
+                                }}
+                            >
+                                UP
+                            </div>
+                        </BackTop>
+
+                    </Content>
+                    <Footer style={{textAlign: 'center', float: 'bottom', padding: '25px'}}>
+                        ©2020 Politecnico di Milano - Developed by <b>Edoardo Ramalli</b>
+                    </Footer>
+                </Layout>
+            </ConfigProvider>
+        )
     }
 
 }

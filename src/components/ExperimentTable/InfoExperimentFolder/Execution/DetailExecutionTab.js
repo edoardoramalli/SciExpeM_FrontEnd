@@ -1,5 +1,5 @@
 import React, {lazy} from "react";
-import {Table, Tabs} from "antd";
+import {Empty, Table, Tabs, Spin} from "antd";
 import {checkError} from "../../../Tool";
 
 const axios = require('axios');
@@ -18,7 +18,35 @@ class DetailExecutionTab extends React.Component {
         super(props);
         this.state = {
             loading: true,
+            list_table: null,
         }
+    }
+
+    createTable(diz_value) {
+        let columns = []
+        Object.entries(diz_value[0]).map(([key, value], index) => {
+            columns.push({
+                    title: key,
+                    dataIndex: key,
+                    key: key,
+                    sorter: (a, b) => {
+                        return a.id > b.id
+                    }
+                }
+            )
+        })
+
+        return <Table
+            bordered
+            rowKey="id"
+            dataSource={diz_value}
+            scroll={{x: true}}
+            columns={columns}
+            // loading={this.state.loading}
+            pagination={false}
+            style={{width: '85vw'}}
+        />
+
     }
 
     componentDidMount() {
@@ -27,19 +55,24 @@ class DetailExecutionTab extends React.Component {
         }
         axios.post(window.$API_address + 'frontend/API/getExecutionColumn', params)
             .then(res => {
-                let columns = []
-                Object.entries(res.data[0]).map(([key, value], index) => {
-                    columns.push({
-                            title: key,
-                            dataIndex: key,
-                            key: key,
-                            sorter: (a, b) => {
-                                return a.id > b.id
-                            }
-                        }
-                    )
+                // let columns = []
+                // Object.entries(res.data[0]).map(([key, value], index) => {
+                //     columns.push({
+                //             title: key,
+                //             dataIndex: key,
+                //             key: key,
+                //             sorter: (a, b) => {
+                //                 return a.id > b.id
+                //             }
+                //         }
+                //     )
+                // })
+                // this.setState({dataSource: res.data, loading: false, columns: columns})
+                let result = []
+                Object.entries(res.data).map(([key, value], index) => {
+                    result.push(<Tabs.TabPane tab={key} key={key}>{this.createTable(value)}</Tabs.TabPane>)
                 })
-                this.setState({dataSource: res.data, loading: false, columns: columns})
+                this.setState({list_table: result, loading: false})
             })
             .catch(error => {
                 checkError(error)
@@ -51,16 +84,24 @@ class DetailExecutionTab extends React.Component {
         return (
             <Tabs tabPosition={'top'}>
                 <Tabs.TabPane tab="Raw Data" key="1">
-                    <Table
-                        bordered
-                        rowKey="id"
-                        dataSource={this.state.dataSource}
-                        scroll={{x: true}}
-                        columns={this.state.columns}
-                        loading={this.state.loading}
-                        pagination={false}
-                        style={{width: '85vw'}}
-                    />
+                    {/*<Table*/}
+                    {/*    bordered*/}
+                    {/*    rowKey="id"*/}
+                    {/*    dataSource={this.state.dataSource}*/}
+                    {/*    scroll={{x: true}}*/}
+                    {/*    columns={this.state.columns}*/}
+                    {/*    loading={this.state.loading}*/}
+                    {/*    pagination={false}*/}
+                    {/*    style={{width: '85vw'}}*/}
+                    {/*/>*/}
+                    {this.state.loading ?
+                        <Spin size="large"/> :
+                        this.state.list_table ? <Tabs tabPosition={'top'}>
+                            {this.state.list_table}
+                        </Tabs> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+
+                    }
+
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Plot" key="2">
                     <ExecutionPlot id={this.props.exec_id} api={'frontend/API/getPlotExecution'}/>

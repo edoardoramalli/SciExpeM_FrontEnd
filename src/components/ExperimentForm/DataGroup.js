@@ -48,6 +48,7 @@ class DataGroup extends React.Component {
                     >
                         <Select.Option value={'experimental_data'}>Experimental Data</Select.Option>
                         <Select.Option value={'initial_condition'}>Initial Condition</Select.Option>
+                        <Select.Option value={'distribution_position'}>Distribution Position</Select.Option>
                     </Select>
                     <MinusCircleOutlined onClick={this.remove.bind(this, currentKey)} />
                 </Space>

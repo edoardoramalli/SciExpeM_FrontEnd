@@ -5,7 +5,6 @@ const axios = require('axios');
 import Cookies from "js-cookie";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
-import "./styles.less"
 import HyperLink from "../../HyperLink";
 import {checkError} from "../../Tool"
 import {table_columns, parseTime, string_compare} from "../../Variables";

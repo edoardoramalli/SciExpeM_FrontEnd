@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Input, Button} from "antd";
+import {Form, Input, Button, message} from "antd";
 import {checkError} from "../Tool";
 
 const axios = require('axios');
@@ -17,31 +17,40 @@ class References extends React.Component {
     }
 
     clickAutoComplete = () => {
+        // const address = 'https://opencitations.net/index/api/v1/metadata/' + this.state.doi
+        const address = 'https://opencitations.net/index/api/v1/metadata/' + this.state.doi
         this.setState({loading: true})
-        axios.get('https://opencitations.net/index/api/v1/metadata/' + this.state.doi)
+        axios.get(address)
             .then(res => {
-                const metadata = res.data[0]
-                let txt = ''
-                if (metadata.author)
-                    txt += metadata.author + ' - '
-                if (metadata.source_title)
-                    txt += metadata.source_title
-                if (metadata.year)
-                    txt += ', ' + metadata.year.toString()
-                if (metadata.volume)
-                    txt += ', (' + metadata.volume + ')'
-                if (metadata.page)
-                    txt += ', ' + metadata.page
+                if (res.data.length > 0){
+                    message.success('DOI found!')
+                    const metadata = res.data[0]
+                    let txt = ''
+                    if (metadata.author)
+                        txt += metadata.author + ' - '
+                    if (metadata.source_title)
+                        txt += metadata.source_title
+                    if (metadata.year)
+                        txt += ', ' + metadata.year.toString()
+                    if (metadata.volume)
+                        txt += ', (' + metadata.volume + ')'
+                    if (metadata.page)
+                        txt += ', ' + metadata.page
 
-                this.props.setField({
-                    title: metadata.title,
-                    year: metadata.year,
-                    author: metadata.author,
-                    volume: metadata.volume,
-                    page: metadata.page,
-                    journal: metadata.source_title,
-                    description: txt
-                })
+                    this.props.setField({
+                        title: metadata.title,
+                        year: metadata.year,
+                        author: metadata.author,
+                        volume: metadata.volume,
+                        page: metadata.page,
+                        journal: metadata.source_title,
+                        description: txt
+                    })
+                }
+                else{
+                    message.info('DOI not found!')
+                }
+
                 this.setState({loading: false})
 
             })
@@ -76,7 +85,7 @@ class References extends React.Component {
                 <Form.Item
                     label="Author(s)"
                     name="author"
-                    rules={[{required: false, message: 'Please insert author(s).'}]}
+                    rules={[{required: true, message: 'Please insert author(s).'}]}
                 >
                     <Input.TextArea
                         placeholder={"Please insert author(s). Last name, first name. Use semicolon to separate authors. E.g. Rossi, Mario; Lebron, James."}
@@ -87,7 +96,7 @@ class References extends React.Component {
                 <Form.Item
                     label="Title"
                     name="title"
-                    rules={[{required: false, message: 'Please insert title.'}]}
+                    rules={[{required: true, message: 'Please insert title.'}]}
                 >
                     <Input.TextArea
                         placeholder={"Please insert title."} rows={5} style={{width: "35%"}}
@@ -128,7 +137,7 @@ class References extends React.Component {
                 <Form.Item
                     label="Year"
                     name="year"
-                    rules={[{required: false, message: 'Please insert year.'}]}
+                    rules={[{required: true, message: 'Please insert year.'}]}
                 >
                     <Input
                         placeholder={"Please insert year."}

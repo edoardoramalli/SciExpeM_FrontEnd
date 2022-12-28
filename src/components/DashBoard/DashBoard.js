@@ -1,7 +1,5 @@
 import React from "react";
-import {checkError} from "../Tool";
 import {Tabs} from "antd";
-import ActionCell from "../Shared/ActionCell";
 
 const axios = require('axios');
 import Cookies from "js-cookie";

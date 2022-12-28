@@ -6,7 +6,7 @@ import {Button, Col, Row, Select, Space, Form, Collapse, message, Input} from "a
 import MinMaxRangeFormItem from "../Shared/MinMaxRangeFormItem";
 import Variables from "../Variables";
 
-const {reactors, experimentTypeToReactor} = Variables
+const {reactors, experimentTypeToReactor, reactor_modes} = Variables
 
 import QueryVisualizer from "./QueryVisualizer";
 import VisualizeTwoIntervalAnalysis from "./VisualizeTwoIntervalAnalysis";
@@ -21,6 +21,7 @@ class CustomFilter extends React.Component {
         this.state = {
             mountKey: Math.random(),
             reactors_options: this.createReactorOptions(),
+            reactor_mode_options: this.createReactorModesOptions(),
             exp_type_options: this.createExperimentTypeOptions(),
             query: null,
         }
@@ -46,7 +47,8 @@ class CustomFilter extends React.Component {
             'execution_column__execution__experiment__phi_sup__lte': this.checkField(values.phi_profile, 'phi_sup'),
             'execution_column__execution__experiment__experiment_type': values.experiment_type,
             'execution_column__execution__experiment__reactor': values.reactor,
-            'execution_column__execution__experiment__file_paper__description__icontains': values.description !== '' ? values.description : undefined,
+            'execution_column__execution__experiment__reactor_modes__icontains': values.reactor_modes,
+            // 'execution_column__execution__experiment__file_paper__description__icontains': values.description !== '' ? values.description : undefined,
             'execution_column__label': this.props.target,
             ...this.props.query
         }
@@ -63,6 +65,12 @@ class CustomFilter extends React.Component {
 
     createReactorOptions() {
         return reactors.map((item) => {
+            return (<Select.Option value={item.toString()}>{item.toString()}</Select.Option>)
+        })
+    }
+
+    createReactorModesOptions() {
+        return reactor_modes.map((item) => {
             return (<Select.Option value={item.toString()}>{item.toString()}</Select.Option>)
         })
     }
@@ -125,6 +133,17 @@ class CustomFilter extends React.Component {
                                     >
                                         <Select allowClear placeholder={'Please select a reactor'} style={{width: 200}}>
                                             {this.state.reactors_options}
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                                <Col>
+                                    <Form.Item
+                                        name={'reactor_modes'}
+                                        label={'Reactor Mode:'}
+                                        rules={[{required: false}]}
+                                    >
+                                        <Select allowClear placeholder={'Please select a reactor'} style={{width: 200}}>
+                                            {this.state.reactor_mode_options}
                                         </Select>
                                     </Form.Item>
                                 </Col>

@@ -3,12 +3,9 @@ import React from "react";
 class HyperLink extends React.Component{
     constructor(props) {
         super(props);
-        this.state ={
-            link: this.props.link
-        }
     }
     goHyperLink(){
-        const url = 'https://www.doi.org/' + String(this.state.link);
+        const url = 'https://www.doi.org/' + String(this.props.link);
         window.open(url);
     }
     render() {
@@ -16,7 +13,7 @@ class HyperLink extends React.Component{
             <span
                 style={{cursor:"pointer", color:"blue", textDecoration:"underline"}}
                 onClick={this.goHyperLink.bind(this)}
-            >{this.state.link} </span>
+            >{this.props.link} </span>
         )
     }
 }

@@ -5,7 +5,6 @@ const axios = require('axios');
 import Cookies from "js-cookie";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
-import "./styles.less"
 import HyperLink from "../../HyperLink";
 import {checkError} from "../../Tool"
 
@@ -77,7 +76,7 @@ class BibliographyTab extends React.Component {
         }
         else{
             return (
-                <Descriptions bordered column={2} className={"description"}>
+                <Descriptions bordered column={2} labelStyle={{fontWeight: 900}}>
                     {this.renderProperties()}
                 </Descriptions>
             );

@@ -179,7 +179,8 @@ class AddColumnModal extends React.Component {
             label: species_label,
             species_object: species_array,
             uncertainty_reference: uncertainty_reference,
-            fuel_oxidizer: values.fuel_oxidizer
+            fuel_oxidizer: values.fuel_oxidizer,
+            data_group_profile: values.data_group_profile
         }
         this.props.handleModal({index: this.props.index, data_column: data_column})
     };
@@ -302,6 +303,17 @@ class AddColumnModal extends React.Component {
                             disabled={!(this.state.speciesAllowed.indexOf(this.state.propertyName) > -1)}
                         >
                             {this.state.speciesOptions}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        label={"Association"}
+                        name="data_group_profile"
+                        rules={[{required: false, message: 'Please insert Association.'}]}
+                    >
+                        <Select mode="tags" style={{ width: '100%' }}
+                                placeholder="Insert Association Rows"
+
+                        >
                         </Select>
                     </Form.Item>
 

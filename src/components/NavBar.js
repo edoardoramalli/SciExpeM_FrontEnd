@@ -1,8 +1,8 @@
 import React from "react";
-import {Menu} from "antd";
+import {Menu, Switch} from "antd";
 const axios = require('axios');
-import {UploadOutlined, DatabaseOutlined, HomeOutlined,LineChartOutlined,DeploymentUnitOutlined,
-    LogoutOutlined, ExperimentOutlined, FileOutlined, DashboardOutlined, CheckOutlined} from '@ant-design/icons';
+import {UploadOutlined, DatabaseOutlined, HomeOutlined,LineChartOutlined,DeploymentUnitOutlined, CloseOutlined,
+    LogoutOutlined, ExperimentOutlined, FileOutlined, DashboardOutlined, CheckOutlined, BlockOutlined} from '@ant-design/icons';
 
 class NavBar extends React.Component{
 
@@ -38,11 +38,12 @@ class NavBar extends React.Component{
             <Menu
                 theme="dark"
                 mode="horizontal"
-                defaultSelectedKeys={[this.props.current]}
+                selectedKeys={[this.props.current]}
                 onClick={this.handleMenuClick}
                 style={{lineHeight: '64px'}}
             >
                 <Menu.Item key="home"><HomeOutlined /> Home</Menu.Item>
+                <Menu.Item key="homepage"><BlockOutlined /> Control</Menu.Item>
                 <Menu.SubMenu
                     title={
                         <span className="submenu-title-wrapper">
@@ -51,7 +52,6 @@ class NavBar extends React.Component{
                     }>
 
                     <Menu.Item key="experiments"><ExperimentOutlined /> Experiments</Menu.Item>
-
                     <Menu.Item key="models"><FileOutlined /> Models</Menu.Item>
                     <Menu.Item key="species"><DeploymentUnitOutlined /> Species</Menu.Item>
                 </Menu.SubMenu>
@@ -77,8 +77,17 @@ class NavBar extends React.Component{
 
                 {/*<Menu.Item key="crowdSourcing"><TeamOutlined />Crowd Sourcing</Menu.Item>*/}
 
+                <Menu.Item key={this.props.current} style={{ marginLeft: 'auto' }}>
+                    <Switch
+                        checkedChildren={"Light"}
+                        unCheckedChildren={"Dark"}
+                        onChange={this.props.switchTheme}
+                        defaultChecked
+                    />
+                </Menu.Item>
 
-                <Menu.Item key="logout" style={{ marginLeft: 'auto' }}>
+
+                <Menu.Item key="logout" >
                     <LogoutOutlined />  Log Out - {this.state.username}
                 </Menu.Item>
 

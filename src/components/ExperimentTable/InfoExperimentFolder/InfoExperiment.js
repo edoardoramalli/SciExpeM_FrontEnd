@@ -8,7 +8,6 @@ axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 import HyperLink from "../../HyperLink";
 
-import "./styles.less"
 import {checkError} from "../../Tool";
 import {EditOutlined, SaveOutlined, RollbackOutlined} from "@ant-design/icons";
 import Variables from "../../Variables";
@@ -32,6 +31,8 @@ class InfoExperiment extends React.Component {
             experiment_type: this.props.props.experiment_type,
             ignition_type: this.props.props.ignition_type,
 
+            fileDOI: 'loading..',
+
             new_comment: undefined,
             new_notes: undefined,
             new_reactor: undefined,
@@ -44,12 +45,12 @@ class InfoExperiment extends React.Component {
         const params = {
             'model_name': 'Experiment',
             'element_id': this.state.exp.props.id,
-            'fields': ['comment', 'notes', 'reactor_modes'],
+            'fields': ['comment', 'notes', 'reactor_modes', 'fileDOI'],
         }
         axios.post(window.$API_address + 'ExperimentManager/API/requestPropertyList', params)
             .then(res => {
                 const result = JSON.parse(res.data)
-                this.setState({comment: result.comment, notes: result.notes, reactor_modes: result.reactor_modes})
+                this.setState({comment: result.comment, notes: result.notes, reactor_modes: result.reactor_modes, fileDOI: result.fileDOI})
             }).catch(error => {
             checkError(error)
             // this.setState({comment: 'Error loading comment', notes})
@@ -199,9 +200,9 @@ class InfoExperiment extends React.Component {
                     }
                     bordered={true}
                     column={2}
+                    labelStyle={{fontWeight: 900}}
                 >
-                    <Descriptions.Item label="Experiment DOI">
-                        {<HyperLink link={this.state.exp.props.fileDOI}/>}
+                    <Descriptions.Item label="Experiment DOI">{<HyperLink link={this.state.fileDOI}/>}
                     </Descriptions.Item>
                     <Descriptions.Item label="Author">{this.state.exp.props.username}</Descriptions.Item>
                     <Descriptions.Item label="Status">{this.state.exp.props.status}</Descriptions.Item>

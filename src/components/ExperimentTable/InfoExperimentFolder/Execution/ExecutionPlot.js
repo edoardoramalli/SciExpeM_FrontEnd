@@ -20,10 +20,10 @@ class ExecutionPlot extends React.Component{
         }
     }
 
-    extend(obj, src) {
-        Object.keys(src).forEach(function(key) { obj[key] = src[key]; });
-        return obj;
-    }
+    // extend(obj, src) {
+    //     Object.keys(src).forEach(function(key) { obj[key] = src[key]; });
+    //     return obj;
+    // }
 
     renderTabs = (info, data) => {
         return (Object.entries(info).map(([key_y, value_y], index_y) => {
@@ -32,7 +32,7 @@ class ExecutionPlot extends React.Component{
                     <Tabs.TabPane tab={key_x + ' Vs. ' + key_y} key={index_x + index_y}>
                         <Plot
                             data={data[key_y][key_x]}
-                            layout={this.extend(this.state.baseConfig, info[key_y][key_x])}
+                            layout={{...this.state.baseConfig, ...info[key_y][key_x]}}
                         />
                     </Tabs.TabPane>
                 )
