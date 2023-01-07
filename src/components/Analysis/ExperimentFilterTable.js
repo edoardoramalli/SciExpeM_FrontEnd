@@ -136,7 +136,7 @@ class ExperimentFilterTable extends React.Component {
 
         this.setState({loading: true, experimentSelected: []})
         const params = {
-            fields: ['id', 'reactor', 'experiment_type', 'username', 'fuels', 'status', 'ignition_type', 'interpreter_name'],
+            fields: ['id', 'reactor', 'experiment_type', 'fuels', 'status', 'i_can_see_it', 'visible', 'interpreter_name'],
             query: {
                 'experiment_type': values.experiment_type,
                 'reactor': values.reactor,

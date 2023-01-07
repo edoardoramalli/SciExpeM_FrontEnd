@@ -23,13 +23,16 @@ class InfoExperiment extends React.Component {
             comment: 'loading...',
             notes: 'loading...',
             reactor_modes: 'loading..',
+            ignition_type: 'loading...',
+            interpreter_name: 'loading...',
+            username:  'loading...',
             editable: false,
             savable: false,
             rollback: false,
 
             reactor: this.props.props.reactor,
             experiment_type: this.props.props.experiment_type,
-            ignition_type: this.props.props.ignition_type,
+            // ignition_type: this.props.props.ignition_type,
 
             fileDOI: 'loading..',
 
@@ -45,12 +48,19 @@ class InfoExperiment extends React.Component {
         const params = {
             'model_name': 'Experiment',
             'element_id': this.state.exp.props.id,
-            'fields': ['comment', 'notes', 'reactor_modes', 'fileDOI'],
+            'fields': ['comment', 'notes', 'reactor_modes', 'fileDOI', 'ignition_type', 'username'],
         }
         axios.post(window.$API_address + 'ExperimentManager/API/requestPropertyList', params)
             .then(res => {
                 const result = JSON.parse(res.data)
-                this.setState({comment: result.comment, notes: result.notes, reactor_modes: result.reactor_modes, fileDOI: result.fileDOI})
+                this.setState({
+                    comment: result.comment,
+                    notes: result.notes,
+                    reactor_modes: result.reactor_modes,
+                    fileDOI: result.fileDOI,
+                    ignition_type: result.ignition_type,
+                    username: result.username,
+                })
             }).catch(error => {
             checkError(error)
             // this.setState({comment: 'Error loading comment', notes})
@@ -204,7 +214,7 @@ class InfoExperiment extends React.Component {
                 >
                     <Descriptions.Item label="Experiment DOI">{<HyperLink link={this.state.fileDOI}/>}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Author">{this.state.exp.props.username}</Descriptions.Item>
+                    <Descriptions.Item label="Author">{this.state.username}</Descriptions.Item>
                     <Descriptions.Item label="Status">{this.state.exp.props.status}</Descriptions.Item>
                     <Descriptions.Item
                         label="Interpreter">{this.state.exp.props.interpreter_name}</Descriptions.Item>
@@ -213,12 +223,15 @@ class InfoExperiment extends React.Component {
                         label="Experiment Type">{this.renderEditOptions(this.state, 'experiment_type', Object.keys(experimentTypeToReactor))}</Descriptions.Item>
                     <Descriptions.Item
                         label="Reactor">{this.renderEditOptions(this.state, 'reactor', reactors)}</Descriptions.Item>
-                    <Descriptions.Item label="Ignition Type">{this.renderEditOptions(this.state, 'ignition_type', ignition)}</Descriptions.Item>
+                    <Descriptions.Item
+                        label="Ignition Type">{this.renderEditOptions(this.state, 'ignition_type', ignition)}</Descriptions.Item>
                     {/*TODO mettere render options to reactor modes*/}
-                    <Descriptions.Item label="Reactor Modes" span={2}>{this.state.reactor_modes ? this.state.reactor_modes.toString() : undefined}</Descriptions.Item>
+                    <Descriptions.Item label="Reactor Modes"
+                                       span={2}>{this.state.reactor_modes ? this.state.reactor_modes.toString() : undefined}</Descriptions.Item>
                     <Descriptions.Item label="Comment"
                                        span={2}>{this.renderEdit(this.state, 'comment')}</Descriptions.Item>
-                    <Descriptions.Item label="Notes" span={2}>{this.renderEdit(this.state, 'notes', true)}</Descriptions.Item>
+                    <Descriptions.Item label="Notes"
+                                       span={2}>{this.renderEdit(this.state, 'notes', true)}</Descriptions.Item>
 
                 </Descriptions>
             </div>

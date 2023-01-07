@@ -32,16 +32,16 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
-        // this.updateStateApp = this.updateStateApp.bind(this)
-
 
         this.state = {
             current: 'homepage',
             fuels: [],
             species: [],
-            current_theme: defaultAlgorithm,
+            current_theme: localStorage.hasOwnProperty('current_theme') ? localStorage.getItem('current_theme') : 'normal',
+            select_theme: {'normal': defaultAlgorithm, 'dark': darkAlgorithm}
         }
     }
+
 
     updateStateApp = (e) => {
         this.setState({current: e.key})
@@ -53,11 +53,12 @@ class App extends React.Component {
 
     switchTheme = () => {
         let new_theme;
-        if (this.state.current_theme === defaultAlgorithm) {
-            new_theme = darkAlgorithm
+        if (this.state.current_theme === 'normal') {
+            new_theme = 'dark'
         } else {
-            new_theme = defaultAlgorithm
+            new_theme = 'normal'
         }
+        localStorage.setItem('current_theme', new_theme)
         this.setState({current_theme: new_theme})
     }
 
@@ -82,11 +83,20 @@ class App extends React.Component {
         return (
             <ConfigProvider
                 theme={{
-                    algorithm: this.state.current_theme,
-                }}>
+                    algorithm: this.state.select_theme[this.state.current_theme],
+                    token: {
+                        colorPrimary: '#1faf21',
+                    },
+                }}
+            >
                 <Layout className="layout" style={{minHeight: "100vh"}}>
-                    <Header>
-                        <NavBar current={current} updateStateApp={this.updateStateApp} switchTheme={this.switchTheme}/>
+                    <Header style={{backgroundColor: "transparent"}}>
+                        <NavBar
+                            current={current}
+                            updateStateApp={this.updateStateApp}
+                            switchTheme={this.switchTheme}
+                            theme={this.state.current_theme}
+                        />
                     </Header>
                     <Content style={{padding: '25px 25px', height: "100%"}}>
                         {/*<div style={{background: '#fff', padding: 0}}>*/}

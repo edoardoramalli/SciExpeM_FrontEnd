@@ -11,6 +11,8 @@ import {EditOutlined, RollbackOutlined, SaveOutlined} from "@ant-design/icons";
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import plaintext from 'react-syntax-highlighter/dist/esm/languages/hljs/plaintext';
 
+import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 SyntaxHighlighter.registerLanguage('plaintext', plaintext);
 
 class OSFile extends React.Component {
@@ -124,6 +126,7 @@ class OSFile extends React.Component {
                                             language="plaintext"
                                             showLineNumbers={true}
                                             wrapLongLines={true}
+                                            style={dark}
                                         >
                                             {this.state.file}
                                         </SyntaxHighlighter>

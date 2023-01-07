@@ -44,8 +44,7 @@ class ExperimentTable extends React.Component {
     onFinish = values => {
 
         const params = {
-            fields: ['id', 'reactor', 'experiment_type', 'username',
-                'fuels', 'status', 'ignition_type', 'interpreter_name'],
+            fields: ['id', 'reactor', 'experiment_type', 'fuels', 'status', 'visible', 'i_can_see_it', 'interpreter_name'],
             query: {
                 'id': values.id ? parseInt(values.id) : undefined,
                 'experiment_type': values.experiment_type,
@@ -72,8 +71,7 @@ class ExperimentTable extends React.Component {
     }
     last_ten = () => {
         const params = {
-            fields: ['id', 'reactor', 'experiment_type', 'username',
-                'fuels', 'status', 'ignition_type', 'interpreter_name'],
+            fields: ['id', 'reactor', 'experiment_type', 'fuels', 'status', 'visible', 'i_can_see_it', 'interpreter_name'],
             query: {},
             order_by: '-id',
             n_elements: 10,
