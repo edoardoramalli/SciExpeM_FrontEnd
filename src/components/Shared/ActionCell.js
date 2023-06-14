@@ -35,19 +35,31 @@ class ActionCell extends React.Component{
     };
 
     handleClick(e){
+
+        const hexToBytes = (hex) => {
+            var bytes = [];
+
+            for (var c = 0; c < hex.length; c += 2) {
+                bytes.push(parseInt(hex.substr(c, 2), 16));
+            }
+
+            return bytes;
+        };
+
         const params = {
             'element_id': this.props.element_id,
             'model_name': this.props.model_name,
             file: this.props.items[e.key]['file'],
         }
 
-        axios.get(window.$API_address + 'frontend/API/getFile',
-            {responseType: 'blob', params: params})
+        axios.post(window.$API_address + 'frontend/API/getFile', params)
             .then(res => {
-                const url = window.URL.createObjectURL(new Blob([res.data]));
+                // console.log(hexToBytes(res.data.data))
+                const byteArray = new Uint8Array(res.data.data_bytes.match(/.{2}/g).map(e => parseInt(e, 16)));
+                const url = window.URL.createObjectURL(new Blob([byteArray]));
                 const link = document.createElement('a');
                 link.href = url;
-                const file_name = this.props.model_name + '_' + this.props.file_name + '_'
+                const file_name = this.props.model_name + '_' + this.props.element_id + '_'
                     + this.props.items[e.key]['file'] + this.props.items[e.key]['extension']
                 link.setAttribute('download', file_name);
                 document.body.appendChild(link);
@@ -55,6 +67,7 @@ class ActionCell extends React.Component{
                 message.success('File downloaded')
             })
             .catch(error => {
+                console.log(error)
                 message.error("Error downloading the file. File could be missing, or you don't have the permissions.")
             })
     }

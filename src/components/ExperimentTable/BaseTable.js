@@ -276,28 +276,28 @@ class BaseTable extends React.Component{
                     }) : <></>
                 }
                 },
-            {
-                title: 'Visible',
-                dataIndex: 'visible',
-                key: 'visible',
-                width: '5%',
-                // filters: filter_exp_type,
-                // onFilter: (value, record) => record.experiment_type.toLowerCase().includes(value),
-                // sorter: (a, b) => {
-                //     return a.experiment_type.localeCompare(b.experiment_type)
-                // },
-                render: (props, record) => {
-                    if (record.visible){
-                        return <Tag color={'green'}>{"YES"}</Tag>
-                    }
-                    else if (record.i_can_see_it){
-                        return <Tag color={'orange'}>{"OK"}</Tag>
-                    }
-                    else{
-                        return <Tag color={'red'}>{"NO"}</Tag>
-                    }
-                }
-            },
+            // {
+            //     title: 'Visible',
+            //     dataIndex: 'visible',
+            //     key: 'visible',
+            //     width: '5%',
+            //     // filters: filter_exp_type,
+            //     // onFilter: (value, record) => record.experiment_type.toLowerCase().includes(value),
+            //     // sorter: (a, b) => {
+            //     //     return a.experiment_type.localeCompare(b.experiment_type)
+            //     // },
+            //     render: (props, record) => {
+            //         if (record.visible){
+            //             return <Tag color={'green'}>{"YES"}</Tag>
+            //         }
+            //         else if (record.i_can_see_it){
+            //             return <Tag color={'orange'}>{"OK"}</Tag>
+            //         }
+            //         else{
+            //             return <Tag color={'red'}>{"NO"}</Tag>
+            //         }
+            //     }
+            // },
             // {
             //     title: 'Properties',
             //     dataIndex: 'common_properties',

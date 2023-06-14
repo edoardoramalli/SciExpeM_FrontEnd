@@ -112,7 +112,7 @@ class Characteristics extends React.Component {
                         >
                             <InputNumber
                                 style={{width: 100, textAlign: 'center'}}
-                                min={0} max={150} step={5}
+                                min={0} max={1200} step={5}
                                 onChange={this.onChangePinf}
                                 placeholder={'Min'}
                             />
@@ -140,7 +140,7 @@ class Characteristics extends React.Component {
                                     textAlign: 'center',
                                 }}
                                 placeholder={'Max'}
-                                min={this.state.p_inf} max={150} step={5}
+                                min={this.state.p_inf} max={1200} step={5}
                             />
                         </Form.Item>
                     </Input.Group>

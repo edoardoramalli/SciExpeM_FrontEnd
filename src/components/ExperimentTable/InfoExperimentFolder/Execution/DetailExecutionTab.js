@@ -36,6 +36,8 @@ class DetailExecutionTab extends React.Component {
             )
         })
 
+        console.log('ciaoooo')
+
         return <Table
             bordered
             rowKey="id"
@@ -68,11 +70,17 @@ class DetailExecutionTab extends React.Component {
                 //     )
                 // })
                 // this.setState({dataSource: res.data, loading: false, columns: columns})
-                let result = []
-                Object.entries(res.data).map(([key, value], index) => {
-                    result.push(<Tabs.TabPane tab={key} key={key}>{this.createTable(value)}</Tabs.TabPane>)
-                })
-                this.setState({list_table: result, loading: false})
+                // console.log('edoooooooo')
+                // console.log(res.data)
+                // let result = []
+                // Object.entries(res.data).map(([key, value], index) => {
+                //     console.log(key, value)
+                //     result.push(<Tabs.TabPane tab={key} key={key}>{this.createTable(value)}</Tabs.TabPane>)
+                // })
+
+                // result.push(<>{this.createTable(res.data)}</>)
+                // console.log(result)
+                this.setState({list_table: this.createTable(res.data), loading: false})
             })
             .catch(error => {
                 checkError(error)
@@ -96,9 +104,7 @@ class DetailExecutionTab extends React.Component {
                     {/*/>*/}
                     {this.state.loading ?
                         <Spin size="large"/> :
-                        this.state.list_table ? <Tabs tabPosition={'top'}>
-                            {this.state.list_table}
-                        </Tabs> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+                        this.state.list_table ? this.state.list_table : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
 
                     }
 
