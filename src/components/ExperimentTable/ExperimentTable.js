@@ -30,7 +30,7 @@ class ExperimentTable extends React.Component {
             reactors_options: this.createReactorOptions(),
         }
 
-        this.last_ten()
+        // this.last_ten()
 
 
     }
