@@ -21,6 +21,7 @@ import CrowdSourcing from "./CrowdSourcing/CrowdSourcing";
 import Validation from "./Validation/Validation";
 import DashBoard from "./DashBoard/DashBoard";
 import Homepage from "./Homepage/Homepage";
+import Debug from "./Debug"
 
 
 const {Header, Content, Footer} = Layout;
@@ -76,7 +77,8 @@ class App extends React.Component {
             "analysis": <ExperimentFilterTable/>,
             "crowdSourcing": <CrowdSourcing/>,
             "validation": <Validation/>,
-            "dashboard": <DashBoard/>
+            "dashboard": <DashBoard/>,
+            "debug": <Debug />
         }
 
 

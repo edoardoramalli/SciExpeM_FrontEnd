@@ -53,7 +53,7 @@ class AddSpecie extends React.Component{
     render() {
         return(
             <Modal
-                title="Add Specie"
+                title="Add Species"
                 visible={this.props.addSpecieVisible}
                 onCancel={this.props.closeAddSpecie}
                 footer={null}

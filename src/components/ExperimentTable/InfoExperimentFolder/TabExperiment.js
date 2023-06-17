@@ -14,7 +14,8 @@ import BibliographyTab from "./BibliographyTab";
 import ExperimentFile from "./ExperimentFile";
 import ManagementExperiment from "./ManagementExperiment";
 import RawData from "./RawData";
-import PlotExperiment from "./PlotExperiment";
+// import PlotExperiment from "./PlotExperiment";
+import PlotExperimentNew from "./PlotExperimentNew";
 import ExecutionTab from "./ExecutionTab";
 import CurveMatchingResult from "./CurveMatchingResult";
 import OSFile from "./OSFile";
@@ -68,7 +69,7 @@ class TabExperiment extends React.Component {
                     />
                 </TabPane>
                 <TabPane tab="Plot Data" key="ExpTab5">
-                    <PlotExperiment exp_id={this.props.experiment.id}/>
+                    <PlotExperimentNew exp_id={this.props.experiment.id}/>
                 </TabPane>
                 <TabPane tab="Raw Data" key="ExpTab6">
                     <RawData exp_id={this.props.experiment.id} type={"data"}/>

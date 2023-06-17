@@ -284,18 +284,18 @@ class AddColumnModal extends React.Component {
                     </Row>
 
                     <Form.Item
-                        label="Specie(s)"
+                        label="Species"
                         name="species_object"
                         rules={[{
                             required: (this.state.speciesAllowed.indexOf(this.state.propertyName) > -1),
-                            message: 'Please select specie.'
+                            message: 'Please select species.'
                         }]}
                     >
                         <Select
                             showSearch
                             onChange={this.onChangeSpecie.bind(this)}
                             mode="multiple"
-                            placeholder={'Select Specie'}
+                            placeholder={'Select Species'}
                             optionFilterProp="children"
                             filterOption={(input, option) =>
                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -334,7 +334,7 @@ class AddColumnModal extends React.Component {
                                                         {...field}
                                                         name={[field.name, 'specie']}
                                                         fieldKey={[field.fieldKey, 'specie']}
-                                                        rules={[{required: true, message: 'Missing specie name.'}]}
+                                                        rules={[{required: true, message: 'Missing species name.'}]}
                                                         style={{width: 150}}
                                                     >
                                                         <Select

@@ -155,4 +155,39 @@ export const table_columns = {
     },
 }
 
+
+export const prova = [{'x': {'id': 618, 'name': 'temperature', 'units': 'K', 'data': ['1621.1293260474', '1618.1818181818', '1493.2885906040', '1444.8051948052', '1508.4745762712', '1388.4555382215', '1346.4447806354', '1326.3785394933', '1297.3760932945', '1276.9010043042', '1181.9389110226', '1204.3301759134', '1123.7373737374', '1108.3437110834', '1084.0438489647', '1077.4818401937', '1063.3213859020', '1034.8837209302', '1024.1657077100', '992.1962095875', '975.8771929825', '965.2928416486'], 'dg_id': 'dg1', 'label': 'T', 'uncertainty_reference': null, 'species_object': [], 'is_x': true, 'is_y': false, 'transformation': 'inv'}, 'y': {'id': 619, 'name': 'ignition delay', 'units': 'us', 'data': ['88.8867872675', '100.0000000000', '116.1759624574', '114.9383918051', '121.2609399226', '184.1264920264', '194.2549494309', '233.0461112712', '198.4606541941', '245.8655463526', '328.3061889572', '381.4128748283', '572.9800947303', '585.3853648182', '709.8437955478', '748.8909884201', '740.9133871207', '842.5222819296', '1055.0081484366', '1307.0104796094', '1708.2763938087', '1802.2455152500'], 'dg_id': 'dg1', 'label': 'tau', 'uncertainty_reference': null, 'species_object': [], 'is_x': false, 'is_y': true, 'transformation': 'log10'}}]
+
+export const plot_exp_settings = {
+
+}
+
+
+export const preferred_unit = {
+    'temperature': 'K',
+    // 'pressure': ['Pa', 'kPa', 'MPa', 'Torr', 'torr', 'bar', 'mbar', 'atm'],
+    'ignition delay': 'us',
+    'composition': 'mole fraction',
+    'laminar burning velocity': 'cm/s',
+    // 'volume': ['m3', 'dm3', 'cm3', 'mm3', 'L'],
+    'time': 's',
+    'residence time': 's',
+    'distance': 'cm',
+    // 'rate coefficient': ['s-1', 'm3 mol-1 s-1', 'dm3 mol-1 s-1', 'cm3 mol-1 s-1', 'm3 molecule-1 s-1',
+    //     'dm3 molecule-1 s-1', 'cm3 molecule-1 s-1', 'm6 mol-3 s-1', 'dm6 mol-2 s-1',
+    //     'cm6 mol-2 s-1', 'm6 molecule-2 s-1', 'dm6 molecule-2 s-1', 'cm6 molecule-2 s-1'],
+    'equivalence ratio': 'unitless',
+    // 'length': ['m', 'dm', 'cm', 'mm'],
+    // 'density': ['g m-3', 'g dm-3', 'g cm-3', 'g mm-3', 'kg m-3', 'kg dm-3', 'kg cm-3', 'kg mm-3'],
+    // 'flow rate': ['g m-2x s-1', 'g dm-2 s-1', 'g cm-2 s-1', 'g mm-2 s-1', 'kg m-2 s-1', 'kg dm-2 s-1', 'kg cm-2 s-1', 'kg mm-2 s-1'],
+    // 'concentration': ['mol/m3', 'mol/dm3', 'mol/cm3', 'mol m-3', 'mol dm-3', 'mol cm-3', 'molecule/m3', 'molecule/dm3', 'molecule/cm3', 'molecule m-3', 'molecule dm-3', 'molecule cm-3'],
+    'soot volume fraction': 'unitless',
+    'H/C ratio': 'unitless',
+    'number density': 'cm-3',
+    'particle diameter': 'nm',
+    'primary particle diameter': 'nm',
+    'particle size distribution': 'cm-3',
+    'primary particle size distribution': 'cm-3',
+}
+
 export default {reactors, experimentTypeToReactor, ignition_type, ignition_quantity, ignition, reactor_modes, property_list}

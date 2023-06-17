@@ -335,7 +335,7 @@ class SpeciesTable extends React.Component {
                                         this.setState({addSpecieVisible: true})
                                     }}
                                 >
-                                    Add Specie
+                                    Add Species
                                 </Button>
                             </Col>
                             <Col offset={8}>

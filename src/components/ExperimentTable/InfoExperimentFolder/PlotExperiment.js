@@ -18,7 +18,7 @@ class PlotExperiment extends React.Component{
         super(props);
         this.state = {
             plotList: [],
-            baseConfig: {width: 640, height: 480, showlegend: true, autosize: true},
+            baseConfig: {width: 640, height: 480, showlegend: true, autosize: true, },
             addConfig: {},
             renderObject: null,
             tabs: null
@@ -51,7 +51,7 @@ class PlotExperiment extends React.Component{
         axios.post(window.$API_address + 'frontend/API/getPlotExperiment', params)
             .then(res => {
                 const result = res.data
-                // console.log('prima', result)
+                console.log('prima', result)
                 // const edo = {'Data Group (dg2)': {'xaxis': {'title': 'distance [m] (lin)', 'linecolor': 'lightgrey', 'linewidth': 2, 'mirror': true}, 'yaxis': {'title': 'particle diameter [nm] (lin)', 'linecolor': 'lightgrey', 'linewidth': 2, 'mirror': true}}, 'Data Group (dg1)': {'xaxis': {'title': 'distance [m] (lin)', 'linecolor': 'lightgrey', 'linewidth': 2, 'mirror': true}, 'yaxis': {'title': 'soot volume fraction [unitless] (lin)', 'linecolor': 'lightgrey', 'linewidth': 2, 'mirror': true}}}
                 const tabs =  this.renderTabs(result['info'], result['data'])
                 // const tabs =  this.renderTabs(edo, result['data'])
