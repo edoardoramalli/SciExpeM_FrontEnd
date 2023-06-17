@@ -11,9 +11,11 @@ import './components/index.css';
 import App from "./components/App";
 
 window.$API_address = "";
-// window.$API_address = "http://127.0.0.1:8080/";
+window.$API_address = "http://127.0.0.1:8080/";
 // window.$API_address = "https://dev.chem.polimi.it/";
 // window.$API_address = "https://sciexpem.chem.polimi.it/";
+
+// export NODE_OPTIONS=--openssl-legacy-provider
 
 
 

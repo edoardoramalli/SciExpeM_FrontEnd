@@ -22,7 +22,7 @@ class AddSpecie extends React.Component{
         values['names'] = values['names'] !== undefined ? values['names'].split(',') : undefined
 
         const params = {
-            'model_name': 'Specie',
+            'model_name': 'Species',
             'property_dict': JSON.stringify(values)
         }
 

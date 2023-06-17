@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Col, Input, Row, Statistic, Table, Tag} from "antd";
+import {Button, Col, Input, Row, Statistic, Table, Tag, Tooltip} from "antd";
 import TabExperiment from "./InfoExperimentFolder/TabExperiment";
 import ActionCell from "../../components/Shared/ActionCell"
 import {SearchOutlined} from "@ant-design/icons";
@@ -271,8 +271,8 @@ class BaseTable extends React.Component{
                 //     return a.experiment_type.localeCompare(b.experiment_type)
                 // },
                 render: (props, record) => {
-                    return record.fuels ? record.fuels.map(i=>{
-                        return <Tag color="default">{i}</Tag>
+                    return record.fuels_object ? record.fuels_object.map(i=>{
+                        return <Tooltip title={'Species ID: ' + i.id}><Tag color="default">{i.preferredKey}</Tag></Tooltip>
                     }) : <></>
                 }
                 },

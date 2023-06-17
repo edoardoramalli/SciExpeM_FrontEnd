@@ -106,7 +106,7 @@ class SpeciesTable extends React.Component {
 
     refreshSpecieList = () => {
         this.setState({loading: true})
-        const params = {model_name: 'Specie', query: {}, fields: ['id', 'InChI', 'preferredKey', 'names', 'CAS', 'SMILES', 'chemName', 'formula']}
+        const params = {model_name: 'Species', query: {}, fields: ['id', 'InChI', 'preferredKey', 'names', 'CAS', 'SMILES', 'chemName', 'formula']}
         axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase', params)
             .then(res => {
                 this.setState({species: res.data, editableRow: undefined, loading: false})
@@ -149,7 +149,7 @@ class SpeciesTable extends React.Component {
             'formula': this.state.new_formula,
         }
 
-        const params = {'model_name': 'Specie', 'element_id': record.id, 'property_dict': JSON.stringify(properties)}
+        const params = {'model_name': 'Species', 'element_id': record.id, 'property_dict': JSON.stringify(properties)}
         axios.post(window.$API_address + 'ExperimentManager/API/updateElement', params)
             .then(res => {
                 message.success('Specie Edit Successful!');
@@ -187,7 +187,7 @@ class SpeciesTable extends React.Component {
         this.setState({loadingDelete: true});
         const params = {
             'element_id': id,
-            'model_name': 'Specie'
+            'model_name': 'Species'
         }
         axios.post(window.$API_address + 'ExperimentManager/API/deleteElement', params)
             .then(res => {

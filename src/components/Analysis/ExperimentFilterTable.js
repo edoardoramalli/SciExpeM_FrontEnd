@@ -5,7 +5,7 @@ const {Panel} = Collapse
 import BaseTable from "../ExperimentTable/BaseTable";
 
 import Variables from "../Variables"
-import {checkError} from "../Tool";
+import {checkError, get_species_options} from "../Tool";
 import MinMaxRangeFormItem from "../Shared/MinMaxRangeFormItem";
 
 const axios = require('axios');
@@ -41,7 +41,7 @@ class ExperimentFilterTable extends React.Component {
             experiments: [],
             fuels: [],
             reactors_options: this.createReactorOptions(),
-            fuels_options: null,
+            species_options: null,
             models_options: null,
             exp_type_options: this.createExperimentTypeOptions(),
             renderPlot: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>,
@@ -60,13 +60,17 @@ class ExperimentFilterTable extends React.Component {
         }
     }
 
-    componentDidMount() {
-        axios.get(window.$API_address + 'frontend/api/opensmoke/fuels_names')
-            .then(res => {
-                this.setState({fuels: res.data.names, fuels_options: this.createFuelsOptions(res.data.names)});
-            }).catch(error => {
-            checkError(error)
-        })
+    async componentDidMount() {
+        // axios.get(window.$API_address + 'frontend/api/opensmoke/fuels_names')
+        //     .then(res => {
+        //         this.setState({fuels: res.data.names, fuels_options: this.createFuelsOptions(res.data.names)});
+        //     }).catch(error => {
+        //     checkError(error)
+        // })
+
+        const fuels_options = await get_species_options()
+
+        this.setState({species_options: fuels_options})
 
 
         axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase',
@@ -79,19 +83,19 @@ class ExperimentFilterTable extends React.Component {
             checkError(error)
         })
 
-        axios.get(window.$API_address + 'frontend/api/opensmoke/species_names')
-            .then(res => {
-                const specie_dict = res.data;
-                let options = []
-                Object.entries(specie_dict).forEach(([key, value]) => {
-                    let text = value + ' (ID: ' + key + ')'
-                    options.push(<Select.Option key={text} value={key}>{text}</Select.Option>)
-                })
-
-                this.setState({species: options})
-            }).catch(error => {
-            // console.log(error.response);
-        })
+        // axios.get(window.$API_address + 'frontend/api/opensmoke/species_names')
+        //     .then(res => {
+        //         const specie_dict = res.data;
+        //         let options = []
+        //         Object.entries(specie_dict).forEach(([key, value]) => {
+        //             let text = value + ' (ID: ' + key + ')'
+        //             options.push(<Select.Option key={text} value={key}>{text}</Select.Option>)
+        //         })
+        //
+        //         this.setState({species: options})
+        //     }).catch(error => {
+        //     // console.log(error.response);
+        // })
     }
 
 
@@ -136,12 +140,12 @@ class ExperimentFilterTable extends React.Component {
 
         this.setState({loading: true, experimentSelected: []})
         const params = {
-            fields: ['id', 'reactor', 'experiment_type', 'fuels', 'status', 'i_can_see_it', 'visible', 'interpreter_name'],
+            fields: ['id', 'reactor', 'experiment_type', 'fuels_object', 'status', 'i_can_see_it', 'visible', 'interpreter_name'],
             query: {
                 'experiment_type': values.experiment_type,
                 'reactor': values.reactor,
                 'status': 'verified',
-                'fuels__contained_by': values.fuels && values.fuels.length > 0 ? values.fuels : undefined,
+                'fuels_object__id__in': values.fuels && values.fuels.length > 0 ? values.fuels : undefined,
                 'executions__chemModel__id__in': values.chemModels && values.chemModels > 0 ? values.chemModels : undefined,
                 'executions__experiment__id__isnull': false,
                 'executions__execution_end__isnull': false, // solo le simulazioni terminate
@@ -171,6 +175,7 @@ class ExperimentFilterTable extends React.Component {
 
         let identifier = values['toggle'] === undefined || values['toggle'] === true ? 'fileDOI' : 'id'
         let specie = values['specie'] === undefined ? 0 : values['specie']
+        console.log(values)
         this.setState({loadingHeatMap: true})
         axios.post(window.$API_address + 'frontend/API/getHeatMapExecution',
             {
@@ -306,8 +311,13 @@ class ExperimentFilterTable extends React.Component {
                                             placeholder="Please select fuels"
                                             style={{width: 300}}
                                             allowClear
+                                            optionFilterProp="children"
+                                            filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            }
+                                            filterSort={(optionA, optionB) => optionA.value > optionB.value}
                                         >
-                                            {this.state.fuels_options}
+                                            {this.state.species_options}
                                         </Select>
                                     </Form.Item>
                                 </Col>
@@ -430,9 +440,11 @@ class ExperimentFilterTable extends React.Component {
                                                     showSearch
                                                     placeholder={"Select a species"}
                                                     optionFilterProp="children"
-                                                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                                    style={{width: 150}}>
-                                                    {this.state.species}
+                                                    filterOption={(input, option) =>
+                                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                    }
+                                                    filterSort={(optionA, optionB) => optionA.value > optionB.value}style={{width: 150}}>
+                                                    {this.state.species_options}
                                                 </Select>
                                             </Form.Item>
                                         </Col>

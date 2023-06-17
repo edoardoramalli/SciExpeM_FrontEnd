@@ -3,6 +3,7 @@ import {Form, Input, InputNumber, Select} from "antd";
 
 const axios = require('axios');
 import Cookies from "js-cookie";
+import {get_species_options} from "../Tool";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 
@@ -10,22 +11,26 @@ class Characteristics extends React.Component {
     constructor() {
         super();
         this.state = {
-            list_fuels: null
+            fuels_options: null
         }
     }
 
-    componentDidMount() {
-        axios.get(window.$API_address + 'frontend/api/opensmoke/fuels_names')
-            .then(res => {
-                const names = res.data.names
+    async componentDidMount() {
 
-                this.setState({
-                    list_fuels: names.map(item =>
-                        <Select.Option key={item} value={item}>{item}</Select.Option>
-                    )
-                })
+        const fuels_options = await get_species_options()
 
-            })
+        this.setState({fuels_options: fuels_options})
+        // axios.get(window.$API_address + 'frontend/api/opensmoke/fuels_names')
+        //     .then(res => {
+        //         const names = res.data.names
+        //
+        //         this.setState({
+        //             list_fuels: names.map(item =>
+        //                 <Select.Option key={item} value={item}>{item}</Select.Option>
+        //             )
+        //         })
+        //
+        //     })
     }
 
     onChangeTinf = value => {
@@ -203,8 +208,14 @@ class Characteristics extends React.Component {
                         placeholder="Please select fuels"
                         style={{width: "35%"}}
                         allowClear
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                        filterSort={(optionA, optionB) => optionA.value > optionB.value}
+
                     >
-                        {this.state.list_fuels}
+                        {this.state.fuels_options}
                     </Select>
                 </Form.Item>
             </>

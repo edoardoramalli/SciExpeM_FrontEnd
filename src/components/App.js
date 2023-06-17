@@ -35,7 +35,7 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-            current: 'homepage',
+            current: 'experiments',
             fuels: [],
             species: [],
             current_theme: localStorage.hasOwnProperty('current_theme') ? localStorage.getItem('current_theme') : 'normal',

@@ -5,6 +5,7 @@ import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 
 const axios = require('axios');
 import Cookies from "js-cookie";
+import {get_species_options} from "../Tool";
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
@@ -17,20 +18,23 @@ class InitialSpecies extends React.Component {
         }
     }
 
-    componentDidMount() {
-        axios.get(window.$API_address + 'frontend/api/opensmoke/species_names')
-            .then(res => {
-                const specie_dict = res.data;
-                let options = []
-                Object.entries(specie_dict).forEach(([key, value]) => {
-                    let text = value + ' (ID: ' + key + ')'
-                    options.push(<Select.Option key={text} value={key}>{text}</Select.Option>)
-                })
+    async componentDidMount() {
+        // axios.get(window.$API_address + 'frontend/api/opensmoke/species_names') // TODO da deprecare e
+        //     .then(res => {
+        //         const specie_dict = res.data;
+        //         let options = []
+        //         Object.entries(specie_dict).forEach(([key, value]) => {
+        //             let text = value + ' (ID: ' + key + ')'
+        //             options.push(<Select.Option key={text} value={key}>{text}</Select.Option>)
+        //         })
+        //
+        //         this.setState({species: options})
+        //     }).catch(error => {
+        //     // console.log(error.response);
+        // })
+        const species = await get_species_options()
 
-                this.setState({species: options})
-            }).catch(error => {
-            // console.log(error.response);
-        })
+        this.setState({species: species})
     }
 
     render() {
@@ -50,7 +54,10 @@ class InitialSpecies extends React.Component {
                                         showSearch
                                         placeholder={"Select a species"}
                                         optionFilterProp="children"
-                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        filterOption={(input, option) =>
+                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }
+                                        filterSort={(optionA, optionB) => optionA.value > optionB.value}
                                         style={{width: 150}}>
                                         {this.state.species}
                                     </Select>

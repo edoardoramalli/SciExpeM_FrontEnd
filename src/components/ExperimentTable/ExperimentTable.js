@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 // Local Import
-import {checkError} from "../Tool"
+import {checkError, get_species_options} from "../Tool"
 import BaseTable from "./BaseTable";
 import {Button, Col, Collapse, Form, message, Row, Select, Space, Input, InputNumber, Divider,} from "antd";
 
@@ -25,11 +25,13 @@ class ExperimentTable extends React.Component {
         this.state = {
             experiments: [],
             loading: false,
-            fuels: [],
             fuels_options: [],
             exp_type_options: this.createExperimentTypeOptions(),
             reactors_options: this.createReactorOptions(),
         }
+
+        this.last_ten()
+
 
     }
 
@@ -44,13 +46,13 @@ class ExperimentTable extends React.Component {
     onFinish = values => {
 
         const params = {
-            fields: ['id', 'reactor', 'experiment_type', 'fuels', 'status', 'visible', 'i_can_see_it', 'interpreter_name'],
+            fields: ['id', 'reactor', 'experiment_type', 'fuels_object', 'status', 'visible', 'i_can_see_it', 'interpreter_name'],
             query: {
                 'id': values.id ? parseInt(values.id) : undefined,
                 'experiment_type': values.experiment_type,
                 'reactor': values.reactor,
                 'username__icontains': values.username !== '' ? values.username : undefined,
-                'fuels__contained_by': values.fuels && values.fuels.length > 0 ? values.fuels : undefined,
+                'fuels_object__id__in': values.fuels && values.fuels.length > 0 ? values.fuels : undefined,
                 't_inf__gte': this.checkField(values.t_profile, 't_inf'),
                 't_sup__lte': this.checkField(values.t_profile, 't_sup'),
                 'p_inf__gte': this.checkField(values.p_profile, 'p_inf'),
@@ -71,7 +73,7 @@ class ExperimentTable extends React.Component {
     }
     last_ten = () => {
         const params = {
-            fields: ['id', 'reactor', 'experiment_type', 'fuels', 'status', 'visible', 'i_can_see_it', 'interpreter_name'],
+            fields: ['id', 'reactor', 'experiment_type', 'fuels_object', 'status', 'visible', 'i_can_see_it', 'interpreter_name'],
             query: {},
             order_by: '-id',
             n_elements: 10,
@@ -132,11 +134,12 @@ class ExperimentTable extends React.Component {
         })
     }
 
-    createFuelsOptions(fuels) {
-        return fuels.map(item => {
-            return (<Select.Option key={item} value={item}>{item}</Select.Option>)
-        })
-    }
+    // createFuelsOptions(fuels) {
+    //     return fuels.map(item => {
+    //         return (
+    //             <Select.Option key={item.id} value={item.id}>{item.preferredKey + ' (' + item.id + ')'}</Select.Option>)
+    //     })
+    // }
 
     createReactorOptions() {
         return reactors.map((item) => {
@@ -144,13 +147,34 @@ class ExperimentTable extends React.Component {
         })
     }
 
-    componentDidMount() {
-        axios.get(window.$API_address + 'frontend/api/opensmoke/fuels_names')
-            .then(res => {
-                this.setState({fuels: res.data.names, fuels_options: this.createFuelsOptions(res.data.names)});
-            }).catch(error => {
-            checkError(error)
-        })
+    async componentDidMount() {
+        // axios.get(window.$API_address + 'frontend/api/opensmoke/fuels_names')
+        //     .then(res => {
+        //         this.setState({fuels: res.data.names, fuels_options: this.createFuelsOptions(res.data.names)});
+        //     }).catch(error => {
+        //     checkError(error)
+        // })
+
+        const fuels_options = await get_species_options()
+
+        this.setState({fuels_options: fuels_options})
+
+
+        // const params = {
+        //     fields: ['id', 'preferredKey'],
+        //     query: {},
+        //     // order_by: 'id',
+        //     model_name: 'Species',
+        // }
+        //
+        //
+        // axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase', params)
+        //     .then(res => {
+        //         this.setState({fuels_options: this.createFuelsOptions(res.data)});
+        //     })
+        //     .catch(error => {
+        //         checkError(error)
+        //     })
 
         // Development
         // const params = {
@@ -245,6 +269,11 @@ class ExperimentTable extends React.Component {
                                             <Select
                                                 mode="multiple"
                                                 placeholder="Please select fuels"
+                                                optionFilterProp="children"
+                                                filterOption={(input, option) =>
+                                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                }
+                                                filterSort={(optionA, optionB) => optionA.value > optionB.value}
                                                 style={{width: 300}}
                                                 allowClear
                                             >

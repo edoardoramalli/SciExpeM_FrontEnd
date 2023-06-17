@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
 
-import {checkError} from "../../Tool"
+import {checkError, get_species_options} from "../../Tool"
 
 
 
@@ -66,7 +66,7 @@ class ManagementExperiment extends React.Component{
             t_sup: parseFloat(this.state.t_sup),
             p_inf: parseFloat(this.state.p_inf),
             p_sup: parseFloat(this.state.p_sup),
-            fuels: this.state.fuels
+            fuels_object: this.state.fuels
         }
         if (this.state.status === 'verified') {
             let dict = params
@@ -90,19 +90,13 @@ class ManagementExperiment extends React.Component{
 
     }
 
-    componentDidMount() {
-        axios.get(window.$API_address + 'frontend/api/opensmoke/fuels_names')
-            .then(res => {
-                const names = res.data.names
-                
-                this.setState({list_fuels: names.map(item =>
-                        <Select.Option key={item} value={item}>{item}</Select.Option>
-                    )})
+    async componentDidMount() {
+        const fuels_options = await get_species_options()
 
-                })
+        this.setState({list_fuels: fuels_options})
 
         const params = {
-            fields: ['t_inf', 't_sup', 'p_inf', 'p_sup', 'phi_inf', 'phi_sup', 'fuels', 'status'],
+            fields: ['t_inf', 't_sup', 'p_inf', 'p_sup', 'phi_inf', 'phi_sup', 'fuels_object', 'status'],
             element_id: this.state.exp_id.toString(),
             model_name: 'Experiment'
         }
@@ -111,11 +105,11 @@ class ManagementExperiment extends React.Component{
             .then(res => {
                 const result = JSON.parse(res.data)
                 let tmp_fuel;
-                if (result.fuels === null){
+                if (result.fuels_object === null){
                     tmp_fuel = []
                 }
                 else{
-                    tmp_fuel = result.fuels
+                    tmp_fuel = result.fuels_object.map(i => i.id)
                 }
                 this.setState({
                     fuels: tmp_fuel,
@@ -295,6 +289,12 @@ class ManagementExperiment extends React.Component{
                             value={this.state.fuels}
                             onChange={this.changeFuels}
                             allowClear
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            filterSort={(optionA, optionB) => optionA.value > optionB.value}
+
                         >
                             {this.state.list_fuels}
                         </Select>

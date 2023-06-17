@@ -1,4 +1,10 @@
-import {message} from "antd";
+import React from 'react';
+import {message, Select} from "antd";
+const axios = require('axios');
+import Cookies from "js-cookie";
+
+axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
+
 
 export function extractData(dataString) {
     const a = dataString.trim().split("\n")
@@ -132,4 +138,31 @@ export async function checkError(error) {
     } else {
         message.error(error.response.data, 3);
     }
+}
+
+export function create_species_options(species_list){
+    return species_list.map(item => {
+        return (
+            <Select.Option key={item.id} value={item.id}>{item.preferredKey + ' (' + item.id + ')'}</Select.Option>)
+    })
+}
+
+export async function get_species_options(){
+    return new Promise((resolve, reject) => {
+        const params = {
+            fields: ['id', 'preferredKey'],
+            query: {},
+            model_name: 'Species',
+        }
+
+        axios.post(window.$API_address + 'ExperimentManager/API/filterDataBase', params)
+            .then(res => {
+                return resolve(create_species_options(res.data))
+            })
+            .catch(error => {
+                checkError(error)
+            })
+
+    })
+
 }

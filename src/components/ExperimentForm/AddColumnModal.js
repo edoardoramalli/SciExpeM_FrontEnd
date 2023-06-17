@@ -20,7 +20,7 @@ import Cookies from "js-cookie";
 
 axios.defaults.headers.post['X-CSRFToken'] = Cookies.get('csrftoken');
 
-import {extractData} from "../Tool";
+import {extractData, get_species_options} from "../Tool";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 
 
@@ -42,33 +42,37 @@ class AddColumnModal extends React.Component {
             speciesAllowed: ['composition', 'concentration'],
             uncertaintyActive: false,
             propertyDataUncertainty: [],
-            species: {},
+            // species: {},
         }
     }
 
-    componentDidMount() {
-        axios.get(window.$API_address + 'frontend/api/opensmoke/species_names')
-            .then(res => {
+    async componentDidMount() {
+        // axios.get(window.$API_address + 'frontend/api/opensmoke/species_names')
+        //     .then(res => {
+        //
+        //         const specie_dict = res.data;
+        //         let speciesOptions = []
+        //         Object.entries(specie_dict).forEach(([key, value]) => {
+        //             let text = value + ' (ID: ' + key + ')'
+        //             speciesOptions.push(<Select.Option key={text} value={key}>{text}</Select.Option>)
+        //         })
+        //         // let speciesOptions = res.data.names.map((item) => {
+        //         //     return (
+        //         //         <Select.Option
+        //         //             value={item}
+        //         //             key={item}
+        //         //         >
+        //         //             {item}
+        //         //         </Select.Option>
+        //         //     )
+        //         // });
+        //         this.setState({species: specie_dict, speciesOptions: speciesOptions, propertyObject: this.createOptions()})
+        //     }).catch(error => {
+        // })
 
-                const specie_dict = res.data;
-                let speciesOptions = []
-                Object.entries(specie_dict).forEach(([key, value]) => {
-                    let text = value + ' (ID: ' + key + ')'
-                    speciesOptions.push(<Select.Option key={text} value={key}>{text}</Select.Option>)
-                })
-                // let speciesOptions = res.data.names.map((item) => {
-                //     return (
-                //         <Select.Option
-                //             value={item}
-                //             key={item}
-                //         >
-                //             {item}
-                //         </Select.Option>
-                //     )
-                // });
-                this.setState({species: specie_dict, speciesOptions: speciesOptions, propertyObject: this.createOptions()})
-            }).catch(error => {
-        })
+        const speciesOptions = await get_species_options()
+
+        this.setState({speciesOptions: speciesOptions, propertyObject: this.createOptions()})
 
     }
 
@@ -101,11 +105,17 @@ class AddColumnModal extends React.Component {
     }
 
     onChangeSpecie(value) {
-        let text = []
-        value.map(i =>{
-            text.push(this.state.species[parseInt(i)])
-        })
-        this.props.setColumnName(this.props.index, ' - ' + text.toString())
+        // let text = []
+        // value.map(i =>{
+        //     text.push(this.state.species[parseInt(i)])
+        // })
+        // this.props.setColumnName(this.props.index, ' - ' + text.toString())
+        // let text = []
+        // value.map(i =>{
+        //     text.push(this.state.species[parseInt(i)])
+        // })
+        this.props.setColumnName(this.props.index, ' - ' + value)
+
     }
 
     createUnitOptions() {
@@ -300,6 +310,7 @@ class AddColumnModal extends React.Component {
                             filterOption={(input, option) =>
                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
+                            filterSort={(optionA, optionB) => optionA.value > optionB.value}
                             disabled={!(this.state.speciesAllowed.indexOf(this.state.propertyName) > -1)}
                         >
                             {this.state.speciesOptions}
@@ -340,11 +351,13 @@ class AddColumnModal extends React.Component {
                                                         <Select
                                                             showSearch
                                                             onChange={this.onChangeSpecie.bind(this)}
-                                                            placeholder={'Select Specie'}
+                                                            placeholder={'Select Species'}
                                                             optionFilterProp="children"
                                                             filterOption={(input, option) =>
                                                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                                             }
+                                                            filterSort={(optionA, optionB) => optionA.value > optionB.value}
+
                                                         >
                                                             {this.state.speciesOptions}
                                                         </Select>

@@ -82,7 +82,8 @@ class Validation extends React.Component {
         }
         axios.post(window.$API_address + 'frontend/API/getFuelValidation', {chemModel_list: tmp})
             .then(res => {
-                const result = JSON.parse(res.data)
+                const result = res.data
+                console.log('edooooiiiii', result)
                 this.setState({fuels: result, activeFuel: result[0]})
             }).catch(error => {
             checkError(error)
@@ -397,8 +398,8 @@ class Validation extends React.Component {
                         <Tabs centered type="card" onChange={this.changeActiveFuel}>
                             {
                                 this.state.fuels.map((element, i) => {
-                                    const query = {execution_column__execution__experiment__fuels: element, ...query_general}
-                                    return <TabPane tab={element.toString()} key={element.toString()}>
+                                    const query = {execution_column__execution__experiment__fuels_object__id: element.id, ...query_general}
+                                    return <TabPane tab={element.preferredKey.toString()} key={element.preferredKey.toString()}>
                                         {/*<QueryVisualizer*/}
                                         {/*    key={mountKey}*/}
                                         {/*    query={query}*/}
@@ -412,7 +413,7 @@ class Validation extends React.Component {
                                                 {
                                                     this.state.targets.map((target, i) => {
                                                         const query = {execution_column__label: target,
-                                                            execution_column__execution__experiment__fuels: element, ...query_general}
+                                                            execution_column__execution__experiment__fuels_object__id: element.id, ...query_general}
                                                         return <TabPane tab={target} key={target}>
                                                             <QueryVisualizer
                                                                 key={mountKey}
